@@ -1,0 +1,23 @@
+# Runtime databases, cache, and persistent container data
+**/9router-data/
+**/hermes-data/
+**/honcho-data/
+**/honcho-db-data/
+**/prometheus_data/
+**/grafana_data/
+**/*-data/
+
+# Secret credentials and local environments
+**/.env
+**/.env.local
+**/.env.*.local
+!**/.env.example
+!**/.env.template
+
+# System & runtime caches
+**/__pycache__/
+**/*.pyc
+**/.DS_Store
+**/*.log
+**/.locks/
+**/.cache/

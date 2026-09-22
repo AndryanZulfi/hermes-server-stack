@@ -1,0 +1,53 @@
+services:
+  9router:
+    image: decolua/9router:latest
+    container_name: 9router
+    restart: always
+    ports:
+      - "20128:20128"
+    volumes:
+      - ./9router-data:/app/data
+      - ./9router-data:/app/data-home
+    env_file:
+      - .env
+    environment:
+      DATA_DIR: /app/data
+      PORT: "20128"
+      HOSTNAME: "0.0.0.0"
+      NODE_ENV: production
+      INITIAL_PASSWORD: "andryan_16"
+      APP_URL: "https://deb-zlf.tail38902e.ts.net"
+      ORIGIN: "https://deb-zlf.tail38902e.ts.net"
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8642:8642"   # gateway API
+      - "9119:9119"   # dashboard (only reached when HERMES_DASHBOARD=1)
+    volumes:
+      - ./hermes-data:/opt/data
+      - ./hermes-data:/root/.hermes
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - HERMES_DASHBOARD=1
+      # Uncomment to forward specific env vars instead of using .env file:
+      # - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    env_file:
+       - ./hermes-data/.env
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "2.0"
+    depends_on:
+      - 9router
+
+networks:
+  default:
+    name: ai-network
+    external: true

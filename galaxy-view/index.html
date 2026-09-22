@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes Skill Map</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#090d16;font-family:'JetBrains Mono',monospace;color:#e2e8f0}
+canvas{position:fixed;inset:0}
+#bg{z-index:0}
+#main{z-index:1;cursor:grab}
+#main.dragging{cursor:grabbing}
+#ui{position:fixed;inset:0;z-index:2;pointer-events:none}
+
+/* HUD TOP */
+#hud{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:11px 24px;background:rgba(9,13,22,0.92);border-bottom:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(20px);pointer-events:none}
+.logo{font-size:11px;font-weight:700;letter-spacing:.12em;display:flex;align-items:center;gap:8px;color:#f8fafc}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:#38bdf8}
+.hud-sub{font-size:9px;color:#64748b;letter-spacing:.08em}
+.hud-stats{display:flex;gap:20px}
+.stat{font-size:9px;color:#64748b;letter-spacing:.06em}
+.stat b{color:#cbd5e1;font-weight:700}
+
+/* TOAST */
+#toast{position:fixed;top:54px;right:18px;z-index:10;min-width:220px;padding:10px 14px;background:rgba(15,23,42,.96);border:1px solid rgba(255,255,255,.08);border-radius:8px;backdrop-filter:blur(24px);display:flex;align-items:flex-start;gap:9px;transform:translateY(-55px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1);pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+.t-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0;background:#38bdf8}
+.t-dot.on{background:#f59e0b}
+.t-lbl{font-size:8px;color:#64748b;letter-spacing:.08em;margin-bottom:2px;text-transform:uppercase}
+.t-val{font-size:11px;font-weight:600;color:#f8fafc;line-height:1.4}
+
+/* DETAIL PANEL */
+#detail{position:fixed;bottom:20px;right:20px;z-index:10;width:268px;display:none;background:rgba(8,12,26,.95);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 15px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 8px 32px rgba(0,0,0,.6);pointer-events:auto}
+.d-badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.d-title{font-size:13px;font-weight:700;color:#f0f4ff;margin-bottom:4px}
+.d-desc{font-size:10px;color:#475569;line-height:1.6;font-family:sans-serif}
+.d-hr{height:1px;background:rgba(255,255,255,.05);margin:9px 0}
+.d-row{display:flex;justify-content:space-between;font-size:9px;color:#334155;margin-bottom:3px}
+.d-row span{color:#64748b}
+
+/* CONSTELLATION INDEX */
+#idx{position:fixed;bottom:20px;left:20px;z-index:10;width:235px;max-height:min(380px,calc(100vh - 120px));display:flex;flex-direction:column;background:rgba(5,8,18,.92);border:1px solid rgba(255,255,255,.08);border-radius:12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.6);pointer-events:auto;overflow:hidden;transition:max-height .3s cubic-bezier(.16,1,.3,1)}
+#idx.minimized{max-height:36px}
+.idx-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 9px 12px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;user-select:none;flex-shrink:0}
+.idx-hdr-title{display:flex;align-items:center;gap:7px;font-size:8.5px;font-weight:700;color:#7dd3c8;letter-spacing:.12em;text-transform:uppercase}
+.idx-dot{width:6px;height:6px;border-radius:50%;background:#7dd3c8;box-shadow:0 0 8px rgba(125,211,200,.6);flex-shrink:0}
+.idx-count{background:rgba(255,255,255,.08);color:#cbd5e1;font-size:8px;font-weight:600;padding:1px 6px;border-radius:999px}
+.idx-chevron{font-size:9px;color:#64748b;transition:transform .25s ease}
+#idx.minimized .idx-chevron{transform:rotate(-90deg)}
+#idx-body{flex:1;overflow-y:auto;min-height:0;padding:4px 0}
+#idx-body::-webkit-scrollbar{width:4px}
+#idx-body::-webkit-scrollbar-track{background:transparent}
+#idx-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+#idx-body::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.22)}
+
+.ic-group{border-bottom:1px solid rgba(255,255,255,.03)}
+.ic-parent{display:flex;align-items:center;gap:7px;padding:7px 12px 6px 10px;cursor:pointer;color:#94a3b8;font-size:8.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-left:3px solid transparent;transition:background .15s,color .15s;user-select:none}
+.ic-parent:hover{background:rgba(255,255,255,.05);color:#f1f5f9}
+.ic-parent-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ic-parent-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ic-parent-count{font-size:7.5px;opacity:.6;font-weight:600;background:rgba(255,255,255,.06);padding:0 5px;border-radius:8px}
+.ic-parent-arrow{font-size:8px;opacity:.4;margin-left:4px;transition:transform .2s ease}
+.ic-parent.collapsed .ic-parent-arrow{transform:rotate(-90deg)}
+
+.ic-children{display:block;padding:2px 0 4px;background:rgba(0,0,0,.15)}
+.ic-children.collapsed{display:none}
+
+.ir{display:flex;align-items:center;gap:6px;padding:4.5px 12px 4.5px 22px;cursor:pointer;color:#64748b;font-size:8.5px;border-left:2px solid transparent;transition:all .15s;user-select:none}
+.ir:hover{background:rgba(255,255,255,.05);color:#f8fafc}
+.ir.lit{color:#38d9d4;font-weight:600}
+.ir.selected{background:rgba(255,255,255,.08);color:#f1f5f9;border-left-color:#7dd3c8}
+.ir-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;opacity:.7}
+.ir.lit .ir-dot{opacity:1;box-shadow:0 0 6px #38d9d4;animation:blink 1s infinite}
+.ir-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ir-sub-count{font-size:7px;color:#64748b;background:rgba(255,255,255,.06);padding:0 4px;border-radius:6px;margin-left:auto}
+.ir-arrow{font-size:7.5px;opacity:.35;margin-left:3px;transition:transform .2s ease}
+.ir-arrow.collapsed{transform:rotate(-90deg)}
+
+.ic-subskills{display:block;padding:1px 0 3px;background:rgba(0,0,0,.22)}
+.ic-subskills.collapsed{display:none}
+.ir-sub{padding:3px 10px 3px 32px;font-size:8px;color:#475569}
+.ir-sub-line{font-family:monospace;color:#334155;font-size:8px;margin-right:2px}
+
+@media (max-width: 640px) {
+  #idx{left:10px;bottom:10px;width:calc(100vw - 20px);max-width:260px;max-height:min(300px,45vh)}
+  #detail{right:10px;bottom:10px;width:calc(100vw - 20px);max-width:260px}
+}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<canvas id="main"></canvas>
+
+<div id="hud">
+  <div class="logo"><div class="logo-dot"></div>HERMES SKILL MAP</div>
+  <div class="hud-sub">SKILL NEURAL MAP</div>
+  <div class="hud-stats">
+    <div class="stat">CLUSTERS <b id="s-cl">—</b></div>
+    <div class="stat">SKILLS <b id="s-sk">—</b></div>
+    <div class="stat">STATUS <b id="s-st" style="color:#38d9d4">IDLE</b></div>
+  </div>
+</div>
+
+<div id="toast">
+  <div class="t-dot" id="tdot"></div>
+  <div><div class="t-lbl">SKILL ACTIVE</div><div class="t-val" id="tval">—</div></div>
+</div>
+
+<div id="detail">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+    <div class="d-badge" id="dbadge"></div>
+    <div id="dclose" style="cursor:pointer;color:#64748b;font-size:12px;padding:2px 6px;line-height:1">✕</div>
+  </div>
+  <div class="d-title" id="dtitle">—</div>
+  <div class="d-desc" id="ddesc">—</div>
+  <div class="d-hr"></div>
+  <div class="d-row">TYPE <span id="dtype">—</span></div>
+  <div class="d-row">CATEGORY <span id="dcat">—</span></div>
+  <div class="d-row" id="dprow" style="display:none">PARENT <span id="dpar">—</span></div>
+</div>
+
+<div id="idx">
+  <div class="idx-hdr" id="idx-toggle" title="Click to collapse/expand">
+    <div class="idx-hdr-title">
+      <span class="idx-dot"></span>
+      CONSTELLATION INDEX
+      <span class="idx-count" id="idx-total-count">0</span>
+    </div>
+    <span class="idx-chevron" id="idx-chevron">▾</span>
+  </div>
+  <div id="idx-body">
+    <div id="idx-list"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// PALETTE
+// ══════════════════════════════════════════
+// PALETTE (Anti-Slop Restrained Technical System)
+// ══════════════════════════════════════════
+const PAL = {
+  core:                    '#f8fafc',   // High-contrast clean white / titanium
+  'software-development':  '#38bdf8',   // Sky / Slate Blue
+  productivity:            '#34d399',   // Emerald / Sage
+  creative:                '#fbbf24',   // Warm Amber
+  'autonomous-ai-agents':  '#818cf8',   // Indigo Slate
+  research:                '#a78bfa',   // Iris Slate
+  apple:                   '#94a3b8',   // Cool Platinum
+  media:                   '#fb923c',   // Terracotta
+  email:                   '#2dd4bf',   // Muted Teal
+  devops:                  '#60a5fa',   // Technical Blue
+  'note-taking':           '#10b981',   // Jade
+  'social-media':          '#cbd5e1',   // Silver
+  web:                     '#0ea5e9'    // Deep Sky
+};
+function col(c){ return PAL[c] || PAL.web; }
+function hexAlpha(h, a){
+  const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// ══════════════════════════════════════════
+// CANVAS + VIEWPORT
+// ══════════════════════════════════════════
+const BG  = document.getElementById('bg');
+const CV  = document.getElementById('main');
+const BCX = BG.getContext('2d');
+const CTX = CV.getContext('2d');
+let W = innerWidth, H = innerHeight;
+let camX = -80, camY = 0, camZ = 0.68; // centered with generous padding around whole constellation
+
+function resize(){
+  W = innerWidth; H = innerHeight;
+  BG.width = CV.width = W;
+  BG.height = CV.height = H;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// World → screen
+function ws(wx, wy){ return [(wx - camX)*camZ + W/2, (wy - camY)*camZ + H/2]; }
+// Screen → world
+function sw(sx, sy){ return [(sx - W/2)/camZ + camX, (sy - H/2)/camZ + camY]; }
+
+// ══════════════════════════════════════════
+// TECHNICAL BACKGROUND (Precision Grid + Starfield)
+// ══════════════════════════════════════════
+const STARS = [];
+const SHOOTING = [];
+let _nextShoot = 0;
+
+(function initStars(){
+  for(let i=0;i<700;i++){
+    STARS.push({
+      x:Math.random()*W, y:Math.random()*H,
+      vx:(Math.random()-.5)*.02, vy:(Math.random()-.5)*.02,
+      r:0.6+Math.random()*0.8,
+      op:0.25+Math.random()*0.55,
+      ts:0.4+Math.random()*0.8,
+      tp:Math.random()*Math.PI*2
+    });
+  }
+})();
+
+function spawnShootingStar(){
+  const fromLeft = Math.random()<.5;
+  const sx = fromLeft ? Math.random()*W*.4 : W*.6+Math.random()*W*.4;
+  const sy = Math.random()*H*.35;
+  const angle = (25+Math.random()*35)*(Math.PI/180);
+  const spd = 6+Math.random()*6;
+  SHOOTING.push({
+    x:sx, y:sy,
+    vx: Math.cos(angle)*spd*(fromLeft?1:-1),
+    vy: Math.sin(angle)*spd,
+    len: 50+Math.random()*70,
+    life: 1.0,
+    decay: 0.02+Math.random()*0.015
+  });
+}
+
+let ST=0;
+function drawBG(){
+  BCX.clearRect(0,0,W,H);
+
+  // Subtle architectural coordinate grid
+  const gridSz = 100 * camZ;
+  const offX = (W/2 - camX * camZ) % gridSz;
+  const offY = (H/2 - camY * camZ) % gridSz;
+
+  BCX.strokeStyle = 'rgba(255, 255, 255, 0.022)';
+  BCX.lineWidth = 1;
+  BCX.beginPath();
+  for(let x = offX; x < W; x += gridSz){
+    BCX.moveTo(x, 0); BCX.lineTo(x, H);
+  }
+  for(let y = offY; y < H; y += gridSz){
+    BCX.moveTo(0, y); BCX.lineTo(W, y);
+  }
+  BCX.stroke();
+
+  ST += .008;
+
+  // Regular stars (fine white & silver pinpricks)
+  STARS.forEach(s=>{
+    s.x+=s.vx; s.y+=s.vy;
+    if(s.x<0)s.x=W; if(s.x>W)s.x=0;
+    if(s.y<0)s.y=H; if(s.y>H)s.y=0;
+    const tw = Math.sin(ST*s.ts*50+s.tp)*0.2 + 0.8;
+    BCX.globalAlpha = s.op * tw * 0.7;
+    BCX.fillStyle = '#cbd5e1';
+    BCX.beginPath(); BCX.arc(s.x,s.y,s.r,0,Math.PI*2); BCX.fill();
+  });
+  BCX.globalAlpha = 1;
+
+  // Shooting stars
+  const now = performance.now();
+  if(now > _nextShoot){
+    spawnShootingStar();
+    _nextShoot = now + 4000 + Math.random()*5000;
+  }
+  for(let i=SHOOTING.length-1;i>=0;i--){
+    const s=SHOOTING[i];
+    s.x+=s.vx; s.y+=s.vy; s.life-=s.decay;
+    if(s.life<=0){ SHOOTING.splice(i,1); continue; }
+    BCX.save();
+    BCX.globalAlpha = s.life * 0.5;
+    BCX.strokeStyle = '#e2e8f0';
+    BCX.lineWidth = 1;
+    BCX.beginPath();
+    BCX.moveTo(s.x, s.y);
+    BCX.lineTo(s.x - s.vx*s.len*0.08, s.y - s.vy*s.len*0.08);
+    BCX.stroke();
+    BCX.restore();
+  }
+}
+
+// ══════════════════════════════════════════
+// PHYSICS ENGINE
+// ══════════════════════════════════════════
+const CX = 220, CY = 0; // Global Hermes core world anchor
+const R_CLUSTER_ORBIT = 350; // Global default orbit distance for clusters
+const NODES = [];      // all physics nodes
+const LINKS = [];      // {a, b} index pairs for bezier drawing
+let gData = null;
+
+// Physics constants — realistic Newtonian celestial mechanics
+const DAMP_CL      = 0.90;   // cluster damping: smooth viscous deceleration
+const DAMP_SK      = 0.86;   // skill/subskill damping
+const MAX_VEL_CL   = 2.5;    // cluster velocity cap: allow smooth natural momentum when pushed
+const MAX_VEL_SK   = 2.0;    // skill velocity cap
+const MAX_VEL_SUB  = 2.2;    // subskill velocity cap
+
+function clampVel(n){
+  const spd = Math.hypot(n.vx, n.vy);
+  const maxV = n.type==='cluster' ? MAX_VEL_CL : (n.type==='skill' ? MAX_VEL_SK : MAX_VEL_SUB);
+  if(spd > maxV){ const f=maxV/spd; n.vx*=f; n.vy*=f; }
+}
+
+function physicsTick(){
+  const N = NODES.length;
+  if(!N) return;
+  const core = NODES[0] || {x:0, y:0};
+  const time = Date.now();
+
+  // 1. Natural elastic springs relative to parents (radial fan hierarchy)
+  NODES.forEach(n=>{
+    if(n.dragging) return;
+
+    if(n.type==='cluster'){
+      // Target anchor: where it was placed on load or dropped/displaced by user
+      const targetDist = n.orbitDist !== undefined ? n.orbitDist : R_CLUSTER_ORBIT;
+      const targetAng = n.ang !== undefined ? n.ang : Math.PI;
+
+      // Organic living motion in place: gentle harmonic oscillation (never static / "diam di tempat")
+      const phaseX = time * 0.0008 + (n.seed || 0) * 1.7;
+      const phaseY = time * 0.0006 + (n.seed || 0) * 2.3;
+      const swayX = Math.cos(phaseX) * 7.5;
+      const swayY = Math.sin(phaseY) * 7.5;
+
+      const targetX = core.x + Math.cos(targetAng) * targetDist + swayX;
+      const targetY = core.y + Math.sin(targetAng) * targetDist + swayY;
+
+      // Soft, elastic tether to living anchor
+      n.vx += (targetX - n.x) * 0.022;
+      n.vy += (targetY - n.y) * 0.022;
+    }
+
+    else if(n.type==='skill' && n.parentIdx !== undefined){
+      const p = NODES[n.parentIdx];
+      if(p){
+        // Direction from core through parent cluster
+        const pdx = p.x - core.x, pdy = p.y - core.y;
+        const p_ang = Math.atan2(pdy, pdx);
+        const baseAng = p_ang + (n.relAng || 0);
+
+        // Natural slow radial breathing (slowly moving closer/farther from parent cluster)
+        // ~21 seconds per cycle, ultra-smooth, zero jitter
+        const baseDist = n.baseDist || n.relDist || 85;
+        const breathPhase = time * 0.00030 + (n.seed || 0) * 1.5;
+        const radialOffset = Math.sin(breathPhase) * 14;
+        const targetDist = Math.max(35, baseDist + radialOffset);
+
+        // Subtle gentle angular sway
+        const angSway = Math.cos(breathPhase * 0.6) * 0.035;
+        const targetAng = baseAng + angSway;
+
+        const targetX = p.x + Math.cos(targetAng) * targetDist;
+        const targetY = p.y + Math.sin(targetAng) * targetDist;
+
+        // Smooth critically damped acceleration to target (no jitter)
+        n.vx += (targetX - n.x) * 0.012;
+        n.vy += (targetY - n.y) * 0.012;
+      }
+    }
+
+    else if(n.type==='subskill' && n.parentIdx !== undefined){
+      const ps = NODES[n.parentIdx];
+      if(ps){
+        const p = (ps.parentIdx !== undefined) ? NODES[ps.parentIdx] : core;
+        const pdx = ps.x - p.x, pdy = ps.y - p.y;
+        const ps_ang = Math.atan2(pdy, pdx);
+        const baseAng = ps_ang + (n.relAng || 0);
+
+        const baseDist = n.baseDist || n.relDist || 40;
+        const subBreathPhase = time * 0.00040 + (n.seed || 0) * 2.1;
+        const radialOffset = Math.sin(subBreathPhase) * 8;
+        const targetDist = Math.max(20, baseDist + radialOffset);
+        const angSway = Math.cos(subBreathPhase * 0.7) * 0.04;
+        const targetAng = baseAng + angSway;
+
+        const targetX = ps.x + Math.cos(targetAng) * targetDist;
+        const targetY = ps.y + Math.sin(targetAng) * targetDist;
+
+        n.vx += (targetX - n.x) * 0.015;
+        n.vy += (targetY - n.y) * 0.015;
+      }
+    }
+  });
+
+  // 2. Exact physical collision solver (contact at a.r + b.r, ZERO padding, NO penetration)
+  const ITER = 3;
+  for(let iter=0; iter<ITER; iter++){
+    for(let i=0; i<N; i++){
+      const a = NODES[i];
+      for(let j=i+1; j<N; j++){
+        const b = NODES[j];
+        const isCoreA = a.type === 'core';
+        const isCoreB = b.type === 'core';
+
+        // EXACT PHYSICAL CONTACT RADIUS — NO PADDING!
+        const minD = a.r + b.r;
+
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const dist2 = dx*dx + dy*dy;
+        if(dist2 < minD*minD && dist2 > 0.0001){
+          const dist = Math.sqrt(dist2);
+          const overlap = minD - dist;
+          const nx = dx / dist, ny = dy / dist;
+
+          if(isCoreA || isCoreB){
+            // Core is immovable anchor (infinite mass); other node yields smoothly
+            const other = isCoreA ? b : a;
+            const sign = isCoreA ? 1 : -1;
+            other.x += nx * sign * overlap;
+            other.y += ny * sign * overlap;
+            other.vx += nx * sign * Math.max(1.0, overlap * 0.35);
+            other.vy += ny * sign * Math.max(1.0, overlap * 0.35);
+            if(other.type === 'cluster'){
+              other.anchorX = other.x; other.anchorY = other.y;
+              other.ang = Math.atan2(other.y - core.y, other.x - core.x);
+              other.orbitDist = Math.hypot(other.x - core.x, other.y - core.y);
+            }
+          } else if(a.dragging && !b.dragging){
+            // a is being dragged by user: b is physically pushed out by the FULL overlap
+            b.x += nx * overlap;
+            b.y += ny * overlap;
+            b.vx += nx * Math.max(1.2, overlap * 0.35);
+            b.vy += ny * Math.max(1.2, overlap * 0.35);
+            if(b.type === 'cluster'){
+              b.anchorX = b.x; b.anchorY = b.y;
+              b.ang = Math.atan2(b.y - core.y, b.x - core.x);
+              b.orbitDist = Math.hypot(b.x - core.x, b.y - core.y);
+            }
+          } else if(b.dragging && !a.dragging){
+            // b is being dragged by user: a is physically pushed out by the FULL overlap
+            a.x -= nx * overlap;
+            a.y -= ny * overlap;
+            a.vx -= nx * Math.max(1.2, overlap * 0.35);
+            a.vy -= ny * Math.max(1.2, overlap * 0.35);
+            if(a.type === 'cluster'){
+              a.anchorX = a.x; a.anchorY = a.y;
+              a.ang = Math.atan2(a.y - core.y, a.x - core.x);
+              a.orbitDist = Math.hypot(a.x - core.x, a.y - core.y);
+            }
+          } else if(!a.dragging && !b.dragging){
+            // Both free: split overlap inversely by mass
+            const mA = a.mass || 1, mB = b.mass || 1;
+            const ratioA = mB / (mA + mB);
+            const ratioB = mA / (mA + mB);
+
+            a.x -= nx * overlap * ratioA;
+            a.y -= ny * overlap * ratioA;
+            b.x += nx * overlap * ratioB;
+            b.y += ny * overlap * ratioB;
+
+            const force = Math.max(0.6, overlap * 0.25);
+            a.vx -= nx * force * ratioA;
+            a.vy -= ny * force * ratioA;
+            b.vx += nx * force * ratioB;
+            b.vy += ny * force * ratioB;
+
+            if(a.type === 'cluster'){
+              a.anchorX = a.x; a.anchorY = a.y;
+              a.ang = Math.atan2(a.y - core.y, a.x - core.x);
+              a.orbitDist = Math.hypot(a.x - core.x, a.y - core.y);
+            }
+            if(b.type === 'cluster'){
+              b.anchorX = b.x; b.anchorY = b.y;
+              b.ang = Math.atan2(b.y - core.y, b.x - core.x);
+              b.orbitDist = Math.hypot(b.x - core.x, b.y - core.y);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 3. Integrate + viscous damping + natural rest settling
+  NODES.forEach(n=>{
+    if(n.dragging || n.type==='core'){ return; }
+    const dmp = n.type==='cluster' ? DAMP_CL : DAMP_SK;
+    n.vx *= dmp; n.vy *= dmp;
+
+    // Settling threshold: if speed is below threshold, stop to peaceful rest
+    if(Math.abs(n.vx) < 0.004) n.vx = 0;
+    if(Math.abs(n.vy) < 0.004) n.vy = 0;
+
+    clampVel(n);
+    n.x += n.vx; n.y += n.vy;
+  });
+}
+
+// ══════════════════════════════════════════
+// PARTICLE FLOW (active skill animation)
+// ══════════════════════════════════════════
+const ACTIVE = new Set();
+const TIMERS = {};
+const FLOWS  = {}; // skillId → {segments:[{ax,ay,bx,by}], particles[], col, fading}
+
+function spawnFlow(skillId, useCount){
+  // Find skill node — must exist and have a valid parent (cluster)
+  const n = NODES.find(x=>x.id===skillId);
+  if(!n){ setTimeout(()=>spawnFlow(skillId, useCount),200); return; }
+  const p = n.parentIdx!==undefined ? NODES[n.parentIdx] : null;
+  if(!p) return;
+  const core = NODES.find(x=>x.type==='core');
+  const c = col(n.category||'web');
+
+  // Scale particles and speed based on use_count
+  const uc = useCount || 1;
+  const intensity = uc <= 5 ? 0.4 : uc <= 20 ? 0.7 : 1.0;
+  const count = Math.round(6 + intensity * 10);   // 6–16 particles
+  const baseSpd = 0.005 + intensity * 0.004;       // faster for high-use skills
+
+  FLOWS[skillId] = {
+    col: c, fading: false,
+    core, cluster: p, skill: n,
+    particles: Array.from({length: count}, (_,i)=>({
+      t: i/count, spd: baseSpd + Math.random()*0.003,
+      sz: 1.5 + intensity*1.2 + Math.random()*0.8, op: 0.8 + intensity*0.1
+    }))
+  };
+}
+function stopFlow(skillId){
+  if(FLOWS[skillId]) FLOWS[skillId].fading = true;
+  setTimeout(()=>delete FLOWS[skillId], 900);
+}
+
+// ══════════════════════════════════════════
+// BEZIER HELPERS
+// ══════════════════════════════════════════
+function bezPt(ax,ay,bx,by, t){
+  const cx1=ax+(bx-ax)*.5, cy1=ay;
+  const cx2=ax+(bx-ax)*.5, cy2=by;
+  const u=1-t;
+  return [
+    u*u*u*ax+3*u*u*t*cx1+3*u*t*t*cx2+t*t*t*bx,
+    u*u*u*ay+3*u*u*t*cy1+3*u*t*t*cy2+t*t*t*by
+  ];
+}
+function bezPath(ctx, ax,ay,bx,by){
+  const cx = ax+(bx-ax)*.5;
+  ctx.moveTo(ax,ay);
+  ctx.bezierCurveTo(cx,ay, cx,by, bx,by);
+}
+
+// Draw wavy organic axon for cluster→skill links (matching hand-drawn sketch)
+function drawWavyAxon(ctx, ax, ay, bx, by, isActive, strokeCol){
+  const dx = bx - ax, dy = by - ay;
+  const dist = Math.hypot(dx, dy) || 1;
+  const nx = dx / dist, ny = dy / dist;
+  const px = -ny, py = nx;
+  const waves = Math.max(2.5, Math.min(4.5, dist / 35));
+  const amp = isActive ? 5.5 : 3.8;
+  const steps = 22;
+
+  ctx.beginPath();
+  ctx.moveTo(ax, ay);
+  for(let s = 1; s <= steps; s++){
+    const t = s / steps;
+    const taper = Math.sin(t * Math.PI);
+    const wobble = Math.sin(t * Math.PI * 2 * waves) * amp * taper;
+    ctx.lineTo(ax + dx * t + px * wobble, ay + dy * t + py * wobble);
+  }
+  ctx.strokeStyle = strokeCol;
+  ctx.lineWidth = isActive ? 2.4 : 1.3;
+  if(isActive){
+    ctx.shadowColor = strokeCol;
+    ctx.shadowBlur = 10;
+  }
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function drawRound(ctx, x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+}
+
+function renderFrame(){
+  CTX.clearRect(0,0,W,H);
+  CTX.save();
+  CTX.translate(W/2, H/2);
+  CTX.scale(camZ, camZ);
+  CTX.translate(-camX, -camY);
+
+  const anyActive = ACTIVE.size > 0;
+
+  // Compute active cluster IDs (only clusters that contain an actively firing skill)
+  const activeClusterIds = new Set();
+  ACTIVE.forEach(actId => {
+    const node = NODES.find(x => x.id === actId);
+    if(node){
+      if(node.type === 'cluster') activeClusterIds.add(node.id);
+      else if(node.category) activeClusterIds.add(node.category);
+    }
+  });
+
+  // ── Draw links as axons/dendrites with layout matching the diagram ──
+  LINKS.forEach(lk=>{
+    const a=NODES[lk.a], b=NODES[lk.b];
+    if(!a || !b) return;
+    const isCoreLink = a.type==='core' || b.type==='core';
+    const isClusterToSkill = (a.type==='cluster' && b.type==='skill') || (b.type==='cluster' && a.type==='skill');
+    const c = col(b.type==='skill'?b.category:(a.category||'core'));
+
+    CTX.save();
+
+    if(isCoreLink){
+      // Trunk line from Core to Cluster
+      const cl = a.type==='core' ? b : a;
+      const isTrunkActive = cl && activeClusterIds.has(cl.id);
+      CTX.strokeStyle = isTrunkActive ? col(cl.category||cl.id) : 'rgba(255, 255, 255, 0.14)';
+      CTX.lineWidth = isTrunkActive ? 2.6 : 1.0;
+      if(isTrunkActive){
+        CTX.shadowColor = col(cl.category||cl.id);
+        CTX.shadowBlur = 10;
+      }
+      CTX.beginPath(); bezPath(CTX, a.x, a.y, b.x, b.y); CTX.stroke();
+      CTX.shadowBlur = 0;
+    } else if(isClusterToSkill){
+      // Wavy axon from Cluster to Skill — retains category color at all times!
+      const sk = a.type==='skill' ? a : b;
+      const isSkActive = sk && ACTIVE.has(sk.id);
+      const cableCol = isSkActive ? c : hexAlpha(c, 0.38);
+      drawWavyAxon(CTX, a.x, a.y, b.x, b.y, isSkActive, cableCol);
+    } else {
+      // Skill → Subskill clean branch
+      const parentSk = a.type==='skill' ? a : b;
+      const isBranchActive = parentSk && ACTIVE.has(parentSk.id);
+      CTX.strokeStyle = hexAlpha(c, isBranchActive ? 0.85 : 0.28);
+      CTX.lineWidth = isBranchActive ? 1.4 : 0.8;
+      CTX.beginPath(); CTX.moveTo(a.x, a.y); CTX.lineTo(b.x, b.y); CTX.stroke();
+    }
+
+    CTX.restore();
+  });
+
+  // ── Draw synaptic signal flows (action potential / electric synapse) ──
+  Object.entries(FLOWS).forEach(([sid, sys])=>{
+    const {core, cluster, skill, col: c, fading: fade} = sys;
+    if(!core||!cluster||!skill) return;
+
+    const rgb=(h)=>{
+      const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);
+      return`${r},${g},${b}`;
+    };
+    const R=rgb(c);
+
+    // Helper: get point along 2-segment path (t=0..1)
+    // t 0..0.5 → core→cluster, t 0.5..1 → cluster→skill
+    function pathPt(t){
+      if(t<=0.5){
+        const tt=t*2;
+        return bezPt(core.x,core.y,cluster.x,cluster.y,tt);
+      } else {
+        const tt=(t-0.5)*2;
+        return bezPt(cluster.x,cluster.y,skill.x,skill.y,tt);
+      }
+    }
+
+    sys.particles.forEach(pt=>{
+      if(fade&&pt.t>=1)return;
+      pt.t+=pt.spd;
+      if(pt.t>1){pt.t=fade?9:0; return;}
+
+      // ── Lightning bolt: noisy trail segments ──
+      const steps=10;
+      const jitter=2.5;
+      const path=[];
+      for(let i=0;i<=steps;i++){
+        const ti=pt.t-(.06*(1-i/steps));
+        if(ti<0||ti>1){path.push(null);continue;}
+        const [px2,py2]=pathPt(Math.max(0,Math.min(1,ti)));
+        // Tangent for perpendicular jitter
+        const tiN=Math.min(1,ti+.008);
+        const [px3,py3]=pathPt(tiN);
+        const tdx=px3-px2, tdy=py3-py2;
+        const tlen=Math.hypot(tdx,tdy)||1;
+        const nx=-tdy/tlen, ny=tdx/tlen;
+        const j=(Math.sin(ti*60+pt.t*25+i*1.5)*jitter + Math.sin(ti*110+i*2.1)*jitter*.4)*(fade?.4:1);
+        path.push([px2+nx*j, py2+ny*j]);
+      }
+
+      // Draw trail
+      for(let i=1;i<path.length;i++){
+        if(!path[i]||!path[i-1])continue;
+        const al=(i/path.length)*pt.op*(fade?.15:1);
+        const pw=pt.sz*(i/path.length)*.8;
+        CTX.beginPath();
+        CTX.moveTo(path[i-1][0],path[i-1][1]);
+        CTX.lineTo(path[i][0],path[i][1]);
+        CTX.strokeStyle=`rgba(${R},${al.toFixed(2)})`;
+        CTX.lineWidth=pw;
+        CTX.shadowColor=c; CTX.shadowBlur=pw*5;
+        CTX.stroke();
+      }
+
+      // ── Clean signal packet head ──
+      const[hx,hy]=pathPt(pt.t);
+      CTX.beginPath(); CTX.arc(hx,hy,pt.sz*1.4,0,Math.PI*2);
+      CTX.fillStyle=hexAlpha(c, 0.35 * (fade?0.2:1));
+      CTX.fill();
+      CTX.beginPath(); CTX.arc(hx,hy,pt.sz*0.8,0,Math.PI*2);
+      CTX.fillStyle=`rgba(255,255,255,${(pt.op*0.95*(fade?0.2:1)).toFixed(2)})`;
+      CTX.fill();
+    });
+  });
+
+  // ── Draw nodes (Anti-Slop Clean Technical Architecture) ──
+  NODES.forEach(n=>{
+    const {x,y,r,type,label,category,active} = n;
+    const c = col(type==='core'?'core':category);
+
+    if(type==='core'){
+      const anyActive = ACTIVE.size > 0;
+      const pulseTime = performance.now();
+
+      // Outer precision reticle ring
+      CTX.beginPath(); CTX.arc(x,y,r+14,0,Math.PI*2);
+      CTX.strokeStyle='rgba(255,255,255,0.08)'; CTX.lineWidth=1;
+      CTX.setLineDash([3,6]); CTX.stroke(); CTX.setLineDash([]);
+
+      // Animasi Berdenyut di Core saat ada skill aktif
+      if(anyActive){
+        const ripC1 = (pulseTime * 0.0016) % 1.0;
+        const ripC2 = (pulseTime * 0.0016 + 0.5) % 1.0;
+        CTX.beginPath(); CTX.arc(x,y,r + 6 + ripC1 * 24,0,Math.PI*2);
+        CTX.strokeStyle=`rgba(56,189,248,${((1 - ripC1)*0.75).toFixed(2)})`;
+        CTX.lineWidth=1.8; CTX.stroke();
+
+        CTX.beginPath(); CTX.arc(x,y,r + 6 + ripC2 * 24,0,Math.PI*2);
+        CTX.strokeStyle=`rgba(56,189,248,${((1 - ripC2)*0.75).toFixed(2)})`;
+        CTX.lineWidth=1.8; CTX.stroke();
+      }
+
+      // Solid architectural core body
+      CTX.beginPath(); CTX.arc(x,y,r,0,Math.PI*2);
+      CTX.fillStyle='#0f172a'; CTX.fill();
+      CTX.strokeStyle=anyActive?'#38bdf8':'#e2e8f0'; CTX.lineWidth=2;
+      CTX.stroke();
+
+      // Inner precision ring
+      CTX.beginPath(); CTX.arc(x,y,r-8,0,Math.PI*2);
+      CTX.strokeStyle='rgba(255,255,255,0.12)'; CTX.lineWidth=1; CTX.stroke();
+
+      // Sharp, authoritative typography
+      CTX.fillStyle='#f8fafc'; CTX.font='700 11px JetBrains Mono';
+      CTX.textAlign='center'; CTX.textBaseline='middle';
+      CTX.fillText('HERMES',x,y-6);
+      CTX.fillStyle='#94a3b8'; CTX.font='600 7px JetBrains Mono';
+      CTX.fillText('AI CORE',x,y+8);
+    }
+
+    else if(type==='cluster'){
+      const isClActive = activeClusterIds.has(n.id);
+      const pulseTime = performance.now();
+
+      // ── ANIMASI BERDENYUT DI NODE INDUK CLUSTER YANG DILEWATI ──
+      if(isClActive){
+        const ripCl1 = (pulseTime * 0.0018 + (n.seed || 0) * 0.3) % 1.0;
+        const ripCl2 = (pulseTime * 0.0018 + (n.seed || 0) * 0.3 + 0.5) % 1.0;
+
+        CTX.beginPath(); CTX.arc(x,y,r + ripCl1 * 24,0,Math.PI*2);
+        CTX.strokeStyle=hexAlpha(c, (1 - ripCl1) * 0.85);
+        CTX.lineWidth=2.0; CTX.stroke();
+
+        CTX.beginPath(); CTX.arc(x,y,r + ripCl2 * 24,0,Math.PI*2);
+        CTX.strokeStyle=hexAlpha(c, (1 - ripCl2) * 0.85);
+        CTX.lineWidth=2.0; CTX.stroke();
+      } else {
+        // Normal subtle static outer ring
+        CTX.beginPath(); CTX.arc(x,y,r+5,0,Math.PI*2);
+        CTX.strokeStyle=hexAlpha(c, 0.20); CTX.lineWidth=0.8;
+        CTX.stroke();
+      }
+
+      // Solid body — WARNA TETAP ADA DAN TIDAK BERUBAH!
+      CTX.beginPath(); CTX.arc(x,y,r,0,Math.PI*2);
+      CTX.fillStyle='#0f172a'; CTX.fill();
+      CTX.strokeStyle=c;
+      CTX.lineWidth = isClActive ? 2.6 : 1.6;
+      if(isClActive){
+        CTX.shadowColor=c; CTX.shadowBlur=14;
+      }
+      CTX.stroke();
+      CTX.shadowBlur=0;
+
+      // Label — clean text wrap with bright clear text
+      const words=label.split(' ');
+      const l1=words.slice(0,Math.ceil(words.length/2)).join(' ');
+      const l2=words.slice(Math.ceil(words.length/2)).join(' ');
+      CTX.fillStyle='#f8fafc';
+      CTX.font=`700 ${Math.max(7.5,Math.min(9,r*.32))}px JetBrains Mono`;
+      CTX.textAlign='center'; CTX.textBaseline='middle';
+      if(l2){ CTX.fillText(l1.slice(0,14),x,y-6); CTX.fillText(l2.slice(0,14),x,y+6); }
+      else { CTX.fillText(l1.slice(0,14),x,y); }
+    }
+
+    else if(type==='skill'){
+      const isAct=ACTIVE.has(n.id);
+      const isHov = hoveredNode && (hoveredNode.id === n.id || (hoveredNode.parentIdx !== undefined && hoveredNode.parentIdx === idx[n.id]));
+      const isParentHov = hoveredNode && (hoveredNode.type === 'cluster' && hoveredNode.id === n.category);
+      const rSoma = r + (isAct?2.5:0);
+      const pulseTime = performance.now();
+
+      // ── ANIMASI BERDENYUT DI NODE SKILL YANG SEDANG DIGUNAKAN ──
+      if(isAct){
+        const ripSk1 = (pulseTime * 0.0022 + (n.seed || 0) * 0.5) % 1.0;
+        const ripSk2 = (pulseTime * 0.0022 + (n.seed || 0) * 0.5 + 0.5) % 1.0;
+
+        CTX.beginPath(); CTX.arc(x,y,rSoma + ripSk1 * 18,0,Math.PI*2);
+        CTX.strokeStyle=hexAlpha(c, (1 - ripSk1) * 0.90);
+        CTX.lineWidth=2.0; CTX.stroke();
+
+        CTX.beginPath(); CTX.arc(x,y,rSoma + ripSk2 * 18,0,Math.PI*2);
+        CTX.strokeStyle=hexAlpha(c, (1 - ripSk2) * 0.90);
+        CTX.lineWidth=2.0; CTX.stroke();
+      } else if(isHov){
+        CTX.beginPath(); CTX.arc(x,y,rSoma+4,0,Math.PI*2);
+        CTX.strokeStyle='rgba(255,255,255,0.40)';
+        CTX.lineWidth=1.2; CTX.stroke();
+      }
+
+      // Solid body — WARNA TETAP ADA DAN TIDAK HILANG!
+      CTX.beginPath(); CTX.arc(x,y,rSoma,0,Math.PI*2);
+      CTX.fillStyle = isAct ? c : '#131c2e'; CTX.fill();
+      CTX.strokeStyle = isAct ? '#ffffff' : hexAlpha(c, (isHov || isParentHov) ? 0.95 : 0.65);
+      CTX.lineWidth = isAct ? 2.2 : 1.2;
+      if(isAct){
+        CTX.shadowColor=c; CTX.shadowBlur=16;
+      }
+      CTX.stroke();
+      CTX.shadowBlur=0;
+
+      // Centered number badge — ALWAYS READABLE
+      CTX.fillStyle = isAct ? '#ffffff' : (isHov ? '#f8fafc' : '#cbd5e1');
+      CTX.font=`700 ${Math.floor(rSoma*.42)}px JetBrains Mono`;
+      CTX.textAlign='center'; CTX.textBaseline='middle';
+      CTX.fillText(n._n||'',x,y);
+
+      // Show label if active, hovered, parent hovered, or zoomed in
+      if(isAct || isHov || isParentHov || camZ > 0.85){
+        const fullLabel = label || n.id;
+        if(isHov){
+          // Tooltip pill with full un-truncated name on hover
+          CTX.font = '600 8.5px JetBrains Mono';
+          const tw = CTX.measureText(fullLabel).width;
+          const tx = (x<CX) ? (x - rSoma - 9 - tw) : (x + rSoma + 9);
+          CTX.fillStyle = 'rgba(15, 23, 42, 0.94)';
+          CTX.strokeStyle = c;
+          CTX.lineWidth = 1;
+          CTX.beginPath();
+          CTX.roundRect(tx - 4, y - 8, tw + 8, 16, 4);
+          CTX.fill();
+          CTX.stroke();
+          CTX.fillStyle = '#ffffff';
+          CTX.textAlign = 'left';
+          CTX.textBaseline = 'middle';
+          CTX.fillText(fullLabel, tx, y);
+        } else {
+          const chip = fullLabel.length>14 ? fullLabel.slice(0,14)+'…' : fullLabel;
+          CTX.fillStyle = isAct ? '#ffffff' : (isParentHov ? '#e2e8f0' : '#94a3b8');
+          CTX.font = `${isAct ? '700' : '500'} 8px JetBrains Mono`;
+          CTX.textAlign = (x<CX) ? 'right' : 'left';
+          CTX.textBaseline = 'middle';
+          const stagY = ((parseInt(n._n||'0', 10) % 2 === 1) ? 2.5 : -2.5);
+          CTX.fillText(chip, (x<CX) ? (x-rSoma-7) : (x+rSoma+7), y + stagY);
+        }
+      }
+    }
+
+    else if(type==='subskill'){
+      const isAct=ACTIVE.has(n.id)||ACTIVE.has(n.parent);
+      const isHov = hoveredNode && (hoveredNode.id === n.id || hoveredNode.id === n.parent);
+      const c=col(category);
+      const subR = isAct ? 9.5 : 7.5;
+      const pulseTime = performance.now();
+
+      if(isAct){
+        const ripSub = (pulseTime * 0.0028 + (n.seed || 0) * 0.7) % 1.0;
+        CTX.beginPath(); CTX.arc(x,y,subR + ripSub * 10,0,Math.PI*2);
+        CTX.strokeStyle=hexAlpha(c, (1 - ripSub) * 0.85);
+        CTX.lineWidth=1.5; CTX.stroke();
+      }
+
+      // Clean micro terminal — ALWAYS RETAINS COLOR
+      CTX.beginPath(); CTX.arc(x,y,subR,0,Math.PI*2);
+      CTX.fillStyle='#0f172a'; CTX.fill();
+      CTX.strokeStyle=isAct ? '#ffffff' : hexAlpha(c, 0.50);
+      CTX.lineWidth=isAct ? 1.8 : 1.0;
+      CTX.stroke();
+
+      // Precision center dot — ALWAYS COLORFUL
+      CTX.beginPath(); CTX.arc(x,y,subR*0.35,0,Math.PI*2);
+      CTX.fillStyle=isAct?'#ffffff':c; CTX.fill();
+
+      // Show subskill label on hover or when zoomed in (prevents text overlap)
+      if(isHov || camZ > 1.35){
+        const fullLabel = label || n.id;
+        if(isHov){
+          CTX.font = '600 8px JetBrains Mono';
+          const tw = CTX.measureText(fullLabel).width;
+          const tx = (x<CX) ? (x - subR - 7 - tw) : (x + subR + 7);
+          CTX.fillStyle = 'rgba(15, 23, 42, 0.94)';
+          CTX.strokeStyle = c;
+          CTX.lineWidth = 1;
+          CTX.beginPath();
+          CTX.roundRect(tx - 4, y - 7, tw + 8, 14, 3);
+          CTX.fill();
+          CTX.stroke();
+          CTX.fillStyle = '#ffffff';
+          CTX.textAlign = 'left';
+          CTX.textBaseline = 'middle';
+          CTX.fillText(fullLabel, tx, y);
+        } else {
+          const chip = fullLabel.length>16 ? fullLabel.slice(0,15)+'…' : fullLabel;
+          CTX.fillStyle = isAct ? '#f8fafc' : '#64748b';
+          CTX.font = `${isAct ? '600' : '400'} 8px JetBrains Mono`;
+          CTX.textAlign = (x<CX) ? 'right' : 'left';
+          CTX.textBaseline = 'middle';
+          CTX.fillText(chip, (x<CX) ? (x-subR-6) : (x+subR+6), y);
+        }
+      }
+    }
+  });
+
+  CTX.restore();
+}
+
+// ══════════════════════════════════════════
+// MAIN LOOP
+// ══════════════════════════════════════════
+function loop(){
+  drawBG();
+  physicsTick();
+  renderFrame();
+  requestAnimationFrame(loop);
+}
+
+// ══════════════════════════════════════════
+// INTERACTION & CAMERA ANIMATION
+// ══════════════════════════════════════════
+let hoveredNode=null, dragNode=null, dragOffX=0, dragOffY=0;
+let panStart=null, panCamStart=null;
+let lastClick={x:0,y:0,t:0};
+let touchStartInfo=null;
+let touchDist0=0, touchZoom0=1;
+let _flyAnim=null;
+
+function flyTo(nodeId){
+  const n = NODES.find(x=>x.id===nodeId);
+  if(!n) return;
+  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim = null; }
+
+  const startX = camX, startY = camY, startZ = camZ;
+  const targetZ = n.type === 'cluster' ? 1.35 : (n.type === 'core' ? 1.1 : (n.type === 'subskill' ? 2.2 : 1.85));
+
+  const dist = Math.hypot(n.x - startX, n.y - startY);
+  const dur = Math.min(1050, Math.max(650, 500 + dist * 0.35));
+  const t0 = performance.now();
+
+  function step(now){
+    const elapsed = now - t0;
+    const progress = Math.min(elapsed / dur, 1);
+    const ease = progress < 0.5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    camX = startX + (n.x - startX) * ease;
+    camY = startY + (n.y - startY) * ease;
+    camZ = startZ + (targetZ - startZ) * ease;
+
+    if(progress < 1){
+      _flyAnim = requestAnimationFrame(step);
+    } else {
+      camX = n.x;
+      camY = n.y;
+      camZ = targetZ;
+      _flyAnim = null;
+    }
+  }
+  _flyAnim = requestAnimationFrame(step);
+}
+
+function hitTest(wx,wy){
+  // Reverse: subskills first (smaller), then skills, then clusters, then core
+  const order=[...NODES].reverse();
+  for(const n of order){
+    const d=Math.hypot(wx-n.x, wy-n.y);
+    const hitR = n.type==='subskill'?20:(n.type==='skill'?24:(n.type==='cluster'?30:40));
+    if(d < n.r+hitR) return n;
+  }
+  return null;
+}
+
+CV.addEventListener('mousedown',e=>{
+  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim=null; }
+  const[wx,wy]=sw(e.clientX,e.clientY);
+  const hit=hitTest(wx,wy);
+  if(hit){
+    dragNode=hit;
+    dragNode.dragging=true;
+    dragOffX=wx-hit.x; dragOffY=wy-hit.y;
+    CV.classList.add('dragging');
+  } else {
+    panStart={x:e.clientX,y:e.clientY};
+    panCamStart={x:camX,y:camY};
+  }
+});
+CV.addEventListener('mousemove',e=>{
+  const[wx,wy]=sw(e.clientX,e.clientY);
+  hoveredNode = hitTest(wx,wy);
+  CV.style.cursor = hoveredNode ? 'pointer' : (dragNode ? 'grabbing' : 'grab');
+
+  if(dragNode){
+    const targetX = wx-dragOffX;
+    const targetY = wy-dragOffY;
+    dragNode.vx = (targetX - dragNode.x) * 0.45;
+    dragNode.vy = (targetY - dragNode.y) * 0.45;
+    dragNode.x = targetX;
+    dragNode.y = targetY;
+  } else if(panStart){
+    camX=panCamStart.x-(e.clientX-panStart.x)/camZ;
+    camY=panCamStart.y-(e.clientY-panStart.y)/camZ;
+  }
+});
+CV.addEventListener('mouseleave', ()=>{ hoveredNode = null; });
+function onNodeDrop(n){
+  if(!n) return;
+  const core = NODES[0] || {x:0, y:0};
+  if(n.type === 'cluster'){
+    const dx = n.x - core.x, dy = n.y - core.y;
+    n.ang = Math.atan2(dy, dx);
+    n.orbitDist = Math.hypot(dx, dy) || 1;
+    n.anchorX = n.x;
+    n.anchorY = n.y;
+  } else if(n.type === 'skill' && n.parentIdx !== undefined){
+    const p = NODES[n.parentIdx];
+    if(p){
+      const pdx = p.x - core.x, pdy = p.y - core.y;
+      const p_ang = Math.atan2(pdy, pdx);
+      const sdx = n.x - p.x, sdy = n.y - p.y;
+      const s_ang = Math.atan2(sdy, sdx);
+      n.relAng = s_ang - p_ang;
+      n.baseDist = Math.hypot(sdx, sdy);
+      n.relDist = n.baseDist;
+    }
+  } else if(n.type === 'subskill' && n.parentIdx !== undefined){
+    const ps = NODES[n.parentIdx];
+    if(ps){
+      const p = (ps.parentIdx !== undefined) ? NODES[ps.parentIdx] : core;
+      const pdx = ps.x - p.x, pdy = ps.y - p.y;
+      const ps_ang = Math.atan2(pdy, pdx);
+      const subdx = n.x - ps.x, subdy = n.y - ps.y;
+      const sub_ang = Math.atan2(subdy, subdx);
+      n.relAng = sub_ang - ps_ang;
+      n.baseDist = Math.hypot(subdx, subdy);
+      n.relDist = n.baseDist;
+    }
+  }
+}
+
+CV.addEventListener('mouseup',e=>{
+  if(dragNode){
+    onNodeDrop(dragNode);
+    dragNode.dragging=false;
+    dragNode=null;
+    CV.classList.remove('dragging');
+  }
+  panStart=null;
+});
+CV.addEventListener('mouseleave',e=>{
+  if(dragNode){
+    onNodeDrop(dragNode);
+    dragNode.dragging=false;
+    dragNode=null;
+  }
+  panStart=null; CV.classList.remove('dragging');
+});
+
+// Click (not drag)
+CV.addEventListener('click',e=>{
+  const[wx,wy]=sw(e.clientX,e.clientY);
+  const hit=hitTest(wx,wy);
+  if(hit) showDetail(hit);
+  else document.getElementById('detail').style.display='none';
+});
+
+// Touch
+CV.addEventListener('touchstart',e=>{
+  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim=null; }
+  if(e.touches.length === 2){
+    dragNode = null;
+    panStart = null;
+    touchDist0 = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    touchZoom0 = camZ;
+    e.preventDefault();
+    return;
+  }
+  const t=e.touches[0];
+  const[wx,wy]=sw(t.clientX,t.clientY);
+  const hit=hitTest(wx,wy);
+  touchStartInfo = { x: t.clientX, y: t.clientY, t: performance.now(), hit };
+  if(hit){
+    dragNode=hit; dragNode.dragging=true; dragOffX=wx-hit.x; dragOffY=wy-hit.y;
+    CV.classList.add('dragging');
+  } else {
+    panStart={x:t.clientX,y:t.clientY}; panCamStart={x:camX,y:camY};
+  }
+  e.preventDefault();
+},{passive:false});
+
+CV.addEventListener('touchmove',e=>{
+  if(e.touches.length === 2 && touchDist0 > 0){
+    const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    camZ = Math.min(3, Math.max(0.08, touchZoom0 * (dist / touchDist0)));
+    e.preventDefault();
+    return;
+  }
+  const t=e.touches[0];
+  if(dragNode){
+    const[wx,wy]=sw(t.clientX,t.clientY);
+    const targetX = wx-dragOffX;
+    const targetY = wy-dragOffY;
+    dragNode.vx = (targetX - dragNode.x) * 0.45;
+    dragNode.vy = (targetY - dragNode.y) * 0.45;
+    dragNode.x = targetX;
+    dragNode.y = targetY;
+  } else if(panStart){
+    camX=panCamStart.x-(t.clientX-panStart.x)/camZ;
+    camY=panCamStart.y-(t.clientY-panStart.y)/camZ;
+  }
+  e.preventDefault();
+},{passive:false});
+
+CV.addEventListener('touchend',e=>{
+  if(e.touches.length < 2) touchDist0 = 0;
+  if(touchStartInfo){
+    const dt = performance.now() - touchStartInfo.t;
+    const t = e.changedTouches ? e.changedTouches[0] : null;
+    const dx = t ? Math.abs(t.clientX - touchStartInfo.x) : 0;
+    const dy = t ? Math.abs(t.clientY - touchStartInfo.y) : 0;
+    if(dt < 350 && dx < 12 && dy < 12){
+      if(touchStartInfo.hit) showDetail(touchStartInfo.hit);
+      else document.getElementById('detail').style.display='none';
+    }
+    touchStartInfo = null;
+  }
+  if(dragNode){
+    onNodeDrop(dragNode);
+    dragNode.dragging=false;
+    dragNode=null;
+    CV.classList.remove('dragging');
+  }
+  panStart=null;
+});
+
+// Zoom
+CV.addEventListener('wheel',e=>{
+  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim=null; }
+  e.preventDefault();
+  const factor=e.deltaY<0?1.1:0.91;
+  const[wx,wy]=sw(e.clientX,e.clientY);
+  camZ=Math.min(3,Math.max(0.08,camZ*factor));
+  // Zoom toward mouse
+  const[wx2,wy2]=sw(e.clientX,e.clientY);
+  camX+=wx-wx2; camY+=wy-wy2;
+},{passive:false});
+
+// ══════════════════════════════════════════
+// UI
+// ══════════════════════════════════════════
+function showDetail(n){
+  const c=col(n.type==='core'?'core':n.category);
+  const badge=document.getElementById('dbadge');
+  badge.textContent=n.type.toUpperCase();
+  badge.style.cssText=`color:${c};border:1px solid ${c}44;background:${c}22;display:inline-block;margin-bottom:7px;padding:2px 9px;border-radius:999px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase`;
+  document.getElementById('dtitle').textContent=n.label;
+  document.getElementById('ddesc').textContent=n.desc||'—';
+  document.getElementById('dtype').textContent=n.type;
+  document.getElementById('dcat').textContent=n.category||'—';
+  const dprow = document.getElementById('dprow');
+  if(n.parent){
+    dprow.style.display = 'flex';
+    document.getElementById('dpar').textContent = n.parent;
+  } else {
+    dprow.style.display = 'none';
+  }
+  const p=document.getElementById('detail');
+  p.style.display='block'; p.style.borderColor=c+'33';
+}
+
+function activateSkill(name, useCount){
+  ACTIVE.add(name);
+  const n=NODES.find(x=>x.id===name);
+  const c=n?col(n.category):'#6366f1';
+  dbgLog(`activateSkill(${name})<br>node found: ${!!n}<br>NODES.length: ${NODES.length}<br>ACTIVE: [${[...ACTIVE].join(',')}]`);
+  spawnFlow(name, useCount);
+  const ix=document.getElementById(`ix-${name}`);
+  if(ix) ix.classList.add('lit');
+  document.getElementById('s-st').textContent='FIRING';
+  document.getElementById('s-st').style.color=c;
+  document.getElementById('tval').textContent=[...ACTIVE].map(s=>s.toUpperCase()).join(' • ');
+  document.getElementById('tdot').classList.add('on');
+  document.getElementById('toast').classList.add('show');
+  // No client-side auto-deactivate timer — polling handles it
+}
+function deactivateSkill(name){
+  ACTIVE.delete(name);
+  if(TIMERS[name]){clearTimeout(TIMERS[name]);delete TIMERS[name];}
+  stopFlow(name);
+  const ix=document.getElementById(`ix-${name}`);
+  if(ix) ix.classList.remove('lit');
+  if(ACTIVE.size===0){
+    document.getElementById('s-st').textContent='IDLE';
+    document.getElementById('s-st').style.color='#38d9d4';
+    document.getElementById('tdot').classList.remove('on');
+    document.getElementById('toast').classList.remove('show');
+  } else {
+    document.getElementById('tval').textContent=[...ACTIVE].map(s=>s.toUpperCase()).join(' • ');
+  }
+}
+
+// ══════════════════════════════════════════
+// ── DEBUG OVERLAY (hidden by default) ──
+const _dbgOverlay = document.createElement('div');
+_dbgOverlay.id='dbg-overlay';
+_dbgOverlay.style.cssText='position:fixed;top:60px;left:10px;background:rgba(0,0,0,.85);color:#0f0;font:11px monospace;padding:8px 12px;border-radius:6px;z-index:9999;max-width:280px;pointer-events:none;display:none;';
+document.body.appendChild(_dbgOverlay);
+function dbgLog(msg){ _dbgOverlay.innerHTML = msg; }
+
+// SSE (primary) + Polling fallback (works on mobile)
+// ══════════════════════════════════════════
+let _lastPolled = new Set();
+let _lastSkillCount = 0;
+let _graphInitialized = false;
+
+function pollActive(){
+  fetch('/api/active?_t=' + Date.now()).then(r=>r.json()).then(d=>{
+    const cur = new Set(d.skills||[]);
+    const infoMap = {};
+    (d.skills_info||[]).forEach(s=>{ infoMap[s.name]=s.use_count; });
+    dbgLog(`POLL OK<br>active: [${[...cur].join(', ')||'none'}]<br>NODES: ${typeof NODES!=='undefined'?NODES.length:'?'}<br>ACTIVE: [${[...ACTIVE].join(', ')||'none'}]`);
+
+    // Auto-detect new skills added on server in real time!
+    if (d.total_skills && _lastSkillCount > 0 && d.total_skills !== _lastSkillCount) {
+      fetch('/api/graph?_t=' + Date.now()).then(r=>r.json()).then(data=>{
+        buildGraph(data, true);
+      }).catch(_=>{});
+    }
+
+    // Activate new ones with use_count
+    cur.forEach(s=>{ if(!_lastPolled.has(s)) activateSkill(s, infoMap[s]||1); });
+    // Deactivate removed ones
+    _lastPolled.forEach(s=>{ if(!cur.has(s)) deactivateSkill(s); });
+    _lastPolled = cur;
+  }).catch(e=>{ dbgLog(`POLL ERR: ${e}`); });
+}
+
+// SSE (also try, as bonus)
+(function connectSSE(){
+  try{
+    const es=new EventSource('/api/events');
+    es.onmessage=e=>{
+      try{
+        const d=JSON.parse(e.data);
+        if(d.type==='skill_activated'){
+          const ns=Array.isArray(d.skills)?d.skills:[d.skill].filter(Boolean);
+          ns.forEach(activateSkill);
+        } else if(d.type==='skill_deactivated'){
+          if(d.skill) deactivateSkill(d.skill);
+          else [...ACTIVE].forEach(deactivateSkill);
+        }
+      }catch(_){}
+    };
+    es.onerror=()=>setTimeout(connectSSE,5000);
+  }catch(_){}
+})();
+
+// ══════════════════════════════════════════
+// LOAD + BUILD GRAPH
+// ══════════════════════════════════════════
+function buildGraph(data, isLiveUpdate){
+  gData=data;
+  const nm={};
+  data.nodes.forEach(n=>nm[n.id]=n);
+
+  // Node sizes
+  const R_CORE=46, R_CLUSTER=28, R_SKILL=15, R_SUB=10;
+
+  const core=data.nodes.find(n=>n.type==='core');
+  const clusters=data.nodes.filter(n=>n.type==='cluster' && !n.id.startsWith('.'));
+  const skills=data.nodes.filter(n=>n.type==='skill' && !n.id.startsWith('.') && (!n.category || !n.category.startsWith('.')));
+  const subskills=data.nodes.filter(n=>n.type==='subskill' && !n.id.startsWith('.'))||[];
+
+  // Keep existing node state if live update
+  const oldMap=new Map();
+  NODES.forEach(n=>oldMap.set(n.id, n));
+
+  const newNodes=[];
+  const idx={};
+
+  // 1. Core (positioned on the right side)
+  const oldCore=oldMap.get(core.id);
+  const coreNode=oldCore?{...oldCore,...core, x:CX, y:CY, anchorX:CX, anchorY:CY, mass:Infinity}:{
+    ...core, x:CX,y:CY, anchorX:CX, anchorY:CY, vx:0,vy:0, r:R_CORE, mass:Infinity, dragging:false
+  };
+  newNodes.push(coreNode);
+  idx[core.id]=0;
+
+  // 2. Harmonious Cluster Ordering (Top-to-bottom strictly on the LEFT side of Hermes)
+  const CLUSTER_ORDER = [
+    'creative',
+    'web',
+    'autonomous-ai-agents',
+    'apple',
+    'software-development',
+    'devops',
+    'research',
+    'social-media',
+    'email',
+    'media',
+    'note-taking',
+    'productivity'
+  ];
+  clusters.sort((a,b)=>{
+    const ia = CLUSTER_ORDER.indexOf(a.id);
+    const ib = CLUSTER_ORDER.indexOf(b.id);
+    return (ia >= 0 ? ia : 99) - (ib >= 0 ? ib : 99);
+  });
+
+  // Calculate proportional angular budget for each cluster based on its skills & subskills
+  const weights = {};
+  let totalWeight = 0;
+  clusters.forEach(cl=>{
+    const sks = skills.filter(s=>s.category===cl.id);
+    const subs = subskills.filter(s=>s.category===cl.id);
+    const w = 3.0 + sks.length * 1.0 + subs.length * 0.20;
+    weights[cl.id] = w;
+    totalWeight += w;
+  });
+
+  // Sweep strictly along the LEFT semicircle (244° down to 116°, cos(θ) < 0 always)
+  const START_DEG = 244.0;
+  const TOTAL_ARC_DEG = 128.0;
+  let curDeg = START_DEG;
+  const gapDeg = 1.4;
+
+  // Initial load / reload distance bounds (user dragging has NO bounds)
+  const MIN_INIT_ORBIT = 285;
+  const MAX_INIT_ORBIT = 430;
+
+  // Place clusters strictly on the LEFT side of Hermes
+  clusters.forEach((cl,i)=>{
+    const spanDeg = (weights[cl.id] / totalWeight) * TOTAL_ARC_DEG;
+    const midDeg = curDeg - spanDeg * 0.5;
+    curDeg -= spanDeg;
+
+    // Organic random angular jitter on fresh load
+    const angJitterDeg = isLiveUpdate ? 0 : (Math.random() - 0.5) * 5.0;
+    const c_ang = (midDeg + angJitterDeg) * Math.PI / 180;
+    const sectorSpan = spanDeg * Math.PI / 180;
+
+    // Organic randomized orbit distance bounded between [MIN_INIT_ORBIT, MAX_INIT_ORBIT] on fresh load
+    const randOrbit = MIN_INIT_ORBIT + Math.random() * (MAX_INIT_ORBIT - MIN_INIT_ORBIT);
+    const orbit = (oldMap.get(cl.id)?.orbitDist && isLiveUpdate) ? oldMap.get(cl.id).orbitDist : randOrbit;
+
+    const cx = CX + Math.cos(c_ang) * orbit;
+    const cy = CY + Math.sin(c_ang) * orbit;
+    const oldCl = oldMap.get(cl.id);
+    const ni = (oldCl && isLiveUpdate) ? {
+      ...oldCl, ...cl,
+      ang: oldCl.ang !== undefined ? oldCl.ang : c_ang,
+      orbitDist: oldCl.orbitDist !== undefined ? oldCl.orbitDist : orbit,
+      sectorSpan: sectorSpan,
+      r: R_CLUSTER, mass: 10.0
+    } : {
+      ...cl,
+      x: cx, y: cy,
+      anchorX: cx, anchorY: cy,
+      ang: c_ang, orbitDist: orbit,
+      sectorSpan: sectorSpan,
+      vx: 0, vy: 0,
+      r: R_CLUSTER, mass: 10.0,
+      dragging: false,
+      seed: (i+1)*37 + Math.random()*100
+    };
+    idx[cl.id] = newNodes.length;
+    newNodes.push(ni);
+  });
+
+  // 3. Skills — placed BEHIND their parent cluster with tiered radial expansion to the left
+  let si = 1;
+  const idxItems = [];
+  clusters.forEach(cl=>{
+    const clNode = newNodes[idx[cl.id]];
+    const c_ang = clNode.ang;
+    const sectorSpan = clNode.sectorSpan || ((weights[cl.id] / totalWeight) * (TOTAL_ARC_DEG * Math.PI / 180));
+    const usableSpread = Math.max(0.06, sectorSpan - (gapDeg * Math.PI / 180) * 2);
+
+    const cl_skills = skills.filter(s=>s.category===cl.id);
+    cl_skills.sort((a,b)=>{
+      const subA = subskills.filter(s=>s.parent===a.id).length;
+      const subB = subskills.filter(s=>s.parent===b.id).length;
+      return subB - subA;
+    });
+
+    const M = cl_skills.length;
+    const tiers = M > 10 ? 3 : (M > 4 ? 2 : 1);
+
+    cl_skills.forEach((sk, j)=>{
+      const frac = M > 1 ? (j - (M - 1) / 2) / ((M - 1) / 2) : 0;
+      const relAng = frac * (usableSpread * 0.48);
+      const sk_ang = c_ang + relAng;
+
+      const tier = j % tiers;
+      const distBehind = 75 + tier * 50; // tiered depth: 75px, 125px, 175px
+      const sx = clNode.x + Math.cos(sk_ang) * distBehind;
+      const sy = clNode.y + Math.sin(sk_ang) * distBehind;
+
+      const oldSk = oldMap.get(sk.id);
+      const ni = (oldSk && isLiveUpdate) ? {
+        ...oldSk, ...sk,
+        ang: sk_ang, relAng: relAng, relDist: distBehind, baseDist: distBehind,
+        parentIdx: idx[cl.id], r: R_SKILL, mass: 1.8
+      } : {
+        ...sk,
+        x: sx, y: sy,
+        ang: sk_ang, relAng: relAng, relDist: distBehind, baseDist: distBehind,
+        vx: 0, vy: 0,
+        r: R_SKILL, mass: 1.8,
+        parentIdx: idx[cl.id],
+        dragging: false,
+        _n: String(si).padStart(2,'0'),
+        seed: (j+1)*73 + idx[cl.id]*19
+      };
+
+      idxItems.push({id:sk.id, n:ni._n, col:col(sk.category), label:sk.label});
+      idx[sk.id] = newNodes.length;
+      newNodes.push(ni);
+      si++;
+    });
+  });
+
+  // 4. Subskills — placed clearly behind their parent skill
+  skills.forEach(sk=>{
+    const skNode = newNodes[idx[sk.id]];
+    if(!skNode) return;
+    const subs = subskills.filter(s=>s.parent===sk.id);
+    const sub_M = subs.length;
+    if(!sub_M) return;
+
+    const sub_spread = Math.min(0.12, sub_M * 0.02);
+    subs.forEach((sub, k)=>{
+      const sub_frac = sub_M > 1 ? (k - (sub_M - 1) / 2) / ((sub_M - 1) / 2) : 0;
+      const sub_relAng = sub_frac * (sub_spread * 0.5);
+      const sub_relDist = 38 + (k % 2) * 18;
+      const sub_ang = (skNode.ang || 0) + sub_relAng;
+      const sub_x = skNode.x + Math.cos(sub_ang) * sub_relDist;
+      const sub_y = skNode.y + Math.sin(sub_ang) * sub_relDist;
+
+      const oldSub = oldMap.get(sub.id);
+      const ni = (oldSub && isLiveUpdate) ? {
+        ...oldSub, ...sub,
+        relAng: sub_relAng, relDist: sub_relDist, baseDist: sub_relDist,
+        parentIdx: idx[sk.id], r: R_SUB, mass: 0.6
+      } : {
+        ...sub,
+        x: sub_x, y: sub_y,
+        relAng: sub_relAng, relDist: sub_relDist, baseDist: sub_relDist,
+        vx: 0, vy: 0,
+        r: R_SUB, mass: 0.6,
+        parentIdx: idx[sk.id],
+        dragging: false,
+        seed: (k+1)*91 + idx[sk.id]*13
+      };
+      idx[sub.id] = newNodes.length;
+      newNodes.push(ni);
+    });
+  });
+
+  // Update NODES array in-place
+  NODES.length=0;
+  newNodes.forEach(n=>NODES.push(n));
+
+  // Build LINKS array (index pairs)
+  LINKS.length=0;
+  data.links.forEach(lk=>{
+    const aid=lk.source?.id||lk.source;
+    const bid=lk.target?.id||lk.target;
+    if(idx[aid]!==undefined && idx[bid]!==undefined){
+      LINKS.push({a:idx[aid], b:idx[bid]});
+    }
+  });
+
+  // ── Grouped constellation index panel ─────────────────────────
+  const el = document.getElementById('idx-list');
+  el.innerHTML = '';
+  const countEl = document.getElementById('idx-total-count');
+  if(countEl) countEl.textContent = skills.length;
+
+  // Build clusterMap: clusterId -> { id, label, col, skills: [] }
+  const clusterMap = new Map();
+  clusters.forEach(cl=>{
+    clusterMap.set(cl.id, {
+      id: cl.id,
+      label: cl.label || cl.id.replace(/-/g, ' ').toUpperCase(),
+      col: col(cl.category || cl.id),
+      skills: []
+    });
+  });
+
+  // Group each skill into its parent cluster
+  skills.forEach(sk=>{
+    const cat = sk.category || 'web';
+    let bucket = clusterMap.get(cat);
+    if(!bucket){
+      for(const [k, v] of clusterMap.entries()){
+        if(k.toLowerCase() === cat.toLowerCase()){ bucket = v; break; }
+      }
+    }
+    if(!bucket && clusterMap.size > 0){
+      bucket = clusterMap.values().next().value;
+    }
+    if(bucket){
+      bucket.skills.push(sk);
+    }
+  });
+
+  // Render grouped accordion for each cluster
+  clusterMap.forEach((grp, clusterId)=>{
+    if(!grp.skills.length) return;
+    const group = document.createElement('div');
+    group.className = 'ic-group';
+
+    // Parent cluster header
+    const par = document.createElement('div');
+    par.className = 'ic-parent';
+    par.style.borderLeftColor = grp.col;
+    par.innerHTML = `
+      <span class="ic-parent-dot" style="background:${grp.col};box-shadow:0 0 6px ${grp.col}66"></span>
+      <span class="ic-parent-label">${grp.label}</span>
+      <span class="ic-parent-count">${grp.skills.length}</span>
+      <span class="ic-parent-arrow">▾</span>
+    `;
+
+    // Children list container
+    const children = document.createElement('div');
+    children.className = 'ic-children';
+
+    // Clicking cluster row: toggle accordion + smoothly fly to cluster node
+    par.addEventListener('click', ()=>{
+      par.classList.toggle('collapsed');
+      children.classList.toggle('collapsed');
+      flyTo(clusterId);
+      const clNode = NODES.find(x=>x.id===clusterId);
+      if(clNode) showDetail(clNode);
+    });
+
+    // Skill items
+    grp.skills.forEach(sk=>{
+      const skSubs = subskills.filter(s=>s.parent===sk.id);
+      const d = document.createElement('div');
+      d.className = 'ir' + (ACTIVE.has(sk.id) ? ' lit' : '');
+      d.id = `ix-${sk.id}`;
+      d.innerHTML = `
+        <span class="ir-dot" style="background:${grp.col}"></span>
+        <span class="ir-label">${sk.label || sk.id}</span>
+        ${skSubs.length ? `<span class="ir-sub-count">${skSubs.length}</span><span class="ir-arrow">▾</span>` : ''}
+      `;
+
+      let subWrap = null;
+      if(skSubs.length){
+        subWrap = document.createElement('div');
+        subWrap.className = 'ic-subskills';
+        skSubs.forEach(sub=>{
+          const srow = document.createElement('div');
+          srow.className = 'ir ir-sub' + (ACTIVE.has(sub.id) ? ' lit' : '');
+          srow.id = `ix-${sub.id}`;
+          srow.innerHTML = `
+            <span class="ir-sub-line">└─</span>
+            <span class="ir-dot" style="background:${grp.col};opacity:.8;width:3px;height:3px;"></span>
+            <span class="ir-label">${sub.label}</span>
+          `;
+          srow.addEventListener('click', e=>{
+            e.stopPropagation();
+            document.querySelectorAll('.ir.selected').forEach(x=>x.classList.remove('selected'));
+            srow.classList.add('selected');
+            flyTo(sub.id);
+            const subNode = NODES.find(x=>x.id===sub.id);
+            if(subNode) showDetail(subNode);
+          });
+          subWrap.appendChild(srow);
+        });
+      }
+
+      d.addEventListener('click', e=>{
+        e.stopPropagation();
+        if(subWrap){
+          subWrap.classList.toggle('collapsed');
+          d.querySelector('.ir-arrow')?.classList.toggle('collapsed');
+        }
+        document.querySelectorAll('.ir.selected').forEach(x=>x.classList.remove('selected'));
+        d.classList.add('selected');
+        flyTo(sk.id);
+        const skNode = NODES.find(x=>x.id===sk.id);
+        if(skNode) showDetail(skNode);
+      });
+
+      children.appendChild(d);
+      if(subWrap) children.appendChild(subWrap);
+    });
+
+    group.appendChild(par);
+    group.appendChild(children);
+    el.appendChild(group);
+  });
+
+  // UI Event Listeners for Index Toggle & Detail Close
+  const dclose = document.getElementById('dclose');
+  if(dclose && !dclose._bound){
+    dclose._bound = true;
+    dclose.addEventListener('click', e=>{
+      e.stopPropagation();
+      document.getElementById('detail').style.display = 'none';
+    });
+  }
+
+  const idxtoggle = document.getElementById('idx-toggle');
+  if(idxtoggle && !idxtoggle._bound){
+    idxtoggle._bound = true;
+    idxtoggle.addEventListener('click', ()=>{
+      document.getElementById('idx').classList.toggle('minimized');
+    });
+  }
+
+  document.getElementById('s-cl').textContent=clusters.length;
+  document.getElementById('s-sk').textContent=skills.length;
+  _lastSkillCount = skills.length;
+
+  if(!_graphInitialized){
+    _graphInitialized = true;
+    loop();
+    setInterval(pollActive, 1500);
+    setTimeout(pollActive, 500);
+  }
+}
+
+// Initial fetch with cache-busting
+fetch('/api/graph?_t=' + Date.now()).then(r=>r.json()).then(data=>{
+  buildGraph(data, false);
+});
+</script>
+</body>
+</html>
