@@ -134,6 +134,12 @@ cd /host_p
 git config --global --add safe.directory /host_p
 git config credential.helper "store --file=/host_p/9router-hermes/hermes-data/home/.git-credentials"
 
+cleanup() {{
+    chown 10000:10000 /host_p/9router-hermes/hermes-data/home/.git-credentials 2>/dev/null || true
+    chmod 600 /host_p/9router-hermes/hermes-data/home/.git-credentials 2>/dev/null || true
+}}
+trap cleanup EXIT INT TERM
+
 # Check status
 STATUS=$(git status --porcelain)
 if [ -z "$STATUS" ]; then
@@ -180,6 +186,9 @@ echo "PUSHED_OK"
 
 def run_backup_cycle(verbose=False):
     results = []
+
+    # Sync seed configs & ensure credentials ownership before starting git push
+    sync_hermes_config_to_host()
 
     # 1. Skills repo
     res_skills = backup_local_repo(SKILLS_DIR, "hermes-skills")
