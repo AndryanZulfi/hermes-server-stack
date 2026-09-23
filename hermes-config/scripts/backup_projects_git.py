@@ -101,6 +101,12 @@ if [ -d /host_p/9router-hermes/hermes-data/scripts ]; then
   cp -rf /host_p/9router-hermes/hermes-data/scripts/* /host_p/hermes-config/scripts/ 2>/dev/null || true
   rm -rf /host_p/hermes-config/scripts/whatsapp-bridge/node_modules 2>/dev/null || true
 fi
+
+# Sync daily reflections
+mkdir -p /host_p/hermes-config/refleksi
+if [ -d /host_p/9router-hermes/hermes-data/refleksi ]; then
+  cp -rf /host_p/9router-hermes/hermes-data/refleksi/* /host_p/hermes-config/refleksi/ 2>/dev/null || true
+fi
 """
     try:
         subprocess.run(

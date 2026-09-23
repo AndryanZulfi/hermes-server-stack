@@ -141,15 +141,15 @@
       "schedule_display": "0 13,20 * * *",
       "repeat": {
         "times": null,
-        "completed": 8
+        "completed": 9
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-20T05:25:01.065539+07:00",
-      "next_run_at": "2026-09-23T20:00:00+07:00",
-      "last_run_at": "2026-09-23T13:00:46.726746+07:00",
+      "next_run_at": "2026-09-24T13:00:00+07:00",
+      "last_run_at": "2026-09-23T20:00:33.854452+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -168,9 +168,9 @@
       "workdir": null,
       "fire_claim": null,
       "last_dispatch": {
-        "scheduled_at": "2026-09-23T13:00:00+07:00",
-        "dispatched_at": "2026-09-23T13:00:45.307993+07:00",
-        "lateness_seconds": 45.3,
+        "scheduled_at": "2026-09-23T20:00:00+07:00",
+        "dispatched_at": "2026-09-23T20:00:32.016687+07:00",
+        "lateness_seconds": 32.0,
         "kind": "on_time"
       }
     },
@@ -199,15 +199,15 @@
       "schedule_display": "45 20 * * 0,1,2,3,4,6",
       "repeat": {
         "times": null,
-        "completed": 2
+        "completed": 3
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-20T21:17:28.115655+07:00",
-      "next_run_at": "2026-09-23T20:45:00+07:00",
-      "last_run_at": "2026-09-22T20:45:45.997454+07:00",
+      "next_run_at": "2026-09-24T20:45:00+07:00",
+      "last_run_at": "2026-09-23T20:45:33.216117+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -225,13 +225,351 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-09-22T20:45:00+07:00",
-        "dispatched_at": "2026-09-22T20:45:45.305626+07:00",
-        "lateness_seconds": 45.3,
+        "scheduled_at": "2026-09-23T20:45:00+07:00",
+        "dispatched_at": "2026-09-23T20:45:32.016020+07:00",
+        "lateness_seconds": 32.0,
         "kind": "on_time"
       },
       "fire_claim": null
+    },
+    {
+      "id": "a2abeed5ebf0",
+      "name": "Backup Otomatis GitHub (Jam 2 Malam)",
+      "prompt": "Backup otomatis perubahan project & skills ke GitHub setiap jam 02:00 WIB",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "backup_projects_git.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 2 * * *",
+        "display": "0 2 * * *"
+      },
+      "schedule_display": "0 2 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-09-23T14:55:59.605353+07:00",
+      "next_run_at": "2026-09-25T02:00:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "224983305470121@lid",
+        "chat_name": "z",
+        "thread_id": null,
+        "user_id": "224983305470121@lid",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "last_dispatch": {
+        "scheduled_at": "2026-09-24T02:00:00+07:00",
+        "dispatched_at": "2026-09-24T02:00:32.022125+07:00",
+        "lateness_seconds": 32.0,
+        "kind": "on_time"
+      },
+      "fire_claim": {
+        "at": "2026-09-24T02:00:32.143373+07:00",
+        "by": "41c362afdf5b:28827:283105fb47da48b487c5ca7e0abf9f76"
+      }
+    },
+    {
+      "id": "76a9ff2c5f91",
+      "name": "Latihan Berpikir Kritis Harian",
+      "prompt": "Kamu adalah sparring partner berpikir kritis untuk Zulfi.\nTugasmu setiap hari pukul 04:45 WIB adalah mengirimkan 1 stimulus latihan berpikir kritis pagi hari yang tajam, membuka perspektif, dan memicu nalar.\n\nFormat output pesan WhatsApp (gunakan markdown WhatsApp: *bold*, _italic_, monospace; JANGAN gunakan tabel):\n\n1. *Kategori & Topik Hari Ini*:\n   Pilih topik secara variatif dan bergantian (cek riwayat sebelumnya agar tidak repetitif):\n   - Teknologi, AI, & Rekayasa Sistem\n   - Ekonomi, Finansial, Bisnis & Insentif Pasar\n   - Berita Terkini, Regulasi & Kebijakan Publik\n   - Sains, Statistik & Bias Riset (Korelasi vs Kausalitas)\n   - Psikologi Kognisi & Pengambilan Keputusan (Bias Kognitif, Second-order Effects)\n   - Kasus Dilema Strategis / Red Team Thinking\n\n2. *Skenario / Klaim Kasus (2-3 paragraf ringkas & konkret)*:\n   Paparkan sebuah pernyataan populer, kebijakan kontroversial, keputusan bisnis, atau fenomena nyata yang sepintas terdengar sangat benar atau masuk akal, padahal menyimpan asumsi rapuh atau trade-off berat.\n\n3. *Tantangan Nalar (2-3 pertanyaan kritis)*:\n   Tantang Zulfi untuk:\n   - Membedah apa asumsi tersembunyi di balik klaim/skenario tersebut.\n   - Menemukan trade-off atau dampak tingkat dua (second-order effect) yang sering diabaikan orang.\n   - Memberikan kondisi ekstrem di mana pendekatan/klaim itu justru jadi bumerang atau gagal total.\n\n4. *Call-to-Action*:\n   Ingatkan Zulfi untuk langsung membalas chat ini dengan analisismu kapan pun sempat pagi/siang ini untuk kita bedah dan diskusikan bersama.\n\nGaya bahasa: Lugas, segar, cerdas, tanpa basa-basi korporat. Pastikan deliverable langsung berupa pesan WhatsApp yang siap dibaca.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": "custom:9router",
+      "provider_snapshot": null,
+      "model_snapshot": "agy-combo",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": [
+        "self"
+      ],
+      "schedule": {
+        "kind": "cron",
+        "expr": "45 4 * * *",
+        "display": "45 4 * * *"
+      },
+      "schedule_display": "45 4 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-09-23T18:57:02.448049+07:00",
+      "next_run_at": "2026-09-24T04:45:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "224983305470121@lid",
+        "chat_name": "z",
+        "thread_id": null,
+        "user_id": "224983305470121@lid",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "attach_to_session": true
+    },
+    {
+      "id": "737b0fc2fea5",
+      "name": "Refleksi Malam Harian",
+      "prompt": "Kamu adalah partner refleksi malam untuk Zulfi.\nTugasmu setiap malam pukul 21:30 WIB adalah menyapa Zulfi secara hangat dan memicu refleksi harian (Framework 3-Point Delta).\n\nFormat pesan pembuka WhatsApp (singkat, santai, gunakan WhatsApp formatting):\n- Sapa Zulfi dan ingatkan waktu 3-5 menit untuk refleksi santai hari ini.\n- Tanyakan 3 poin kunci:\n  1. *Aha! Moment*: Pemahaman, mekanisme, atau sudut pandang baru apa yang didapat hari ini?\n  2. *The Friction*: Di mana titik macet/kekurangan hari ini dan apa kira-kira akar masalahnya?\n  3. *The Micro-Tweak*: Apa 1 hal konkret atau eksperimen kecil yang ingin diperbaiki besok?\n- Sampaikan bahwa Zulfi bisa membalas dengan teks santai atau Voice Note.\n\nInstruksi saat Zulfi membalas nanti di sesi chat ini:\n- Berikan respons analitis dan apresiasi yang tajam (bantu perjelas jika ada akar masalah yang terlewat).\n- Ekstrak 3 poin tersebut. Simpan entri ke database Notion 'Notes' di bawah kategori 'Refleksi' menggunakan tool mcp__notion__notion_write (operation: create_page, parent database_id: d99132f7-ca42-8318-8019-010461339720, properties: Category=['3e4132f7-ca42-817d-ad0f-d13ea95e67e9'], title: 'Refleksi - YYYY-MM-DD', dengan isi markdown 3 poin tersebut).\n- Simpan juga salinan cadangan lokal di /opt/data/refleksi/YYYY-MM-DD.md (via python3 /opt/data/scripts/save_reflection.py).\n- Konfirmasi ke Zulfi bahwa refleksi hari ini sudah tersimpan rapi di Notion (kategori Refleksi) beserta tautan Notion-nya.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": "custom:9router",
+      "provider_snapshot": null,
+      "model_snapshot": "agy-combo",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": [
+        "self"
+      ],
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 21 * * *",
+        "display": "30 21 * * *"
+      },
+      "schedule_display": "30 21 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 1
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-09-23T20:24:31.297270+07:00",
+      "next_run_at": "2026-09-24T21:30:00+07:00",
+      "last_run_at": "2026-09-23T21:30:45.227531+07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "224983305470121@lid",
+        "chat_name": "z",
+        "thread_id": null,
+        "user_id": "224983305470121@lid",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "attach_to_session": true,
+      "last_dispatch": {
+        "scheduled_at": "2026-09-23T21:30:00+07:00",
+        "dispatched_at": "2026-09-23T21:30:32.021427+07:00",
+        "lateness_seconds": 32.0,
+        "kind": "on_time"
+      },
+      "fire_claim": null
+    },
+    {
+      "id": "31ec4f4ffcfa",
+      "name": "Kosakata Pagi (08.30 WIB)",
+      "prompt": "Kamu adalah mentor bahasa untuk Zulfi.\nTugasmu setiap hari pukul 08:30 WIB adalah mengirimkan 1 KOSAKATA BAHASA INGGRIS pilihan (kata/phrasal verb/idiom) yang natural dan sering digunakan dalam percakapan sehari-hari, ranah kerja/profesional, maupun teknologi.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Kosakata Pagi (English)*:\n   - *Word* [Part of Speech / Pronunciation]\n   - *Arti Lugas*: Makna ringkas & jelas.\n   - *Kapan Digunakan*: Situasi atau konteks di mana kata ini natural dipakai.\n   - *Contoh Kalimat*: 1-2 contoh nyata beserta artinya.\n2. *Tantangan 1 Menit*:\n   Tantang Zulfi membuat 1 kalimat sendiri memakai kata ini dan balas langsung di chat WhatsApp ini.\n\nCek output hari-hari sebelumnya agar tidak repetitif. Gaya: Semangat pagi, segar, dan langsung aplikatif.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": "custom:9router",
+      "provider_snapshot": null,
+      "model_snapshot": "agy-combo",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": [
+        "self"
+      ],
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 8 * * *",
+        "display": "30 8 * * *"
+      },
+      "schedule_display": "30 8 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-09-23T22:48:57.745370+07:00",
+      "next_run_at": "2026-09-24T08:30:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "224983305470121@lid",
+        "chat_name": "z",
+        "thread_id": null,
+        "user_id": "224983305470121@lid",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "attach_to_session": true
+    },
+    {
+      "id": "a7b3fa5ff22f",
+      "name": "Kosakata Siang (12.00 WIB)",
+      "prompt": "Kamu adalah mentor bahasa untuk Zulfi.\nTugasmu setiap hari pukul 12:00 WIB adalah mengirimkan 1 KOSAKATA BAHASA INGGRIS pilihan berikutnya (fokus: idiom, phrasal verb, atau istilah praktis kerja/kehidupan) yang relevan dan sering dipakai.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Kosakata Siang (English)*:\n   - *Word / Phrase* [Part of Speech / Pronunciation]\n   - *Arti Lugas*: Makna ringkas & jelas.\n   - *Kapan Digunakan*: Situasi atau nuansa percakapan di mana kata ini cocok dipakai.\n   - *Contoh Kalimat*: 1-2 contoh nyata beserta artinya.\n2. *Tantangan Singkat*:\n   Minta Zulfi mencoba merangkai 1 kalimat memakai frasa/kata ini sambil istirahat siang.\n\nCek output sesi sebelumnya agar tidak mengulang kata. Gaya: Ringkas, santai untuk jeda siang.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": "custom:9router",
+      "provider_snapshot": null,
+      "model_snapshot": "agy-combo",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": [
+        "self"
+      ],
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 12 * * *",
+        "display": "0 12 * * *"
+      },
+      "schedule_display": "0 12 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-09-23T22:49:01.571677+07:00",
+      "next_run_at": "2026-09-24T12:00:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "224983305470121@lid",
+        "chat_name": "z",
+        "thread_id": null,
+        "user_id": "224983305470121@lid",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "attach_to_session": true
+    },
+    {
+      "id": "6705d52c8d70",
+      "name": "Kosakata Malam (19.00 WIB)",
+      "prompt": "Kamu adalah mentor bahasa untuk Zulfi.\nTugasmu setiap hari pukul 19:00 WIB adalah mengirimkan 1 KOSAKATA BAHASA INDONESIA pilihan (kata baku, serapan kaya makna, atau istilah konseptual) yang elegan, tepat konteks, dan berbobot namun sering terlewatkan dalam percakapan sehari-hari.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Kosakata Malam (Bahasa Indonesia)*:\n   - *Kata* [Kelas Kata / Bentuk Baku KBBI]\n   - *Arti Lugas*: Makna yang presisi sesuai KBBI & konteks modern.\n   - *Kapan Digunakan*: Situasi percakapan, diskusi, atau penulisan di mana kata ini memberi bobot nalar yang baik.\n   - *Contoh Kalimat*: 1-2 contoh nyata.\n2. *Tantangan Santai*:\n   Ajak Zulfi merangkai 1 kalimat bebas menggunakan kata ini sebelum sesi refleksi malam.\n\nCek output hari-hari sebelumnya agar tidak berulang. Gaya: Edukatif, santai, dan menambah wawasan leksikal.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": "custom:9router",
+      "provider_snapshot": null,
+      "model_snapshot": "agy-combo",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": [
+        "self"
+      ],
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * *",
+        "display": "0 19 * * *"
+      },
+      "schedule_display": "0 19 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-09-23T22:49:08.640396+07:00",
+      "next_run_at": "2026-09-24T19:00:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "224983305470121@lid",
+        "chat_name": "z",
+        "thread_id": null,
+        "user_id": "224983305470121@lid",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "attach_to_session": true
     }
   ],
-  "updated_at": "2026-09-23T13:00:46.729960+07:00"
+  "updated_at": "2026-09-24T02:00:32.145926+07:00"
 }
