@@ -60,9 +60,10 @@ def backup_local_repo(repo_dir, repo_name, branch="main"):
         commit_msg += f"\n- ... and {count - 20} more files"
 
     try:
-        subprocess.run(["git", "-C", repo_dir, "add", "-A"], check=True, capture_output=True)
-        subprocess.run(["git", "-C", repo_dir, "commit", "-m", commit_msg], check=True, capture_output=True)
-        subprocess.run(["git", "-C", repo_dir, "push", "origin", branch], check=True, capture_output=True)
+        git_cmd = ["git", "-C", repo_dir, "-c", "credential.helper=store --file=/opt/data/home/.git-credentials"]
+        subprocess.run(git_cmd + ["add", "-A"], check=True, capture_output=True)
+        subprocess.run(git_cmd + ["commit", "-m", commit_msg], check=True, capture_output=True)
+        subprocess.run(git_cmd + ["push", "origin", branch], check=True, capture_output=True)
         return {
             "name": repo_name,
             "status": "pushed",
@@ -107,6 +108,10 @@ mkdir -p /host_p/hermes-config/refleksi
 if [ -d /host_p/9router-hermes/hermes-data/refleksi ]; then
   cp -rf /host_p/9router-hermes/hermes-data/refleksi/* /host_p/hermes-config/refleksi/ 2>/dev/null || true
 fi
+
+# Ensure git credentials file ownership remains readable by hermes user (UID 10000)
+chown 10000:10000 /host_p/9router-hermes/hermes-data/home/.git-credentials 2>/dev/null || true
+chmod 600 /host_p/9router-hermes/hermes-data/home/.git-credentials 2>/dev/null || true
 """
     try:
         subprocess.run(
