@@ -3,408 +3,341 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hermes Skill Map</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<title>HERMES // GRAPH VIEW - AI ARCHITECTURE & TOPOLOGY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:#090d16;font-family:'JetBrains Mono',monospace;color:#e2e8f0;user-select:none;-webkit-user-select:none;touch-action:none;-webkit-touch-callout:none;overscroll-behavior:none}
-canvas{position:fixed;inset:0;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#060913;font-family:'JetBrains Mono',monospace;color:#e2e8f0;overscroll-behavior:none}
+canvas{position:absolute;top:0;left:0;display:block;touch-action:none}
 #bg{z-index:0}
-#main{z-index:1;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#main{z-index:1;cursor:grab}
 #main.dragging{cursor:grabbing}
-#ui{position:fixed;inset:0;z-index:2;pointer-events:none}
 
-/* HUD TOP */
-#hud{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:11px 24px;background:rgba(9,13,22,0.92);border-bottom:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(20px);pointer-events:none}
-.logo{font-size:11px;font-weight:700;letter-spacing:.12em;display:flex;align-items:center;gap:8px;color:#f8fafc}
-.logo-dot{width:6px;height:6px;border-radius:50%;background:#38bdf8}
-.hud-sub{font-size:9px;color:#64748b;letter-spacing:.08em}
-.hud-stats{display:flex;gap:20px}
-.stat{font-size:9px;color:#64748b;letter-spacing:.06em}
-.stat b{color:#cbd5e1;font-weight:700}
+/* HUD Top Header */
+#hud{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(180deg,rgba(6,9,19,0.92) 0%,rgba(6,9,19,0.5) 75%,transparent 100%);pointer-events:none}
+.logo-box{display:flex;align-items:center;gap:10px}
+.logo-core{width:14px;height:14px;border-radius:50%;background:#38bdf8;box-shadow:0 0 12px #38bdf8;animation:corePulse 2.4s infinite ease-in-out}
+@keyframes corePulse{0%,100%{transform:scale(0.9);opacity:0.8}50%{transform:scale(1.2);opacity:1}}
+.logo-title{font-size:13px;font-weight:800;letter-spacing:.12em;color:#f8fafc;text-shadow:0 0 10px rgba(56,189,248,0.5)}
+.logo-sub{font-size:9px;font-weight:600;letter-spacing:.18em;color:#64748b;margin-left:4px}
 
-/* TOAST */
-#toast{position:fixed;top:54px;right:18px;z-index:10;min-width:220px;padding:10px 14px;background:rgba(15,23,42,.96);border:1px solid rgba(255,255,255,.08);border-radius:8px;backdrop-filter:blur(24px);display:flex;align-items:flex-start;gap:9px;transform:translateY(-55px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1);pointer-events:none}
-#toast.show{transform:translateY(0);opacity:1}
-.t-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0;background:#38bdf8}
-.t-dot.on{background:#f59e0b}
-.t-lbl{font-size:8px;color:#64748b;letter-spacing:.08em;margin-bottom:2px;text-transform:uppercase}
-.t-val{font-size:11px;font-weight:600;color:#f8fafc;line-height:1.4}
+/* Filter / Layer Pills */
+.filter-bar{display:flex;gap:6px;pointer-events:auto}
+.filter-btn{background:rgba(15,23,42,0.85);border:1px solid rgba(148,163,184,0.22);color:#94a3b8;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.08em;padding:5px 11px;border-radius:6px;cursor:pointer;transition:all .18s ease}
+.filter-btn:hover{color:#f8fafc;border-color:rgba(56,189,248,0.45);background:rgba(30,41,59,0.9)}
+.filter-btn.active{color:#38bdf8;border-color:#38bdf8;background:rgba(56,189,248,0.12);box-shadow:0 0 10px rgba(56,189,248,0.25)}
 
-/* DETAIL PANEL */
-#detail{position:fixed;bottom:20px;right:20px;z-index:10;width:268px;display:none;background:rgba(8,12,26,.95);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 15px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 8px 32px rgba(0,0,0,.6);pointer-events:auto}
-.d-badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-.d-title{font-size:13px;font-weight:700;color:#f0f4ff;margin-bottom:4px}
-.d-desc{font-size:10px;color:#475569;line-height:1.6;font-family:sans-serif}
-.d-hr{height:1px;background:rgba(255,255,255,.05);margin:9px 0}
-.d-row{display:flex;justify-content:space-between;font-size:9px;color:#334155;margin-bottom:3px}
-.d-row span{color:#64748b}
+/* Top Stats Pills */
+.stats-bar{display:flex;align-items:center;gap:12px;font-size:9px;font-weight:600;letter-spacing:.08em;color:#94a3b8;pointer-events:auto}
+.stat-pill{display:flex;align-items:center;gap:6px;padding:4px 9px;border-radius:5px;background:rgba(15,23,42,0.7);border:1px solid rgba(148,163,184,0.15)}
+.stat-dot{width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981}
 
-/* CONSTELLATION INDEX */
-#idx{position:fixed;bottom:20px;left:20px;z-index:10;width:235px;max-height:min(380px,calc(100vh - 120px));display:flex;flex-direction:column;background:rgba(5,8,18,.92);border:1px solid rgba(255,255,255,.08);border-radius:12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.6);pointer-events:auto;overflow:hidden;transition:max-height .3s cubic-bezier(.16,1,.3,1)}
-#idx.minimized{max-height:36px}
-.idx-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 9px 12px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;user-select:none;flex-shrink:0}
-.idx-hdr-title{display:flex;align-items:center;gap:7px;font-size:8.5px;font-weight:700;color:#7dd3c8;letter-spacing:.12em;text-transform:uppercase}
-.idx-dot{width:6px;height:6px;border-radius:50%;background:#7dd3c8;box-shadow:0 0 8px rgba(125,211,200,.6);flex-shrink:0}
-.idx-count{background:rgba(255,255,255,.08);color:#cbd5e1;font-size:8px;font-weight:600;padding:1px 6px;border-radius:999px}
-.idx-chevron{font-size:9px;color:#64748b;transition:transform .25s ease}
-#idx.minimized .idx-chevron{transform:rotate(-90deg)}
-#idx-body{flex:1;overflow-y:auto;min-height:0;padding:4px 0}
-#idx-body::-webkit-scrollbar{width:4px}
-#idx-body::-webkit-scrollbar-track{background:transparent}
-#idx-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
-#idx-body::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.22)}
+/* Left Navigation & Topology Drawer */
+#drawer{position:fixed;top:60px;left:18px;bottom:18px;width:260px;z-index:10;display:flex;flex-direction:column;background:rgba(10,15,29,0.85);backdrop-filter:blur(10px);border:1px solid rgba(148,163,184,0.16);border-radius:8px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.5);pointer-events:auto;transition:transform .25s ease}
+#drawer.collapsed{transform:translateX(-290px)}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(148,163,184,0.12);background:rgba(15,23,42,0.6)}
+.drawer-title{font-size:10px;font-weight:700;letter-spacing:.12em;color:#cbd5e1}
+.drawer-toggle{cursor:pointer;background:none;border:none;color:#94a3b8;font-size:12px;padding:2px 6px}
+.drawer-toggle:hover{color:#fff}
+.drawer-search{padding:8px 12px;border-bottom:1px solid rgba(148,163,184,0.1)}
+.drawer-search input{width:100%;background:rgba(15,23,42,0.9);border:1px solid rgba(148,163,184,0.2);border-radius:4px;color:#f8fafc;font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:5px 8px;outline:none}
+.drawer-search input:focus{border-color:#38bdf8}
+.drawer-list{flex:1;overflow-y:auto;padding:8px}
+.drawer-list::-webkit-scrollbar{width:4px}
+.drawer-list::-webkit-scrollbar-thumb{background:rgba(148,163,184,0.2);border-radius:2px}
+.nav-item{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;margin-bottom:3px;border-radius:4px;cursor:pointer;font-size:9.5px;font-weight:500;color:#94a3b8;transition:all .15s ease}
+.nav-item:hover{background:rgba(30,41,59,0.8);color:#f8fafc}
+.nav-item.active{background:rgba(56,189,248,0.14);color:#38bdf8;font-weight:700}
+.nav-tag{font-size:7.5px;font-weight:700;padding:1px 5px;border-radius:3px;text-transform:uppercase}
 
-.ic-group{border-bottom:1px solid rgba(255,255,255,.03)}
-.ic-parent{display:flex;align-items:center;gap:7px;padding:7px 12px 6px 10px;cursor:pointer;color:#94a3b8;font-size:8.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-left:3px solid transparent;transition:background .15s,color .15s;user-select:none}
-.ic-parent:hover{background:rgba(255,255,255,.05);color:#f1f5f9}
-.ic-parent-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.ic-parent-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ic-parent-count{font-size:7.5px;opacity:.6;font-weight:600;background:rgba(255,255,255,.06);padding:0 5px;border-radius:8px}
-.ic-parent-arrow{font-size:8px;opacity:.4;margin-left:4px;transition:transform .2s ease}
-.ic-parent.collapsed .ic-parent-arrow{transform:rotate(-90deg)}
+/* Right Detail Inspector */
+#inspector{position:fixed;top:60px;right:18px;width:300px;max-height:calc(100vh - 80px);z-index:10;display:none;flex-direction:column;background:rgba(10,15,29,0.92);backdrop-filter:blur(12px);border:1px solid rgba(56,189,248,0.3);border-radius:8px;box-shadow:0 16px 36px rgba(0,0,0,0.6);padding:16px;pointer-events:auto}
+.insp-close{position:absolute;top:10px;right:12px;cursor:pointer;color:#94a3b8;font-size:14px;background:none;border:none}
+.insp-close:hover{color:#fff}
+.insp-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.insp-title{font-size:14px;font-weight:800;color:#f8fafc;margin-bottom:4px;line-height:1.2}
+.insp-sub{font-size:9px;color:#94a3b8;margin-bottom:12px}
+.insp-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:9px;margin-bottom:14px;background:rgba(15,23,42,0.6);padding:10px;border-radius:6px;border:1px solid rgba(148,163,184,0.12)}
+.insp-lbl{color:#64748b;font-weight:600}
+.insp-val{color:#e2e8f0;font-weight:500;word-break:break-all}
+.insp-val.mono{font-family:'JetBrains Mono',monospace;color:#38bdf8}
+.insp-desc{font-size:9.5px;color:#cbd5e1;line-height:1.45;background:rgba(15,23,42,0.4);padding:8px 10px;border-radius:4px;border-left:2px solid #38bdf8}
+.insp-links{margin-top:12px;font-size:8.5px}
+.insp-links-title{color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.insp-pill-row{display:flex;flex-wrap:wrap;gap:4px}
+.insp-conn-pill{padding:2px 6px;border-radius:3px;background:rgba(30,41,59,0.7);color:#cbd5e1;font-size:8px;border:1px solid rgba(148,163,184,0.18)}
 
-.ic-children{display:block;padding:2px 0 4px;background:rgba(0,0,0,.15)}
-.ic-children.collapsed{display:none}
+/* Bottom Controls & Legend */
+#bottom-bar{position:fixed;bottom:16px;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 20px;pointer-events:none}
+.legend-box{display:flex;align-items:center;gap:12px;background:rgba(10,15,29,0.85);backdrop-filter:blur(8px);border:1px solid rgba(148,163,184,0.14);border-radius:6px;padding:6px 12px;font-size:8.5px;font-weight:600;color:#94a3b8;pointer-events:auto}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-dot{width:7px;height:7px;border-radius:2px}
+.view-ctrls{display:flex;gap:6px;pointer-events:auto}
+.ctrl-btn{width:28px;height:28px;border-radius:5px;background:rgba(15,23,42,0.85);border:1px solid rgba(148,163,184,0.2);color:#94a3b8;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.ctrl-btn:hover{background:rgba(30,41,59,0.9);color:#f8fafc;border-color:#38bdf8}
 
-.ir{display:flex;align-items:center;gap:6px;padding:4.5px 12px 4.5px 22px;cursor:pointer;color:#64748b;font-size:8.5px;border-left:2px solid transparent;transition:all .15s;user-select:none}
-.ir:hover{background:rgba(255,255,255,.05);color:#f8fafc}
-.ir.lit{color:#38d9d4;font-weight:600}
-.ir.selected{background:rgba(255,255,255,.08);color:#f1f5f9;border-left-color:#7dd3c8}
-.ir-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;opacity:.7}
-.ir.lit .ir-dot{opacity:1;box-shadow:0 0 6px #38d9d4;animation:blink 1s infinite}
-.ir-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ir-sub-count{font-size:7px;color:#64748b;background:rgba(255,255,255,.06);padding:0 4px;border-radius:6px;margin-left:auto}
-.ir-arrow{font-size:7.5px;opacity:.35;margin-left:3px;transition:transform .2s ease}
-.ir-arrow.collapsed{transform:rotate(-90deg)}
-
-.ic-subskills{display:block;padding:1px 0 3px;background:rgba(0,0,0,.22)}
-.ic-subskills.collapsed{display:none}
-.ir-sub{padding:3px 10px 3px 32px;font-size:8px;color:#475569}
-.ir-sub-line{font-family:monospace;color:#334155;font-size:8px;margin-right:2px}
-
-@media (max-width: 640px) {
-  #idx{left:10px;bottom:10px;width:calc(100vw - 20px);max-width:260px;max-height:min(300px,45vh)}
-  #detail{right:10px;bottom:10px;width:calc(100vw - 20px);max-width:260px}
-}
+/* Toast */
+#toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:all .2s ease;z-index:20;background:rgba(15,23,42,0.92);border:1px solid #38bdf8;padding:7px 16px;border-radius:20px;font-size:10px;font-weight:700;color:#f8fafc;display:flex;align-items:center;gap:8px;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#toast-dot{width:7px;height:7px;border-radius:50%;background:#38bdf8;box-shadow:0 0 8px #38bdf8}
 </style>
 </head>
 <body>
+
 <canvas id="bg"></canvas>
 <canvas id="main"></canvas>
 
+<!-- Top HUD -->
 <div id="hud">
-  <div class="logo"><div class="logo-dot"></div>HERMES NEURAL MAP</div>
-  <div class="hud-sub">SKILLS & AGENTS</div>
-  <div class="hud-stats">
-    <div class="stat">CLUSTERS <b id="s-cl">—</b></div>
-    <div class="stat">SKILLS <b id="s-sk">—</b></div>
-    <div class="stat">AGENTS <b id="s-ag" style="color:#f59e0b">—</b></div>
-    <div class="stat">STATUS <b id="s-st" style="color:#38d9d4">IDLE</b></div>
-  </div>
-</div>
-
-<div id="toast">
-  <div class="t-dot" id="tdot"></div>
-  <div><div class="t-lbl">SKILL ACTIVE</div><div class="t-val" id="tval">—</div></div>
-</div>
-
-<div id="detail">
-  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
-    <div class="d-badge" id="dbadge"></div>
-    <div id="dclose" style="cursor:pointer;color:#64748b;font-size:12px;padding:2px 6px;line-height:1">✕</div>
-  </div>
-  <div class="d-title" id="dtitle">—</div>
-  <div class="d-desc" id="ddesc">—</div>
-  <div class="d-hr"></div>
-  <div class="d-row">TYPE <span id="dtype">—</span></div>
-  <div class="d-row">CATEGORY <span id="dcat">—</span></div>
-  <div class="d-row" id="ddivrow" style="display:none">DIVISION <span id="ddiv">—</span></div>
-  <div class="d-row" id="dprow" style="display:none">PARENT <span id="dpar">—</span></div>
-</div>
-
-<div id="idx">
-  <div class="idx-hdr" id="idx-toggle" title="Click to collapse/expand">
-    <div class="idx-hdr-title">
-      <span class="idx-dot"></span>
-      CONSTELLATION INDEX
-      <span class="idx-count" id="idx-total-count">0</span>
+  <div class="logo-box">
+    <div class="logo-core"></div>
+    <div>
+      <span class="logo-title">GRAPH VIEW</span>
+      <span class="logo-sub">AI SYSTEM TOPOLOGY</span>
     </div>
-    <span class="idx-chevron" id="idx-chevron">▾</span>
   </div>
-  <div id="idx-body">
-    <div id="idx-list"></div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">ALL TOPOLOGY</button>
+    <button class="filter-btn" data-filter="llm">LLM &amp; ROUTING</button>
+    <button class="filter-btn" data-filter="memory">MEMORY LAYER</button>
+    <button class="filter-btn" data-filter="tools">MCP &amp; TOOLS</button>
+    <button class="filter-btn" data-filter="ops">CLIENTS &amp; OPS</button>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-pill"><div class="stat-dot"></div><span>CORE: HERMES</span></div>
+    <div class="stat-pill"><span>ROUTER: 9ROUTER (:20128)</span></div>
+    <div class="stat-pill"><span>MEMORY: HONCHO (:8000)</span></div>
+    <div class="stat-pill" id="stat-nodes"><span>NODES: 0</span></div>
   </div>
 </div>
+
+<!-- Left Drawer -->
+<div id="drawer">
+  <div class="drawer-header">
+    <span class="drawer-title">SYSTEM DIRECTORY</span>
+    <button class="drawer-toggle" id="drawer-toggle">◀</button>
+  </div>
+  <div class="drawer-search">
+    <input type="text" id="node-search" placeholder="Filter component / port...">
+  </div>
+  <div class="drawer-list" id="drawer-list"></div>
+</div>
+
+<!-- Right Inspector -->
+<div id="inspector">
+  <button class="insp-close" id="insp-close">✕</button>
+  <div class="insp-badge" id="insp-badge">SERVICE</div>
+  <div class="insp-title" id="insp-title">Component Name</div>
+  <div class="insp-sub" id="insp-sub">Tier / Category</div>
+  <div class="insp-grid">
+    <span class="insp-lbl">Container</span><span class="insp-val mono" id="insp-container">—</span>
+    <span class="insp-lbl">Ports</span><span class="insp-val mono" id="insp-ports">—</span>
+    <span class="insp-lbl">Status</span><span class="insp-val" id="insp-status">—</span>
+    <span class="insp-lbl">Network</span><span class="insp-val mono" id="insp-net">ai-network</span>
+  </div>
+  <div class="insp-desc" id="insp-desc">Detailed architecture description...</div>
+  <div class="insp-links">
+    <div class="insp-links-title">Connected Topologies</div>
+    <div class="insp-pill-row" id="insp-conns"></div>
+  </div>
+</div>
+
+<!-- Bottom Legend & Controls -->
+<div id="bottom-bar">
+  <div class="legend-box">
+    <div class="legend-item"><div class="legend-dot" style="background:#38bdf8"></div><span>Core</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div><span>9Router / LLM</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div><span>Honcho Memory / DB</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div><span>MCP Toolsets</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div><span>Client Channels</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f43f5e"></div><span>Monitoring TSDB</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div><span>Tailscale Edge</span></div>
+  </div>
+  <div class="view-ctrls">
+    <button class="ctrl-btn" id="btn-zoom-in" title="Zoom In">+</button>
+    <button class="ctrl-btn" id="btn-zoom-out" title="Zoom Out">−</button>
+    <button class="ctrl-btn" id="btn-recenter" title="Recenter View">⊙</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"><div id="toast-dot"></div><span id="toast-msg">SYSTEM TOPOLOGY READY</span></div>
 
 <script>
-// ══════════════════════════════════════════
-// PALETTE
-// ══════════════════════════════════════════
-// PALETTE (Anti-Slop Restrained Technical System)
-// ══════════════════════════════════════════
-const PAL = {
-  core:                    '#f8fafc',   // High-contrast clean white / titanium
-  'software-development':  '#38bdf8',   // Sky / Slate Blue
-  productivity:            '#34d399',   // Emerald / Sage
-  creative:                '#fbbf24',   // Warm Amber
-  'autonomous-ai-agents':  '#818cf8',   // Indigo Slate
-  research:                '#a78bfa',   // Iris Slate
-  apple:                   '#94a3b8',   // Cool Platinum
-  media:                   '#fb923c',   // Terracotta
-  email:                   '#2dd4bf',   // Muted Teal
-  devops:                  '#60a5fa',   // Technical Blue
-  'note-taking':           '#10b981',   // Jade
-  'social-media':          '#cbd5e1',   // Silver
-  web:                     '#0ea5e9'    // Deep Sky
-};
-function col(c){ return PAL[c] || PAL.web; }
-function hexAlpha(h, a){
-  const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16);
-  return `rgba(${r},${g},${b},${a})`;
-}
-
-// ══════════════════════════════════════════
-// CANVAS + VIEWPORT
-// ══════════════════════════════════════════
-const BG  = document.getElementById('bg');
-const CV  = document.getElementById('main');
-const BCX = BG.getContext('2d');
-const CTX = CV.getContext('2d');
-let W = innerWidth, H = innerHeight;
-let camX = 0, camY = 0, camZ = 0.58; // centered with generous padding around whole constellation
+// ══════════════════════════════════════════════════════════════════
+// CANVAS SETUP & RESIZE
+// ══════════════════════════════════════════════════════════════════
+const BCV = document.getElementById('bg'), BCX = BCV.getContext('2d');
+const CV  = document.getElementById('main'), CTX = CV.getContext('2d');
+let W = window.innerWidth, H = window.innerHeight;
+let camX = 0, camY = 0, camZ = 0.78;
 
 function resize(){
-  W = innerWidth; H = innerHeight;
-  BG.width = CV.width = W;
-  BG.height = CV.height = H;
+  W = window.innerWidth; H = window.innerHeight;
+  BCV.width = W; BCV.height = H;
+  CV.width  = W; CV.height  = H;
 }
 window.addEventListener('resize', resize);
 resize();
 
-// World → screen
-function ws(wx, wy){ return [(wx - camX)*camZ + W/2, (wy - camY)*camZ + H/2]; }
-// Screen → world
-function sw(sx, sy){ return [(sx - W/2)/camZ + camX, (sy - H/2)/camZ + camY]; }
-
-// ══════════════════════════════════════════
-// TECHNICAL BACKGROUND (Precision Grid + Starfield)
-// ══════════════════════════════════════════
-const STARS = [];
-const SHOOTING = [];
-let _nextShoot = 0;
-
-(function initStars(){
-  for(let i=0;i<700;i++){
-    STARS.push({
-      x:Math.random()*W, y:Math.random()*H,
-      vx:(Math.random()-.5)*.02, vy:(Math.random()-.5)*.02,
-      r:0.6+Math.random()*0.8,
-      op:0.25+Math.random()*0.55,
-      ts:0.4+Math.random()*0.8,
-      tp:Math.random()*Math.PI*2
-    });
-  }
-})();
-
-function spawnShootingStar(){
-  const fromLeft = Math.random()<.5;
-  const sx = fromLeft ? Math.random()*W*.4 : W*.6+Math.random()*W*.4;
-  const sy = Math.random()*H*.35;
-  const angle = (25+Math.random()*35)*(Math.PI/180);
-  const spd = 6+Math.random()*6;
-  SHOOTING.push({
-    x:sx, y:sy,
-    vx: Math.cos(angle)*spd*(fromLeft?1:-1),
-    vy: Math.sin(angle)*spd,
-    len: 50+Math.random()*70,
-    life: 1.0,
-    decay: 0.02+Math.random()*0.015
-  });
+function sw(sx, sy){
+  return [ (sx - W/2)/camZ + camX, (sy - H/2)/camZ + camY ];
 }
 
-let ST=0;
+// ══════════════════════════════════════════════════════════════════
+// BACKGROUND GRID & DUST PARTICLES
+// ══════════════════════════════════════════════════════════════════
+const STARS = Array.from({length: 120}, () => ({
+  x: Math.random()*W, y: Math.random()*H,
+  r: Math.random()*1.2 + 0.4,
+  op: Math.random()*0.6 + 0.2,
+  vx: (Math.random()-0.5)*0.12, vy: (Math.random()-0.5)*0.12
+}));
+
 function drawBG(){
-  BCX.clearRect(0,0,W,H);
+  BCX.fillStyle = '#060913';
+  BCX.fillRect(0,0,W,H);
 
-  // Subtle architectural coordinate grid
-  const gridSz = 100 * camZ;
-  const offX = (W/2 - camX * camZ) % gridSz;
-  const offY = (H/2 - camY * camZ) % gridSz;
+  // Subtle coordinate grid moving with camera
+  const gridSz = 48 * camZ;
+  const offX = ((W/2 - camX*camZ) % gridSz + gridSz) % gridSz;
+  const offY = ((H/2 - camY*camZ) % gridSz + gridSz) % gridSz;
 
-  BCX.strokeStyle = 'rgba(255, 255, 255, 0.022)';
+  BCX.strokeStyle = 'rgba(56, 189, 248, 0.035)';
   BCX.lineWidth = 1;
   BCX.beginPath();
-  for(let x = offX; x < W; x += gridSz){
-    BCX.moveTo(x, 0); BCX.lineTo(x, H);
-  }
-  for(let y = offY; y < H; y += gridSz){
-    BCX.moveTo(0, y); BCX.lineTo(W, y);
-  }
+  for(let x=offX; x<W; x+=gridSz){ BCX.moveTo(x, 0); BCX.lineTo(x, H); }
+  for(let y=offY; y<H; y+=gridSz){ BCX.moveTo(0, y); BCX.lineTo(W, y); }
   BCX.stroke();
 
-  ST += .008;
-
-  // Regular stars (fine white & silver pinpricks)
+  // Subtle star dust
   STARS.forEach(s=>{
-    s.x+=s.vx; s.y+=s.vy;
-    if(s.x<0)s.x=W; if(s.x>W)s.x=0;
-    if(s.y<0)s.y=H; if(s.y>H)s.y=0;
-    const tw = Math.sin(ST*s.ts*50+s.tp)*0.2 + 0.8;
-    BCX.globalAlpha = s.op * tw * 0.7;
-    BCX.fillStyle = '#cbd5e1';
-    BCX.beginPath(); BCX.arc(s.x,s.y,s.r,0,Math.PI*2); BCX.fill();
+    s.x += s.vx; s.y += s.vy;
+    if(s.x < 0) s.x = W; if(s.x > W) s.x = 0;
+    if(s.y < 0) s.y = H; if(s.y > H) s.y = 0;
+    BCX.fillStyle = `rgba(203, 213, 225, ${s.op})`;
+    BCX.beginPath(); BCX.arc(s.x, s.y, s.r, 0, Math.PI*2); BCX.fill();
   });
-  BCX.globalAlpha = 1;
-
-  // Shooting stars
-  const now = performance.now();
-  if(now > _nextShoot){
-    spawnShootingStar();
-    _nextShoot = now + 4000 + Math.random()*5000;
-  }
-  for(let i=SHOOTING.length-1;i>=0;i--){
-    const s=SHOOTING[i];
-    s.x+=s.vx; s.y+=s.vy; s.life-=s.decay;
-    if(s.life<=0){ SHOOTING.splice(i,1); continue; }
-    BCX.save();
-    BCX.globalAlpha = s.life * 0.5;
-    BCX.strokeStyle = '#e2e8f0';
-    BCX.lineWidth = 1;
-    BCX.beginPath();
-    BCX.moveTo(s.x, s.y);
-    BCX.lineTo(s.x - s.vx*s.len*0.08, s.y - s.vy*s.len*0.08);
-    BCX.stroke();
-    BCX.restore();
-  }
 }
 
-// ══════════════════════════════════════════
-// PHYSICS ENGINE
-// ══════════════════════════════════════════
-const CX = 0, CY = 0; // Global Hermes core world anchor (centered)
-const R_CLUSTER_ORBIT = 380; // Global default orbit distance for clusters
-const R_CORE = 46, R_CLUSTER = 28, R_SKILL = 15, R_AGENT = 15, R_SUB = 10;
-const NODES = [];      // all physics nodes
-const LINKS = [];      // {a, b} index pairs for bezier drawing
-let gData = null;
+// ══════════════════════════════════════════════════════════════════
+// DATA STATE & COLOR PALETTES
+// ══════════════════════════════════════════════════════════════════
+let NODES = [];
+let LINKS = [];
+let ACTIVE_FILTER = 'all';
+let SEARCH_QUERY = '';
+let hoveredNode = null;
+let selectedNode = null;
+let dragNode = null;
+let dragOffX = 0, dragOffY = 0;
+let panStart = null, panCamStart = null;
+let _flyAnim = null;
 
-// Physics constants — realistic Newtonian celestial mechanics
-const DAMP_CL      = 0.90;   // cluster damping: smooth viscous deceleration
-const DAMP_SK      = 0.86;   // skill/subskill damping
-const MAX_VEL_CL   = 2.5;    // cluster velocity cap: allow smooth natural momentum when pushed
-const MAX_VEL_SK   = 2.0;    // skill velocity cap
-const MAX_VEL_SUB  = 2.2;    // subskill velocity cap
+const CATEGORY_COLORS = {
+  core:       '#38bdf8', // Cyan
+  router:     '#8b5cf6', // Violet
+  memory:     '#10b981', // Emerald
+  mcp:        '#3b82f6', // Sapphire Blue
+  channel:    '#f59e0b', // Amber
+  monitoring: '#f43f5e', // Rose
+  network:    '#06b6d4', // Teal/Cyan
+  skills:     '#a855f7', // Purple
+  agents:     '#ec4899'  // Pink
+};
 
-function clampVel(n){
-  const spd = Math.hypot(n.vx, n.vy);
-  const maxV = n.type==='core' ? 3.0 : (n.type==='cluster' ? MAX_VEL_CL : ((n.type==='skill'||n.type==='agent') ? MAX_VEL_SK : MAX_VEL_SUB));
-  if(spd > maxV){ const f=maxV/spd; n.vx*=f; n.vy*=f; }
+function getNodeColor(n){
+  return CATEGORY_COLORS[n.category] || CATEGORY_COLORS[n.type] || '#94a3b8';
 }
+
+function hexAlpha(hex, a){
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// FORCE-DIRECTED PHYSICS ENGINE
+// ══════════════════════════════════════════════════════════════════
+const DAMPING = 0.88;
 
 function physicsTick(){
   const N = NODES.length;
   if(!N) return;
-  const core = NODES[0] || {x:0, y:0};
-  const time = Date.now();
+  const core = NODES.find(n => n.type === 'core') || {x:0, y:0};
 
-  // 1. Natural elastic springs relative to parents (radial fan hierarchy)
-  NODES.forEach(n=>{
-    if(n.dragging) return;
+  // 1. Link Spring Forces (Hooke's Law)
+  LINKS.forEach(lk => {
+    const a = NODES[lk.a];
+    const b = NODES[lk.b];
+    if(!a || !b) return;
 
-    if(n.type==='core'){
-      // Gentle spring back toward its anchor (CX, CY or where dropped)
-      const ax = n.anchorX !== undefined ? n.anchorX : CX;
-      const ay = n.anchorY !== undefined ? n.anchorY : CY;
-      n.vx += (ax - n.x) * 0.015;
-      n.vy += (ay - n.y) * 0.015;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const targetDist = lk.kind === 'main' ? 210 : (lk.kind === 'sub' ? 100 : 135);
+    const delta = dist - targetDist;
+    const stiffness = lk.kind === 'main' ? 0.025 : 0.038;
+    const force = delta * stiffness;
+
+    const fx = (dx / dist) * force;
+    const fy = (dy / dist) * force;
+
+    if(!a.dragging){
+      a.vx += fx / (a.mass || 1);
+      a.vy += fy / (a.mass || 1);
     }
-
-    else if(n.type==='cluster'){
-      // Target anchor: strictly where it was placed on load or dropped by user (sway in place only!)
-      const targetDist = n.orbitDist !== undefined ? n.orbitDist : R_CLUSTER_ORBIT;
-      const targetAng = n.ang !== undefined ? n.ang : Math.PI;
-
-      // Organic gentle sway in place (strictly local breathing oscillation)
-      const phaseX = time * 0.0008 + (n.seed || 0) * 1.7;
-      const phaseY = time * 0.0006 + (n.seed || 0) * 2.3;
-      const swayX = Math.cos(phaseX) * 4.0;
-      const swayY = Math.sin(phaseY) * 4.0;
-
-      const targetX = core.x + Math.cos(targetAng) * targetDist + swayX;
-      const targetY = core.y + Math.sin(targetAng) * targetDist + swayY;
-
-      // Firm elastic tether holding cluster securely at its anchor in place
-      n.vx += (targetX - n.x) * 0.06;
-      n.vy += (targetY - n.y) * 0.06;
-    }
-
-    else if((n.type==='skill' || n.type==='agent') && n.parentIdx !== undefined){
-      const p = NODES[n.parentIdx];
-      if(p){
-        // Direction from core through parent cluster
-        const pdx = p.x - core.x, pdy = p.y - core.y;
-        const p_ang = Math.atan2(pdy, pdx);
-        const baseAng = (n.relAng !== undefined) ? (p_ang + n.relAng) : (p_ang + (n.seed || 0));
-
-        // Natural slow radial breathing (slowly moving closer/farther from parent cluster)
-        // ~21 seconds per cycle, ultra-smooth, zero jitter
-        const baseDist = n.baseDist || n.relDist || 140;
-        const breathPhase = time * 0.00030 + (n.seed || 0) * 1.5;
-        const radialOffset = Math.sin(breathPhase) * 14;
-        const targetDist = Math.max(80, baseDist + radialOffset);
-
-        // Subtle gentle angular sway
-        const angSway = Math.cos(breathPhase * 0.6) * 0.035;
-        const targetAng = baseAng + angSway;
-
-        const targetX = p.x + Math.cos(targetAng) * targetDist;
-        const targetY = p.y + Math.sin(targetAng) * targetDist;
-
-        // Dynamic follow force: if parent was dragged/moved far, follow with stronger spring!
-        const springK = p.dragging ? 0.12 : 0.04;
-        n.vx += (targetX - n.x) * springK;
-        n.vy += (targetY - n.y) * springK;
-      }
-    }
-
-    else if(n.type==='subskill' && n.parentIdx !== undefined){
-      const ps = NODES[n.parentIdx];
-      if(ps){
-        const p = (ps.parentIdx !== undefined) ? NODES[ps.parentIdx] : core;
-        const pdx = ps.x - p.x, pdy = ps.y - p.y;
-        const ps_ang = Math.atan2(pdy, pdx);
-        const baseAng = (n.relAng !== undefined) ? (ps_ang + n.relAng) : (ps_ang + (n.seed || 0));
-
-        const baseDist = n.baseDist || n.relDist || 80;
-        const subBreathPhase = time * 0.00040 + (n.seed || 0) * 2.1;
-        const radialOffset = Math.sin(subBreathPhase) * 8;
-        const targetDist = Math.max(65, baseDist + radialOffset);
-        const angSway = Math.cos(subBreathPhase * 0.7) * 0.04;
-        const targetAng = baseAng + angSway;
-
-        const targetX = ps.x + Math.cos(targetAng) * targetDist;
-        const targetY = ps.y + Math.sin(targetAng) * targetDist;
-
-        // Dynamic follow force
-        const springK = ps.dragging ? 0.14 : 0.045;
-        n.vx += (targetX - n.x) * springK;
-        n.vy += (targetY - n.y) * springK;
-      }
+    if(!b.dragging){
+      b.vx -= fx / (b.mass || 1);
+      b.vy -= fy / (b.mass || 1);
     }
   });
 
-  // 2. Physical collision solver (fast, stable, no runaway drift)
+  // 2. Many-Body Coulomb Repulsion (Fanning out branches)
+  for(let i=0; i<N; i++){
+    const a = NODES[i];
+    for(let j=i+1; j<N; j++){
+      const b = NODES[j];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist2 = dx*dx + dy*dy;
+      if(dist2 > 40000 || dist2 === 0) continue; // Repulse radius ~200px
+
+      const dist = Math.sqrt(dist2);
+      const repulse = (280 * (a.mass || 1) * (b.mass || 1)) / (dist2 + 400);
+      const rfx = (dx / dist) * repulse;
+      const rfy = (dy / dist) * repulse;
+
+      if(!a.dragging){ a.vx -= rfx / (a.mass || 1); a.vy -= rfy / (a.mass || 1); }
+      if(!b.dragging){ b.vx += rfx / (b.mass || 1); b.vy += rfy / (b.mass || 1); }
+    }
+  }
+
+  // 3. Center Gravity Pull (Keeps graph centered around origin)
+  NODES.forEach(n => {
+    if(n.dragging) return;
+    if(n.type === 'core'){
+      const ax = n.anchorX || 0, ay = n.anchorY || 0;
+      n.vx += (ax - n.x) * 0.04;
+      n.vy += (ay - n.y) * 0.04;
+    } else {
+      n.vx += (core.x - n.x) * 0.0008;
+      n.vy += (core.y - n.y) * 0.0008;
+    }
+  });
+
+  // 4. Elastic Physical Collision Solver (2 Passes: Prevents Penetration)
   const ITER = 2;
-  for(let iter=0; iter<ITER; iter++){
+  for(let it=0; it<ITER; it++){
     for(let i=0; i<N; i++){
       const a = NODES[i];
       for(let j=i+1; j<N; j++){
         const b = NODES[j];
         const isCoreA = a.type === 'core';
         const isCoreB = b.type === 'core';
-
-        const pad = (a.type === 'subskill' || b.type === 'subskill') ? 12 : ((a.type === 'skill' || b.type === 'skill') ? 14 : ((isCoreA || isCoreB) ? 35 : 6));
+        const pad = (isCoreA || isCoreB) ? 35 : 12;
         const minD = a.r + b.r + pad;
 
         const dx = b.x - a.x;
@@ -419,160 +352,48 @@ function physicsTick(){
           const nx = dx / dist, ny = dy / dist;
 
           if(isCoreA || isCoreB){
-            // Core is immovable anchor during collisions; other node yields smoothly outwards
             const other = isCoreA ? b : a;
             const sign = isCoreA ? 1 : -1;
             if(!other.dragging){
               other.x += nx * sign * overlap;
               other.y += ny * sign * overlap;
-              other.vx += nx * sign * Math.min(1.2, overlap * 0.25);
-              other.vy += ny * sign * overlap * 0.25;
+              other.vx += nx * sign * Math.min(1.5, overlap * 0.3);
+              other.vy += ny * sign * Math.min(1.5, overlap * 0.3);
             }
           } else if(a.dragging && !b.dragging){
-            // a is being dragged by user: b is pushed out
-            b.x += nx * overlap;
-            b.y += ny * overlap;
-            b.vx += nx * Math.min(1.2, overlap * 0.25);
-            b.vy += ny * Math.min(1.2, overlap * 0.25);
+            b.x += nx * overlap; b.y += ny * overlap;
+            b.vx += nx * Math.min(1.2, overlap * 0.2);
+            b.vy += ny * Math.min(1.2, overlap * 0.2);
           } else if(b.dragging && !a.dragging){
-            // b is being dragged by user: a is pushed out
-            a.x -= nx * overlap;
-            a.y -= ny * overlap;
-            a.vx -= nx * Math.min(1.2, overlap * 0.25);
-            a.vy -= ny * Math.min(1.2, overlap * 0.25);
+            a.x -= nx * overlap; a.y -= ny * overlap;
+            a.vx -= nx * Math.min(1.2, overlap * 0.2);
+            a.vy -= ny * Math.min(1.2, overlap * 0.2);
           } else if(!a.dragging && !b.dragging){
-            // Both free: split overlap inversely by mass (clusters have mass 50 so skills yield to clusters)
-            const mA = a.type === 'cluster' ? 50.0 : (a.mass || 1.0);
-            const mB = b.type === 'cluster' ? 50.0 : (b.mass || 1.0);
-            const ratioA = mB / (mA + mB);
-            const ratioB = mA / (mA + mB);
-
-            a.x -= nx * overlap * ratioA;
-            a.y -= ny * overlap * ratioA;
-            b.x += nx * overlap * ratioB;
-            b.y += ny * overlap * ratioB;
-
-            const force = Math.min(0.8, Math.max(0.15, overlap * 0.15));
-            a.vx -= nx * force * ratioA;
-            a.vy -= ny * force * ratioA;
-            b.vx += nx * force * ratioB;
-            b.vy += ny * force * ratioB;
+            const mA = a.mass || 1, mB = b.mass || 1;
+            const ratioA = mB / (mA + mB), ratioB = mA / (mA + mB);
+            a.x -= nx * overlap * ratioA; a.y -= ny * overlap * ratioA;
+            b.x += nx * overlap * ratioB; b.y += ny * overlap * ratioB;
           }
         }
       }
     }
   }
 
-  // 3. Integrate + viscous damping + natural rest settling
-  NODES.forEach(n=>{
-    if(n.dragging){ return; }
-    const dmp = n.type==='core' ? 0.92 : (n.type==='cluster' ? DAMP_CL : DAMP_SK);
-    n.vx *= dmp; n.vy *= dmp;
-
-    // Settling threshold: if speed is below threshold, stop to peaceful rest
-    if(Math.abs(n.vx) < 0.004) n.vx = 0;
-    if(Math.abs(n.vy) < 0.004) n.vy = 0;
-
-    clampVel(n);
-    n.x += n.vx; n.y += n.vy;
+  // 5. Viscous Damping & Integration
+  NODES.forEach(n => {
+    if(n.dragging) return;
+    n.vx *= DAMPING;
+    n.vy *= DAMPING;
+    if(Math.abs(n.vx) < 0.005) n.vx = 0;
+    if(Math.abs(n.vy) < 0.005) n.vy = 0;
+    n.x += n.vx;
+    n.y += n.vy;
   });
 }
 
-// ══════════════════════════════════════════
-// PARTICLE FLOW (active skill animation)
-// ══════════════════════════════════════════
-const ACTIVE = new Set();
-const TIMERS = {};
-const FLOWS  = {}; // skillId → {segments:[{ax,ay,bx,by}], particles[], col, fading}
-
-function spawnFlow(skillId, useCount){
-  // Find skill node — must exist and have a valid parent (cluster)
-  const n = NODES.find(x=>x.id===skillId);
-  if(!n){ setTimeout(()=>spawnFlow(skillId, useCount),200); return; }
-  const p = n.parentIdx!==undefined ? NODES[n.parentIdx] : null;
-  if(!p) return;
-  const core = NODES.find(x=>x.type==='core');
-  const c = col(n.category||'web');
-
-  // Scale particles and speed based on use_count
-  const uc = useCount || 1;
-  const intensity = uc <= 5 ? 0.4 : uc <= 20 ? 0.7 : 1.0;
-  const count = Math.round(6 + intensity * 10);   // 6–16 particles
-  const baseSpd = 0.005 + intensity * 0.004;       // faster for high-use skills
-
-  FLOWS[skillId] = {
-    col: c, fading: false,
-    core, cluster: p, skill: n,
-    particles: Array.from({length: count}, (_,i)=>({
-      t: i/count, spd: baseSpd + Math.random()*0.003,
-      sz: 1.5 + intensity*1.2 + Math.random()*0.8, op: 0.8 + intensity*0.1
-    }))
-  };
-}
-function stopFlow(skillId){
-  if(FLOWS[skillId]) FLOWS[skillId].fading = true;
-  setTimeout(()=>delete FLOWS[skillId], 900);
-}
-
-// ══════════════════════════════════════════
-// BEZIER HELPERS
-// ══════════════════════════════════════════
-function bezPt(ax,ay,bx,by, t){
-  const cx1=ax+(bx-ax)*.5, cy1=ay;
-  const cx2=ax+(bx-ax)*.5, cy2=by;
-  const u=1-t;
-  return [
-    u*u*u*ax+3*u*u*t*cx1+3*u*t*t*cx2+t*t*t*bx,
-    u*u*u*ay+3*u*u*t*cy1+3*u*t*t*cy2+t*t*t*by
-  ];
-}
-function bezPath(ctx, ax,ay,bx,by){
-  const cx = ax+(bx-ax)*.5;
-  ctx.moveTo(ax,ay);
-  ctx.bezierCurveTo(cx,ay, cx,by, bx,by);
-}
-
-// Draw wavy organic axon for cluster→skill links (matching hand-drawn sketch)
-function drawWavyAxon(ctx, ax, ay, bx, by, isActive, strokeCol){
-  const dx = bx - ax, dy = by - ay;
-  const dist = Math.hypot(dx, dy) || 1;
-  const nx = dx / dist, ny = dy / dist;
-  const px = -ny, py = nx;
-  const waves = Math.max(2.5, Math.min(4.5, dist / 35));
-  const amp = isActive ? 5.5 : 3.8;
-  const steps = 22;
-
-  ctx.beginPath();
-  ctx.moveTo(ax, ay);
-  for(let s = 1; s <= steps; s++){
-    const t = s / steps;
-    const taper = Math.sin(t * Math.PI);
-    const wobble = Math.sin(t * Math.PI * 2 * waves) * amp * taper;
-    ctx.lineTo(ax + dx * t + px * wobble, ay + dy * t + py * wobble);
-  }
-  ctx.strokeStyle = strokeCol;
-  ctx.lineWidth = isActive ? 2.4 : 1.3;
-  if(isActive){
-    ctx.shadowColor = strokeCol;
-    ctx.shadowBlur = 10;
-  }
-  ctx.stroke();
-  ctx.shadowBlur = 0;
-}
-
-// ══════════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════════
-function drawRound(ctx, x,y,w,h,r){
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);
-  ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
-  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
-  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
-  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
-  ctx.closePath();
-}
-
+// ══════════════════════════════════════════════════════════════════
+// RENDERING PIPELINE
+// ══════════════════════════════════════════════════════════════════
 function renderFrame(){
   CTX.clearRect(0,0,W,H);
   CTX.save();
@@ -580,434 +401,207 @@ function renderFrame(){
   CTX.scale(camZ, camZ);
   CTX.translate(-camX, -camY);
 
-  const anyActive = ACTIVE.size > 0;
+  const now = performance.now();
 
-  // Compute active cluster IDs (only clusters that contain an actively firing skill)
-  const activeClusterIds = new Set();
-  ACTIVE.forEach(actId => {
-    const node = NODES.find(x => x.id === actId);
-    if(node){
-      if(node.type === 'cluster') activeClusterIds.add(node.id);
-      else if(node.category) activeClusterIds.add(node.category);
-    }
-  });
-
-  // ── Draw links as axons/dendrites with layout matching the diagram ──
-  LINKS.forEach(lk=>{
-    const a=NODES[lk.a], b=NODES[lk.b];
+  // ── 1. DRAW EDGES / CONNECTIONS ──
+  LINKS.forEach(lk => {
+    const a = NODES[lk.a];
+    const b = NODES[lk.b];
     if(!a || !b) return;
-    const isCoreLink = a.type==='core' || b.type==='core';
-    const isClusterToItem = (a.type==='cluster' && (b.type==='skill'||b.type==='agent')) || (b.type==='cluster' && (a.type==='skill'||a.type==='agent'));
-    const c = col((b.type==='skill'||b.type==='agent')?b.category:(a.category||'core'));
+
+    // Filter visibility
+    const isVisibleA = isNodeVisible(a);
+    const isVisibleB = isNodeVisible(b);
+    if(!isVisibleA && !isVisibleB) return;
+
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const ux = dx / dist, uy = dy / dist;
+
+    // Edge boundary intersection
+    const startX = a.x + ux * a.r;
+    const startY = a.y + uy * a.r;
+    const endX = b.x - ux * (b.r + 4);
+    const endY = b.y - uy * (b.r + 4);
+
+    const isHovered = hoveredNode && (hoveredNode.id === a.id || hoveredNode.id === b.id);
+    const isMain = lk.kind === 'main';
+    const edgeCol = isMain ? hexAlpha(getNodeColor(b), 0.75) : 'rgba(148, 163, 184, 0.28)';
 
     CTX.save();
+    CTX.beginPath();
+    CTX.moveTo(startX, startY);
+    CTX.lineTo(endX, endY);
+    CTX.strokeStyle = isHovered ? '#ffffff' : edgeCol;
+    CTX.lineWidth = isHovered ? (isMain ? 2.8 : 2.0) : (isMain ? 2.0 : 1.2);
+    if(isHovered || isMain){
+      CTX.shadowColor = getNodeColor(b);
+      CTX.shadowBlur = isHovered ? 12 : 6;
+    }
+    CTX.stroke();
+    CTX.shadowBlur = 0;
 
-    if(isCoreLink){
-      // Trunk line from Core to Cluster
-      const cl = a.type==='core' ? b : a;
-      const isTrunkActive = cl && activeClusterIds.has(cl.id);
-      CTX.strokeStyle = isTrunkActive ? col(cl.category||cl.id) : 'rgba(255, 255, 255, 0.14)';
-      CTX.lineWidth = isTrunkActive ? 2.6 : 1.0;
-      if(isTrunkActive){
-        CTX.shadowColor = col(cl.category||cl.id);
-        CTX.shadowBlur = 10;
-      }
-      CTX.beginPath(); bezPath(CTX, a.x, a.y, b.x, b.y); CTX.stroke();
-      CTX.shadowBlur = 0;
-    } else if(isClusterToItem){
-      // Wavy axon from Cluster to Skill/Agent — retains category color at all times!
-      const itemNode = (a.type==='skill'||a.type==='agent') ? a : b;
-      const isItemActive = itemNode && ACTIVE.has(itemNode.id);
-      const cableCol = isItemActive ? c : hexAlpha(c, 0.38);
-      drawWavyAxon(CTX, a.x, a.y, b.x, b.y, isItemActive, cableCol);
-    } else {
-      // Skill → Subskill clean branch
-      const parentSk = a.type==='skill' ? a : b;
-      const isBranchActive = parentSk && ACTIVE.has(parentSk.id);
-      CTX.strokeStyle = hexAlpha(c, isBranchActive ? 0.85 : 0.28);
-      CTX.lineWidth = isBranchActive ? 1.4 : 0.8;
-      CTX.beginPath(); CTX.moveTo(a.x, a.y); CTX.lineTo(b.x, b.y); CTX.stroke();
+    // Directional Arrow Indicator
+    if(dist > 40){
+      const arrowSz = isMain ? 6 : 4.5;
+      const ax = endX, ay = endY;
+      CTX.fillStyle = isHovered ? '#ffffff' : edgeCol;
+      CTX.beginPath();
+      CTX.moveTo(ax, ay);
+      CTX.lineTo(ax - ux * arrowSz + uy * (arrowSz * 0.6), ay - uy * arrowSz - ux * (arrowSz * 0.6));
+      CTX.lineTo(ax - ux * arrowSz - uy * (arrowSz * 0.6), ay - uy * arrowSz + ux * (arrowSz * 0.6));
+      CTX.closePath();
+      CTX.fill();
+    }
+
+    // Light animated packet pulse on active or main links
+    const pulseSpeed = 0.0006;
+    const packetT = ((now * pulseSpeed + (lk.a * 17)) % 1.0);
+    const px = startX + (endX - startX) * packetT;
+    const py = startY + (endY - startY) * packetT;
+    CTX.beginPath();
+    CTX.arc(px, py, isMain ? 2.2 : 1.6, 0, Math.PI*2);
+    CTX.fillStyle = isMain ? '#ffffff' : hexAlpha(getNodeColor(b), 0.9);
+    CTX.fill();
+
+    // Subtle edge label if zoomed in or hovered
+    if((isHovered || camZ > 1.2) && lk.label){
+      const mx = (startX + endX) / 2;
+      const my = (startY + endY) / 2;
+      CTX.font = '600 7.5px JetBrains Mono';
+      CTX.fillStyle = isHovered ? '#f8fafc' : 'rgba(148, 163, 184, 0.7)';
+      CTX.textAlign = 'center';
+      CTX.textBaseline = 'middle';
+      CTX.fillText(lk.label, mx, my - 6);
     }
 
     CTX.restore();
   });
 
-  // ── Draw synaptic signal flows (action potential / electric synapse) ──
-  Object.entries(FLOWS).forEach(([sid, sys])=>{
-    const {core, cluster, skill, col: c, fading: fade} = sys;
-    if(!core||!cluster||!skill) return;
+  // ── 2. DRAW NODES ──
+  NODES.forEach(n => {
+    if(!isNodeVisible(n)) return;
 
-    const rgb=(h)=>{
-      const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);
-      return`${r},${g},${b}`;
-    };
-    const R=rgb(c);
+    const {x, y, r, type, label, sublabel, ports} = n;
+    const c = getNodeColor(n);
+    const isHov = hoveredNode && hoveredNode.id === n.id;
+    const isSel = selectedNode && selectedNode.id === n.id;
 
-    // Helper: get point along 2-segment path (t=0..1)
-    // t 0..0.5 → core→cluster, t 0.5..1 → cluster→skill
-    function pathPt(t){
-      if(t<=0.5){
-        const tt=t*2;
-        return bezPt(core.x,core.y,cluster.x,cluster.y,tt);
-      } else {
-        const tt=(t-0.5)*2;
-        return bezPt(cluster.x,cluster.y,skill.x,skill.y,tt);
-      }
-    }
+    // ── TIER A: ROOT / HERMES CORE ──
+    if(type === 'core'){
+      // Reticle rings
+      CTX.beginPath(); CTX.arc(x, y, r + 14, 0, Math.PI*2);
+      CTX.strokeStyle = 'rgba(56, 189, 248, 0.15)'; CTX.lineWidth = 1;
+      CTX.setLineDash([4, 6]); CTX.stroke(); CTX.setLineDash([]);
 
-    sys.particles.forEach(pt=>{
-      if(fade&&pt.t>=1)return;
-      pt.t+=pt.spd;
-      if(pt.t>1){pt.t=fade?9:0; return;}
+      // Glowing aura pulse
+      const pulse = Math.sin(now * 0.003) * 0.15 + 0.85;
+      CTX.beginPath(); CTX.arc(x, y, r + 4, 0, Math.PI*2);
+      CTX.strokeStyle = `rgba(56, 189, 248, ${0.4 * pulse})`;
+      CTX.lineWidth = 3; CTX.stroke();
 
-      // ── Lightning bolt: noisy trail segments ──
-      const steps=10;
-      const jitter=2.5;
-      const path=[];
-      for(let i=0;i<=steps;i++){
-        const ti=pt.t-(.06*(1-i/steps));
-        if(ti<0||ti>1){path.push(null);continue;}
-        const [px2,py2]=pathPt(Math.max(0,Math.min(1,ti)));
-        // Tangent for perpendicular jitter
-        const tiN=Math.min(1,ti+.008);
-        const [px3,py3]=pathPt(tiN);
-        const tdx=px3-px2, tdy=py3-py2;
-        const tlen=Math.hypot(tdx,tdy)||1;
-        const nx=-tdy/tlen, ny=tdx/tlen;
-        const j=(Math.sin(ti*60+pt.t*25+i*1.5)*jitter + Math.sin(ti*110+i*2.1)*jitter*.4)*(fade?.4:1);
-        path.push([px2+nx*j, py2+ny*j]);
-      }
-
-      // Draw trail
-      for(let i=1;i<path.length;i++){
-        if(!path[i]||!path[i-1])continue;
-        const al=(i/path.length)*pt.op*(fade?.15:1);
-        const pw=pt.sz*(i/path.length)*.8;
-        CTX.beginPath();
-        CTX.moveTo(path[i-1][0],path[i-1][1]);
-        CTX.lineTo(path[i][0],path[i][1]);
-        CTX.strokeStyle=`rgba(${R},${al.toFixed(2)})`;
-        CTX.lineWidth=pw;
-        CTX.shadowColor=c; CTX.shadowBlur=pw*5;
-        CTX.stroke();
-      }
-
-      // ── Clean signal packet head ──
-      const[hx,hy]=pathPt(pt.t);
-      CTX.beginPath(); CTX.arc(hx,hy,pt.sz*1.4,0,Math.PI*2);
-      CTX.fillStyle=hexAlpha(c, 0.35 * (fade?0.2:1));
-      CTX.fill();
-      CTX.beginPath(); CTX.arc(hx,hy,pt.sz*0.8,0,Math.PI*2);
-      CTX.fillStyle=`rgba(255,255,255,${(pt.op*0.95*(fade?0.2:1)).toFixed(2)})`;
-      CTX.fill();
-    });
-  });
-
-  // ── Draw nodes (Anti-Slop Clean Technical Architecture) ──
-  NODES.forEach(n=>{
-    const {x,y,r,type,label,category,active} = n;
-    const c = col(type==='core'?'core':category);
-
-    if(type==='core'){
-      const anyActive = ACTIVE.size > 0;
-      const pulseTime = performance.now();
-
-      // Outer precision reticle ring
-      CTX.beginPath(); CTX.arc(x,y,r+14,0,Math.PI*2);
-      CTX.strokeStyle='rgba(255,255,255,0.08)'; CTX.lineWidth=1;
-      CTX.setLineDash([3,6]); CTX.stroke(); CTX.setLineDash([]);
-
-      // Animasi Berdenyut di Core saat ada skill aktif
-      if(anyActive){
-        const ripC1 = (pulseTime * 0.0016) % 1.0;
-        const ripC2 = (pulseTime * 0.0016 + 0.5) % 1.0;
-        CTX.beginPath(); CTX.arc(x,y,r + 6 + ripC1 * 24,0,Math.PI*2);
-        CTX.strokeStyle=`rgba(56,189,248,${((1 - ripC1)*0.75).toFixed(2)})`;
-        CTX.lineWidth=1.8; CTX.stroke();
-
-        CTX.beginPath(); CTX.arc(x,y,r + 6 + ripC2 * 24,0,Math.PI*2);
-        CTX.strokeStyle=`rgba(56,189,248,${((1 - ripC2)*0.75).toFixed(2)})`;
-        CTX.lineWidth=1.8; CTX.stroke();
-      }
-
-      // Solid architectural core body
-      CTX.beginPath(); CTX.arc(x,y,r,0,Math.PI*2);
-      CTX.fillStyle='#0f172a'; CTX.fill();
-      CTX.strokeStyle=anyActive?'#38bdf8':'#e2e8f0'; CTX.lineWidth=2;
+      // Solid Core Body
+      CTX.beginPath(); CTX.arc(x, y, r, 0, Math.PI*2);
+      CTX.fillStyle = '#0a101d'; CTX.fill();
+      CTX.strokeStyle = '#38bdf8'; CTX.lineWidth = isHov ? 3.0 : 2.2;
+      CTX.shadowColor = '#38bdf8'; CTX.shadowBlur = 18;
       CTX.stroke();
-
-      // Inner precision ring
-      CTX.beginPath(); CTX.arc(x,y,r-8,0,Math.PI*2);
-      CTX.strokeStyle='rgba(255,255,255,0.12)'; CTX.lineWidth=1; CTX.stroke();
-
-      // Sharp, authoritative typography
-      CTX.fillStyle='#f8fafc'; CTX.font='700 11px JetBrains Mono';
-      CTX.textAlign='center'; CTX.textBaseline='middle';
-      CTX.fillText('HERMES',x,y-6);
-      CTX.fillStyle='#94a3b8'; CTX.font='600 7px JetBrains Mono';
-      CTX.fillText('AI CORE',x,y+8);
-    }
-
-    else if(type==='cluster'){
-      const isClActive = activeClusterIds.has(n.id);
-      const pulseTime = performance.now();
-
-      // ── ANIMASI BERDENYUT DI NODE INDUK CLUSTER YANG DILEWATI ──
-      if(isClActive){
-        const ripCl1 = (pulseTime * 0.0018 + (n.seed || 0) * 0.3) % 1.0;
-        const ripCl2 = (pulseTime * 0.0018 + (n.seed || 0) * 0.3 + 0.5) % 1.0;
-
-        CTX.beginPath(); CTX.arc(x,y,r + ripCl1 * 24,0,Math.PI*2);
-        CTX.strokeStyle=hexAlpha(c, (1 - ripCl1) * 0.85);
-        CTX.lineWidth=2.0; CTX.stroke();
-
-        CTX.beginPath(); CTX.arc(x,y,r + ripCl2 * 24,0,Math.PI*2);
-        CTX.strokeStyle=hexAlpha(c, (1 - ripCl2) * 0.85);
-        CTX.lineWidth=2.0; CTX.stroke();
-      } else {
-        // Normal subtle static outer ring
-        CTX.beginPath(); CTX.arc(x,y,r+5,0,Math.PI*2);
-        CTX.strokeStyle=hexAlpha(c, 0.20); CTX.lineWidth=0.8;
-        CTX.stroke();
-      }
-
-      // Solid body — WARNA TETAP ADA DAN TIDAK BERUBAH!
-      CTX.beginPath(); CTX.arc(x,y,r,0,Math.PI*2);
-      CTX.fillStyle='#0f172a'; CTX.fill();
-      CTX.strokeStyle=c;
-      CTX.lineWidth = isClActive ? 2.6 : 1.6;
-      if(isClActive){
-        CTX.shadowColor=c; CTX.shadowBlur=14;
-      }
-      CTX.stroke();
-      CTX.shadowBlur=0;
-
-      // Label — clean text wrap with bright clear text
-      const words=label.split(' ');
-      const l1=words.slice(0,Math.ceil(words.length/2)).join(' ');
-      const l2=words.slice(Math.ceil(words.length/2)).join(' ');
-      CTX.fillStyle='#f8fafc';
-      CTX.font=`700 ${Math.max(7.5,Math.min(9,r*.32))}px JetBrains Mono`;
-      CTX.textAlign='center'; CTX.textBaseline='middle';
-      if(l2){ CTX.fillText(l1.slice(0,14),x,y-6); CTX.fillText(l2.slice(0,14),x,y+6); }
-      else { CTX.fillText(l1.slice(0,14),x,y); }
-    }
-
-    else if(type==='skill'){
-      const isAct=ACTIVE.has(n.id);
-      const isHov = hoveredNode && (hoveredNode.id === n.id || (hoveredNode.parentIdx !== undefined && hoveredNode.parentIdx === idx[n.id]));
-      const isParentHov = hoveredNode && (hoveredNode.type === 'cluster' && hoveredNode.id === n.category);
-      const rSoma = r + (isAct?2.5:0);
-      const pulseTime = performance.now();
-
-      // ── ANIMASI BERDENYUT DI NODE SKILL YANG SEDANG DIGUNAKAN ──
-      if(isAct){
-        const ripSk1 = (pulseTime * 0.0022 + (n.seed || 0) * 0.5) % 1.0;
-        const ripSk2 = (pulseTime * 0.0022 + (n.seed || 0) * 0.5 + 0.5) % 1.0;
-
-        CTX.beginPath(); CTX.arc(x,y,rSoma + ripSk1 * 18,0,Math.PI*2);
-        CTX.strokeStyle=hexAlpha(c, (1 - ripSk1) * 0.90);
-        CTX.lineWidth=2.0; CTX.stroke();
-
-        CTX.beginPath(); CTX.arc(x,y,rSoma + ripSk2 * 18,0,Math.PI*2);
-        CTX.strokeStyle=hexAlpha(c, (1 - ripSk2) * 0.90);
-        CTX.lineWidth=2.0; CTX.stroke();
-      } else if(isHov){
-        CTX.beginPath(); CTX.arc(x,y,rSoma+4,0,Math.PI*2);
-        CTX.strokeStyle='rgba(255,255,255,0.40)';
-        CTX.lineWidth=1.2; CTX.stroke();
-      }
-
-      // Solid body — WARNA TETAP ADA DAN TIDAK HILANG!
-      CTX.beginPath(); CTX.arc(x,y,rSoma,0,Math.PI*2);
-      CTX.fillStyle = isAct ? c : '#131c2e'; CTX.fill();
-      CTX.strokeStyle = isAct ? '#ffffff' : hexAlpha(c, (isHov || isParentHov) ? 0.95 : 0.65);
-      CTX.lineWidth = isAct ? 2.2 : 1.2;
-      if(isAct){
-        CTX.shadowColor=c; CTX.shadowBlur=16;
-      }
-      CTX.stroke();
-      CTX.shadowBlur=0;
-
-      // Centered number badge — ALWAYS READABLE
-      CTX.fillStyle = isAct ? '#ffffff' : (isHov ? '#f8fafc' : '#cbd5e1');
-      CTX.font=`700 ${Math.floor(rSoma*.42)}px JetBrains Mono`;
-      CTX.textAlign='center'; CTX.textBaseline='middle';
-      CTX.fillText(n._n||'',x,y);
-
-      // Show label if active, hovered, parent hovered, or zoomed in
-      if(isAct || isHov || isParentHov || camZ > 0.85){
-        const fullLabel = label || n.id;
-        if(isHov){
-          // Tooltip pill with full un-truncated name on hover
-          CTX.font = '600 8.5px JetBrains Mono';
-          const tw = CTX.measureText(fullLabel).width;
-          const tx = (x<CX) ? (x - rSoma - 9 - tw) : (x + rSoma + 9);
-          CTX.fillStyle = 'rgba(15, 23, 42, 0.94)';
-          CTX.strokeStyle = c;
-          CTX.lineWidth = 1;
-          CTX.beginPath();
-          CTX.roundRect(tx - 4, y - 8, tw + 8, 16, 4);
-          CTX.fill();
-          CTX.stroke();
-          CTX.fillStyle = '#ffffff';
-          CTX.textAlign = 'left';
-          CTX.textBaseline = 'middle';
-          CTX.fillText(fullLabel, tx, y);
-        } else {
-          const chip = fullLabel.length>14 ? fullLabel.slice(0,14)+'…' : fullLabel;
-          CTX.fillStyle = isAct ? '#ffffff' : (isParentHov ? '#e2e8f0' : '#94a3b8');
-          CTX.font = `${isAct ? '700' : '500'} 8px JetBrains Mono`;
-          CTX.textAlign = (x<CX) ? 'right' : 'left';
-          CTX.textBaseline = 'middle';
-          const stagY = ((parseInt(n._n||'0', 10) % 2 === 1) ? 2.5 : -2.5);
-          CTX.fillText(chip, (x<CX) ? (x-rSoma-7) : (x+rSoma+7), y + stagY);
-        }
-      }
-    }
-
-    else if(type==='agent'){
-      const isAct=ACTIVE.has(n.id);
-      const isHov = hoveredNode && (hoveredNode.id === n.id || (hoveredNode.parentIdx !== undefined && hoveredNode.parentIdx === idx[n.id]));
-      const isParentHov = hoveredNode && (hoveredNode.type === 'cluster' && hoveredNode.id === n.category);
-      const rGem = r + (isAct?2.5:0);
-      const pulseTime = performance.now();
-
-      // Ripple pulse for active agent
-      if(isAct){
-        const ripAg1 = (pulseTime * 0.0022 + (n.seed || 0) * 0.5) % 1.0;
-        const ripAg2 = (pulseTime * 0.0022 + (n.seed || 0) * 0.5 + 0.5) % 1.0;
-        [ripAg1, ripAg2].forEach(rip => {
-          CTX.save();
-          CTX.translate(x, y);
-          CTX.rotate(Math.PI / 4);
-          const sz = (rGem + rip * 18) * 1.414;
-          CTX.beginPath();
-          CTX.rect(-sz/2, -sz/2, sz, sz);
-          CTX.strokeStyle = hexAlpha(c, (1 - rip) * 0.90);
-          CTX.lineWidth = 2.0;
-          CTX.stroke();
-          CTX.restore();
-        });
-      } else if(isHov){
-        CTX.save();
-        CTX.translate(x, y);
-        CTX.rotate(Math.PI / 4);
-        const sz = (rGem + 4) * 1.414;
-        CTX.beginPath();
-        CTX.rect(-sz/2, -sz/2, sz, sz);
-        CTX.strokeStyle = 'rgba(255,255,255,0.45)';
-        CTX.lineWidth = 1.2;
-        CTX.stroke();
-        CTX.restore();
-      }
-
-      // Diamond Body (Rotated 45-deg square)
-      CTX.save();
-      CTX.translate(x, y);
-      CTX.rotate(Math.PI / 4);
-      const sz = rGem * 1.35;
-      CTX.beginPath();
-      CTX.rect(-sz/2, -sz/2, sz, sz);
-      CTX.fillStyle = isAct ? c : '#0f172a';
-      CTX.fill();
-      CTX.strokeStyle = isAct ? '#ffffff' : hexAlpha(c, (isHov || isParentHov) ? 0.98 : 0.70);
-      CTX.lineWidth = isAct ? 2.4 : 1.4;
-      if(isAct || isHov){
-        CTX.shadowColor = c;
-        CTX.shadowBlur = 16;
-      }
-      CTX.stroke();
-      CTX.restore();
       CTX.shadowBlur = 0;
 
-      // Inner icon: Sleek diamond bullet '◆'
-      CTX.fillStyle = isAct ? '#ffffff' : (isHov ? '#f8fafc' : '#f59e0b');
-      CTX.font = `700 ${Math.floor(rGem * 0.55)}px JetBrains Mono`;
-      CTX.textAlign = 'center';
-      CTX.textBaseline = 'middle';
-      CTX.fillText('◆', x, y);
+      // Inner ring
+      CTX.beginPath(); CTX.arc(x, y, r - 8, 0, Math.PI*2);
+      CTX.strokeStyle = 'rgba(255, 255, 255, 0.15)'; CTX.lineWidth = 1; CTX.stroke();
 
-      // Label on hover or zoom
-      if(isAct || isHov || isParentHov || camZ > 0.85){
-        const fullLabel = label || n.id;
-        if(isHov){
-          CTX.font = '600 8.5px JetBrains Mono';
-          const tw = CTX.measureText(fullLabel).width;
-          const tx = (x<CX) ? (x - rGem - 11 - tw) : (x + rGem + 11);
-          CTX.fillStyle = 'rgba(15, 23, 42, 0.96)';
-          CTX.strokeStyle = c;
-          CTX.lineWidth = 1;
-          CTX.beginPath();
-          CTX.roundRect(tx - 4, y - 8, tw + 8, 16, 4);
-          CTX.fill();
-          CTX.stroke();
-          CTX.fillStyle = '#ffffff';
-          CTX.textAlign = 'left';
-          CTX.textBaseline = 'middle';
-          CTX.fillText(fullLabel, tx, y);
-        } else {
-          const chip = fullLabel.length>15 ? fullLabel.slice(0,15)+'…' : fullLabel;
-          CTX.fillStyle = isAct ? '#ffffff' : (isParentHov ? '#e2e8f0' : '#cbd5e1');
-          CTX.font = `${isAct ? '700' : '600'} 8px JetBrains Mono`;
-          CTX.textAlign = (x<CX) ? 'right' : 'left';
-          CTX.textBaseline = 'middle';
-          const stagY = ((parseInt(n._n||'0', 10) % 2 === 1) ? 2.5 : -2.5);
-          CTX.fillText(chip, (x<CX) ? (x-rGem-8) : (x+rGem+8), y + stagY);
-        }
+      // Authoritative Typography
+      CTX.fillStyle = '#f8fafc'; CTX.font = '800 11px JetBrains Mono';
+      CTX.textAlign = 'center'; CTX.textBaseline = 'middle';
+      CTX.fillText('HERMES', x, y - 6);
+      CTX.fillStyle = '#38bdf8'; CTX.font = '700 7px JetBrains Mono';
+      CTX.fillText('AI CORE', x, y + 8);
+    }
+
+    // ── TIER B: SERVICES & GATEWAYS (9Router, Honcho, MCP, etc.) ──
+    else if(type === 'service' || type === 'gateway'){
+      // Outer subtle ring
+      CTX.beginPath(); CTX.arc(x, y, r + 6, 0, Math.PI*2);
+      CTX.strokeStyle = hexAlpha(c, 0.25); CTX.lineWidth = 1; CTX.stroke();
+
+      // Solid Badge Body
+      CTX.beginPath(); CTX.arc(x, y, r, 0, Math.PI*2);
+      CTX.fillStyle = '#0f172a'; CTX.fill();
+      CTX.strokeStyle = isHov || isSel ? '#ffffff' : c;
+      CTX.lineWidth = isHov || isSel ? 2.6 : 1.8;
+      if(isHov || isSel){
+        CTX.shadowColor = c; CTX.shadowBlur = 14;
+      }
+      CTX.stroke();
+      CTX.shadowBlur = 0;
+
+      // Status indicator dot
+      CTX.beginPath(); CTX.arc(x, y - r + 3, 3, 0, Math.PI*2);
+      CTX.fillStyle = '#10b981'; CTX.fill();
+
+      // Service Label
+      CTX.fillStyle = '#f8fafc'; CTX.font = '700 8.5px JetBrains Mono';
+      CTX.textAlign = 'center'; CTX.textBaseline = 'middle';
+      const shortLbl = label.length > 13 ? label.slice(0, 12) + '…' : label;
+      CTX.fillText(shortLbl, x, y - 2);
+
+      // Port Chip
+      if(ports){
+        CTX.fillStyle = c; CTX.font = '600 6.5px JetBrains Mono';
+        const portStr = ports.split(',')[0].trim();
+        CTX.fillText(portStr.startsWith(':') ? portStr : `:${portStr}`, x, y + 10);
       }
     }
 
-    else if(type==='subskill'){
-      const isAct=ACTIVE.has(n.id)||ACTIVE.has(n.parent);
-      const isHov = hoveredNode && (hoveredNode.id === n.id || hoveredNode.id === n.parent);
-      const c=col(category);
-      const subR = isAct ? 9.5 : 7.5;
-      const pulseTime = performance.now();
-
-      if(isAct){
-        const ripSub = (pulseTime * 0.0028 + (n.seed || 0) * 0.7) % 1.0;
-        CTX.beginPath(); CTX.arc(x,y,subR + ripSub * 10,0,Math.PI*2);
-        CTX.strokeStyle=hexAlpha(c, (1 - ripSub) * 0.85);
-        CTX.lineWidth=1.5; CTX.stroke();
+    // ── TIER C: CHILDREN / MODELS / DATABASES / TOOLS ──
+    else {
+      // Shape selection: Models diamond/star, Databases cylinder, Channels circle
+      CTX.beginPath(); CTX.arc(x, y, r, 0, Math.PI*2);
+      CTX.fillStyle = isHov || isSel ? '#1e293b' : '#0b1120'; CTX.fill();
+      CTX.strokeStyle = isHov || isSel ? '#ffffff' : hexAlpha(c, 0.7);
+      CTX.lineWidth = isHov || isSel ? 2.0 : 1.2;
+      if(isHov){
+        CTX.shadowColor = c; CTX.shadowBlur = 10;
       }
-
-      // Clean micro terminal — ALWAYS RETAINS COLOR
-      CTX.beginPath(); CTX.arc(x,y,subR,0,Math.PI*2);
-      CTX.fillStyle='#0f172a'; CTX.fill();
-      CTX.strokeStyle=isAct ? '#ffffff' : hexAlpha(c, 0.50);
-      CTX.lineWidth=isAct ? 1.8 : 1.0;
       CTX.stroke();
+      CTX.shadowBlur = 0;
 
-      // Precision center dot — ALWAYS COLORFUL
-      CTX.beginPath(); CTX.arc(x,y,subR*0.35,0,Math.PI*2);
-      CTX.fillStyle=isAct?'#ffffff':c; CTX.fill();
+      // Center Icon
+      let icon = '✦';
+      if(type === 'database') icon = '⛁';
+      else if(type === 'dependency' || type === 'mcp') icon = '⚙';
+      else if(type === 'channel') icon = '💬';
+      else if(type === 'monitoring') icon = '📈';
+      else if(type === 'provider') icon = '⚡';
 
-      // Show subskill label on hover or when zoomed in (prevents text overlap)
-      if(isHov || camZ > 1.35){
-        const fullLabel = label || n.id;
+      CTX.fillStyle = c; CTX.font = '700 9px JetBrains Mono';
+      CTX.textAlign = 'center'; CTX.textBaseline = 'middle';
+      CTX.fillText(icon, x, y);
+
+      // Label Chip (Always readable or expanded on hover)
+      if(isHov || camZ > 0.85){
+        const fullTxt = label || n.id;
         if(isHov){
-          CTX.font = '600 8px JetBrains Mono';
-          const tw = CTX.measureText(fullLabel).width;
-          const tx = (x<CX) ? (x - subR - 7 - tw) : (x + subR + 7);
-          CTX.fillStyle = 'rgba(15, 23, 42, 0.94)';
-          CTX.strokeStyle = c;
-          CTX.lineWidth = 1;
+          // Rich floating hover pill
+          CTX.font = '600 8.5px JetBrains Mono';
+          const tw = CTX.measureText(fullTxt).width;
+          const tx = x > 0 ? (x + r + 10) : (x - r - 10 - tw);
+          CTX.fillStyle = 'rgba(15, 23, 42, 0.95)';
+          CTX.strokeStyle = c; CTX.lineWidth = 1;
           CTX.beginPath();
-          CTX.roundRect(tx - 4, y - 7, tw + 8, 14, 3);
-          CTX.fill();
-          CTX.stroke();
+          CTX.roundRect(tx - 4, y - 8, tw + 8, 16, 4);
+          CTX.fill(); CTX.stroke();
           CTX.fillStyle = '#ffffff';
           CTX.textAlign = 'left';
-          CTX.textBaseline = 'middle';
-          CTX.fillText(fullLabel, tx, y);
+          CTX.fillText(fullTxt, tx, y);
         } else {
-          const chip = fullLabel.length>16 ? fullLabel.slice(0,15)+'…' : fullLabel;
-          CTX.fillStyle = isAct ? '#f8fafc' : '#64748b';
-          CTX.font = `${isAct ? '600' : '400'} 8px JetBrains Mono`;
-          CTX.textAlign = (x<CX) ? 'right' : 'left';
-          CTX.textBaseline = 'middle';
-          CTX.fillText(chip, (x<CX) ? (x-subR-6) : (x+subR+6), y);
+          const chip = fullTxt.length > 14 ? fullTxt.slice(0, 13) + '…' : fullTxt;
+          CTX.fillStyle = '#cbd5e1'; CTX.font = '600 7.5px JetBrains Mono';
+          CTX.textAlign = x > 0 ? 'left' : 'right';
+          CTX.fillText(chip, x > 0 ? (x + r + 6) : (x - r - 6), y);
         }
       }
     }
@@ -1016,9 +610,19 @@ function renderFrame(){
   CTX.restore();
 }
 
-// ══════════════════════════════════════════
-// MAIN LOOP
-// ══════════════════════════════════════════
+function isNodeVisible(n){
+  if(ACTIVE_FILTER === 'all') return true;
+  if(n.type === 'core') return true;
+  if(ACTIVE_FILTER === 'llm' && (n.category === 'router' || n.group === 'llm')) return true;
+  if(ACTIVE_FILTER === 'memory' && (n.category === 'memory' || n.group === 'memory' || n.group === 'storage')) return true;
+  if(ACTIVE_FILTER === 'tools' && (n.category === 'mcp' || n.group === 'tools' || n.category === 'skills')) return true;
+  if(ACTIVE_FILTER === 'ops' && (n.category === 'channel' || n.category === 'monitoring' || n.category === 'network')) return true;
+  return false;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MAIN ANIMATION LOOP
+// ══════════════════════════════════════════════════════════════════
 function loop(){
   drawBG();
   physicsTick();
@@ -1026,76 +630,29 @@ function loop(){
   requestAnimationFrame(loop);
 }
 
-// ══════════════════════════════════════════
-// INTERACTION & CAMERA ANIMATION
-// ══════════════════════════════════════════
-let hoveredNode=null, dragNode=null, dragOffX=0, dragOffY=0;
-let panStart=null, panCamStart=null;
-let lastClick={x:0,y:0,t:0};
-let touchStartInfo=null;
-let touchDist0=0, touchZoom0=1;
-let _flyAnim=null;
+// ══════════════════════════════════════════════════════════════════
+// POINTER EVENTS & INTERACTION (PRESERVED & STABILIZED)
+// ══════════════════════════════════════════════════════════════════
+const activePointers = new Map();
+let mainPointerId = null;
+let pointerDownInfo = null;
 
-function flyTo(nodeId){
-  const n = NODES.find(x=>x.id===nodeId);
-  if(!n) return;
-  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim = null; }
-
-  const startX = camX, startY = camY, startZ = camZ;
-  const targetZ = n.type === 'cluster' ? 1.35 : (n.type === 'core' ? 1.1 : (n.type === 'subskill' ? 2.2 : 1.85));
-
-  const dist = Math.hypot(n.x - startX, n.y - startY);
-  const dur = Math.min(1050, Math.max(650, 500 + dist * 0.35));
-  const t0 = performance.now();
-
-  function step(now){
-    const elapsed = now - t0;
-    const progress = Math.min(elapsed / dur, 1);
-    const ease = progress < 0.5
-      ? 4 * progress * progress * progress
-      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-    camX = startX + (n.x - startX) * ease;
-    camY = startY + (n.y - startY) * ease;
-    camZ = startZ + (targetZ - startZ) * ease;
-
-    if(progress < 1){
-      _flyAnim = requestAnimationFrame(step);
-    } else {
-      camX = n.x;
-      camY = n.y;
-      camZ = targetZ;
-      _flyAnim = null;
-    }
-  }
-  _flyAnim = requestAnimationFrame(step);
-}
-
-function hitTest(wx,wy){
-  // Reverse: subskills first (smaller), then skills/agents, then clusters, then core
-  const order=[...NODES].reverse();
+function hitTest(wx, wy){
+  // Check smaller child nodes first, then services, then core
+  const order = [...NODES].reverse();
   for(const n of order){
-    const d=Math.hypot(wx-n.x, wy-n.y);
-    const hitR = n.type==='subskill'?20:((n.type==='skill'||n.type==='agent')?24:(n.type==='cluster'?30:45));
-    if(d < n.r+hitR) return n;
+    if(!isNodeVisible(n)) continue;
+    const d = Math.hypot(wx - n.x, wy - n.y);
+    const hitR = n.type === 'core' ? 48 : (n.type === 'service' ? 36 : 22);
+    if(d < hitR) return n;
   }
   return null;
 }
 
-// Prevent browser from initiating HTML5 drag, text selection, or long-press context menu
-window.addEventListener('dragstart', e => e.preventDefault());
-window.addEventListener('selectstart', e => { if(dragNode || panStart) e.preventDefault(); });
-window.addEventListener('contextmenu', e => { if(dragNode || panStart) e.preventDefault(); });
-
-const activePointers = new Map();
-let mainPointerId = null;
-let pointerDownInfo = null;
-let touchPinchDist0 = 0;
-
 function handlePointerDown(e){
   if(e.pointerType === 'mouse' && e.button !== 0) return;
   e.preventDefault();
-  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim=null; }
+  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim = null; }
 
   activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
@@ -1103,8 +660,8 @@ function handlePointerDown(e){
     mainPointerId = e.pointerId;
     try { CV.setPointerCapture(e.pointerId); } catch(_){}
 
-    const[wx,wy]=sw(e.clientX,e.clientY);
-    const hit=hitTest(wx,wy);
+    const [wx, wy] = sw(e.clientX, e.clientY);
+    const hit = hitTest(wx, wy);
     pointerDownInfo = { x: e.clientX, y: e.clientY, t: performance.now(), hit };
 
     if(hit){
@@ -1117,11 +674,6 @@ function handlePointerDown(e){
       panStart = { x: e.clientX, y: e.clientY };
       panCamStart = { x: camX, y: camY };
     }
-  } else if(activePointers.size === 2 && !dragNode){
-    panStart = null;
-    const pts = Array.from(activePointers.values());
-    touchPinchDist0 = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-    touchZoom0 = camZ;
   }
 }
 
@@ -1129,18 +681,8 @@ function handlePointerMove(e){
   if(!activePointers.has(e.pointerId)) return;
   activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-  // Two-finger pinch zoom (only when no node is being dragged)
-  if(activePointers.size === 2 && !dragNode && touchPinchDist0 > 0){
-    const pts = Array.from(activePointers.values());
-    const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-    camZ = Math.min(3, Math.max(0.08, touchZoom0 * (dist / touchPinchDist0)));
-    e.preventDefault();
-    return;
-  }
-
-  // Single-pointer drag or pan
   if(e.pointerId === mainPointerId){
-    const[wx,wy]=sw(e.clientX,e.clientY);
+    const [wx, wy] = sw(e.clientX, e.clientY);
 
     if(dragNode){
       const targetX = wx - dragOffX;
@@ -1153,105 +695,16 @@ function handlePointerMove(e){
       dragNode.x = targetX;
       dragNode.y = targetY;
 
+      // Natural drag propagation: pull connected children gently
       if(dragNode.type === 'core'){
-        NODES.forEach(other => {
-          if(other !== dragNode){
-            other.x += dx;
-            other.y += dy;
-            if(other.anchorX !== undefined) other.anchorX += dx;
-            if(other.anchorY !== undefined) other.anchorY += dy;
-          }
-        });
-      } else if(dragNode.type === 'cluster'){
-        const core = NODES[0] || {x:0, y:0};
-        const cdx = dragNode.x - core.x, cdy = dragNode.y - core.y;
-        const cdist = Math.hypot(cdx, cdy);
-        const minCoreD = R_CORE + R_CLUSTER + 50;
-        if(cdist < minCoreD){
-          const safeAng = cdist > 0.01 ? Math.atan2(cdy, cdx) : (dragNode.ang !== undefined ? dragNode.ang : 0);
-          dragNode.x = core.x + Math.cos(safeAng) * minCoreD;
-          dragNode.y = core.y + Math.sin(safeAng) * minCoreD;
-        }
-
-        const cIdx = NODES.indexOf(dragNode);
-        NODES.forEach(child => {
-          if(child.parentIdx === cIdx){
-            child.vx += dx * 0.35;
-            child.vy += dy * 0.35;
-            const sIdx = NODES.indexOf(child);
-            NODES.forEach(sub => {
-              if(sub.parentIdx === sIdx){
-                sub.vx += dx * 0.35;
-                sub.vy += dy * 0.35;
-              }
-            });
-          }
-        });
-      } else if(dragNode.type === 'skill' || dragNode.type === 'agent'){
-        const sIdx = NODES.indexOf(dragNode);
-        NODES.forEach(sub => {
-          if(sub.parentIdx === sIdx){
-            sub.vx += dx * 0.35;
-            sub.vy += dy * 0.35;
-          }
-        });
+        dragNode.anchorX = targetX;
+        dragNode.anchorY = targetY;
       }
       e.preventDefault();
     } else if(panStart){
       camX = panCamStart.x - (e.clientX - panStart.x) / camZ;
       camY = panCamStart.y - (e.clientY - panStart.y) / camZ;
       e.preventDefault();
-    }
-  }
-}
-function onNodeDrop(n){
-  if(!n) return;
-  const core = NODES[0] || {x:0, y:0};
-  if(n.type === 'core'){
-    n.anchorX = n.x;
-    n.anchorY = n.y;
-    n.vx = Math.min(1.8, Math.max(-1.8, n.vx));
-    n.vy = Math.min(1.8, Math.max(-1.8, n.vy));
-  } else if(n.type === 'cluster'){
-    const dx = n.x - core.x, dy = n.y - core.y;
-    const dist = Math.hypot(dx, dy);
-    // Enforce safe orbit distance so cluster NEVER collapses or disappears inside Core
-    const minOrbit = R_CORE + R_CLUSTER + 75; // 46 + 28 + 75 = 149px
-    const safeDist = Math.max(minOrbit, dist);
-    n.ang = (dx === 0 && dy === 0) ? (n.ang !== undefined ? n.ang : 0) : Math.atan2(dy, dx);
-    n.orbitDist = safeDist;
-    n.anchorX = core.x + Math.cos(n.ang) * safeDist;
-    n.anchorY = core.y + Math.sin(n.ang) * safeDist;
-    n.x = n.anchorX;
-    n.y = n.anchorY;
-    n.vx = 0;
-    n.vy = 0;
-  } else if((n.type === 'skill' || n.type === 'agent') && n.parentIdx !== undefined){
-    const p = NODES[n.parentIdx];
-    if(p){
-      const sdx = n.x - p.x, sdy = n.y - p.y;
-      n.baseDist = Math.hypot(sdx, sdy);
-      n.relDist = n.baseDist;
-      const pdx = p.x - core.x, pdy = p.y - core.y;
-      const p_ang = Math.atan2(pdy, pdx);
-      const s_ang = Math.atan2(sdy, sdx);
-      n.relAng = s_ang - p_ang;
-      n.vx = Math.min(1.5, Math.max(-1.5, n.vx));
-      n.vy = Math.min(1.5, Math.max(-1.5, n.vy));
-    }
-  } else if(n.type === 'subskill' && n.parentIdx !== undefined){
-    const ps = NODES[n.parentIdx];
-    if(ps){
-      const subdx = n.x - ps.x, subdy = n.y - ps.y;
-      n.baseDist = Math.hypot(subdx, subdy);
-      n.relDist = n.baseDist;
-      const p = (ps.parentIdx !== undefined) ? NODES[ps.parentIdx] : core;
-      const pdx = ps.x - p.x, pdy = ps.y - p.y;
-      const ps_ang = Math.atan2(pdy, pdx);
-      const sub_ang = Math.atan2(subdy, subdx);
-      n.relAng = sub_ang - ps_ang;
-      n.vx = Math.min(1.5, Math.max(-1.5, n.vx));
-      n.vy = Math.min(1.5, Math.max(-1.5, n.vy));
     }
   }
 }
@@ -1262,29 +715,23 @@ function handlePointerUp(e){
   if(e.pointerId === mainPointerId){
     try { CV.releasePointerCapture(e.pointerId); } catch(_){}
 
-    // Check for quick click/tap to inspect node detail
     if(pointerDownInfo){
       const d = Math.hypot(e.clientX - pointerDownInfo.x, e.clientY - pointerDownInfo.y);
       const dt = performance.now() - pointerDownInfo.t;
-      if(d < 10 && dt < 450){
-        if(pointerDownInfo.hit) showDetail(pointerDownInfo.hit);
-        else document.getElementById('detail').style.display = 'none';
+      if(d < 8 && dt < 400){
+        if(pointerDownInfo.hit) openInspector(pointerDownInfo.hit);
+        else closeInspector();
       }
       pointerDownInfo = null;
     }
 
     if(dragNode){
-      onNodeDrop(dragNode);
       dragNode.dragging = false;
       dragNode = null;
       CV.classList.remove('dragging');
     }
     panStart = null;
     mainPointerId = null;
-  }
-
-  if(activePointers.size === 0){
-    touchPinchDist0 = 0;
   }
 }
 
@@ -1293,542 +740,272 @@ CV.addEventListener('pointermove', handlePointerMove);
 CV.addEventListener('pointerup', handlePointerUp);
 CV.addEventListener('pointercancel', handlePointerUp);
 
-// Hover effect when moving mouse without clicking
+// Passive hover check
 window.addEventListener('pointermove', e => {
   if(!dragNode && activePointers.size === 0){
-    const[wx,wy]=sw(e.clientX,e.clientY);
-    hoveredNode = hitTest(wx,wy);
+    const [wx, wy] = sw(e.clientX, e.clientY);
+    hoveredNode = hitTest(wx, wy);
     CV.style.cursor = hoveredNode ? 'pointer' : 'grab';
   }
 });
 
-// Zoom
-CV.addEventListener('wheel',e=>{
-  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim=null; }
+// Zoom Wheel
+CV.addEventListener('wheel', e => {
+  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim = null; }
   e.preventDefault();
-  const factor=e.deltaY<0?1.1:0.91;
-  const[wx,wy]=sw(e.clientX,e.clientY);
-  camZ=Math.min(3,Math.max(0.08,camZ*factor));
-  // Zoom toward mouse
-  const[wx2,wy2]=sw(e.clientX,e.clientY);
-  camX+=wx-wx2; camY+=wy-wy2;
-},{passive:false});
+  const factor = e.deltaY < 0 ? 1.1 : 0.91;
+  const [wx, wy] = sw(e.clientX, e.clientY);
+  camZ = Math.min(3.2, Math.max(0.12, camZ * factor));
+  const [wx2, wy2] = sw(e.clientX, e.clientY);
+  camX += wx - wx2;
+  camY += wy - wy2;
+}, {passive: false});
 
-// ══════════════════════════════════════════
-// UI
-// ══════════════════════════════════════════
-function showDetail(n){
-  const c=col(n.type==='core'?'core':n.category);
-  const badge=document.getElementById('dbadge');
-  badge.textContent=n.type.toUpperCase();
-  badge.style.cssText=`color:${c};border:1px solid ${c}44;background:${c}22;display:inline-block;margin-bottom:7px;padding:2px 9px;border-radius:999px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase`;
-  document.getElementById('dtitle').textContent=n.label;
-  document.getElementById('ddesc').textContent=n.desc||'—';
-  document.getElementById('dtype').textContent=n.type;
-  document.getElementById('dcat').textContent=n.category||'—';
-  const ddivrow = document.getElementById('ddivrow');
-  if(n.division){
-    ddivrow.style.display = 'flex';
-    document.getElementById('ddiv').textContent = n.division.toUpperCase();
-  } else {
-    ddivrow.style.display = 'none';
+// ══════════════════════════════════════════════════════════════════
+// SMOOTH CAMERA FLYTO
+// ══════════════════════════════════════════════════════════════════
+function flyTo(nodeId){
+  const n = NODES.find(x => x.id === nodeId);
+  if(!n) return;
+  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim = null; }
+
+  const startX = camX, startY = camY, startZ = camZ;
+  const targetZ = n.type === 'core' ? 1.0 : (n.type === 'service' ? 1.4 : 1.8);
+  const dur = 750;
+  const t0 = performance.now();
+
+  function step(now){
+    const elapsed = now - t0;
+    const progress = Math.min(elapsed / dur, 1);
+    const ease = progress < 0.5 ? 4*progress*progress*progress : 1 - Math.pow(-2*progress + 2, 3)/2;
+    camX = startX + (n.x - startX) * ease;
+    camY = startY + (n.y - startY) * ease;
+    camZ = startZ + (targetZ - startZ) * ease;
+    if(progress < 1) _flyAnim = requestAnimationFrame(step);
+    else _flyAnim = null;
   }
-  const dprow = document.getElementById('dprow');
-  if(n.parent){
-    dprow.style.display = 'flex';
-    document.getElementById('dpar').textContent = n.parent;
-  } else {
-    dprow.style.display = 'none';
-  }
-  const p=document.getElementById('detail');
-  p.style.display='block'; p.style.borderColor=c+'33';
+  _flyAnim = requestAnimationFrame(step);
 }
 
-function activateSkill(name, useCount){
-  ACTIVE.add(name);
-  const n=NODES.find(x=>x.id===name);
-  const c=n?col(n.category):'#6366f1';
-  dbgLog(`activateSkill(${name})<br>node found: ${!!n}<br>NODES.length: ${NODES.length}<br>ACTIVE: [${[...ACTIVE].join(',')}]`);
-  spawnFlow(name, useCount);
-  const ix=document.getElementById(`ix-${name}`);
-  if(ix) ix.classList.add('lit');
-  document.getElementById('s-st').textContent='FIRING';
-  document.getElementById('s-st').style.color=c;
-  document.getElementById('tval').textContent=[...ACTIVE].map(s=>s.toUpperCase()).join(' • ');
-  document.getElementById('tdot').classList.add('on');
-  document.getElementById('toast').classList.add('show');
-  // No client-side auto-deactivate timer — polling handles it
-}
-function deactivateSkill(name){
-  ACTIVE.delete(name);
-  if(TIMERS[name]){clearTimeout(TIMERS[name]);delete TIMERS[name];}
-  stopFlow(name);
-  const ix=document.getElementById(`ix-${name}`);
-  if(ix) ix.classList.remove('lit');
-  if(ACTIVE.size===0){
-    document.getElementById('s-st').textContent='IDLE';
-    document.getElementById('s-st').style.color='#38d9d4';
-    document.getElementById('tdot').classList.remove('on');
-    document.getElementById('toast').classList.remove('show');
-  } else {
-    document.getElementById('tval').textContent=[...ACTIVE].map(s=>s.toUpperCase()).join(' • ');
-  }
-}
+// ══════════════════════════════════════════════════════════════════
+// INSPECTOR & DIRECTORY UI
+// ══════════════════════════════════════════════════════════════════
+function openInspector(n){
+  selectedNode = n;
+  const c = getNodeColor(n);
+  const insp = document.getElementById('inspector');
+  const badge = document.getElementById('insp-badge');
 
-// ══════════════════════════════════════════
-// ── DEBUG OVERLAY (hidden by default) ──
-const _dbgOverlay = document.createElement('div');
-_dbgOverlay.id='dbg-overlay';
-_dbgOverlay.style.cssText='position:fixed;top:60px;left:10px;background:rgba(0,0,0,.85);color:#0f0;font:11px monospace;padding:8px 12px;border-radius:6px;z-index:9999;max-width:280px;pointer-events:none;display:none;';
-document.body.appendChild(_dbgOverlay);
-function dbgLog(msg){ _dbgOverlay.innerHTML = msg; }
+  badge.textContent = (n.role || n.type).toUpperCase();
+  badge.style.color = c;
+  badge.style.border = `1px solid ${c}66`;
+  badge.style.background = `${c}22`;
 
-// SSE (primary) + Polling fallback (works on mobile)
-// ══════════════════════════════════════════
-let _lastPolled = new Set();
-let _lastSkillCount = 0;
-let _graphInitialized = false;
+  document.getElementById('insp-title').textContent = n.label;
+  document.getElementById('insp-sub').textContent = `${(n.category || n.type).toUpperCase()} • ${n.id}`;
+  document.getElementById('insp-container').textContent = n.container || 'host / internal';
+  document.getElementById('insp-ports').textContent = n.ports || 'internal socket';
+  document.getElementById('insp-status').textContent = (n.status || 'ACTIVE').toUpperCase();
+  document.getElementById('insp-status').style.color = '#10b981';
+  document.getElementById('insp-desc').textContent = n.desc || 'System component running within the Hermes AI architecture.';
 
-function pollActive(){
-  fetch('/api/active?_t=' + Date.now()).then(r=>r.json()).then(d=>{
-    const cur = new Set(d.skills||[]);
-    const infoMap = {};
-    (d.skills_info||[]).forEach(s=>{ infoMap[s.name]=s.use_count; });
-    dbgLog(`POLL OK<br>active: [${[...cur].join(', ')||'none'}]<br>NODES: ${typeof NODES!=='undefined'?NODES.length:'?'}<br>ACTIVE: [${[...ACTIVE].join(', ')||'none'}]`);
+  // Show connected links
+  const connsRow = document.getElementById('insp-conns');
+  connsRow.innerHTML = '';
+  const myIdx = NODES.indexOf(n);
+  const myLinks = LINKS.filter(lk => lk.a === myIdx || lk.b === myIdx);
 
-    // Auto-detect new skills added on server in real time!
-    if (d.total_skills && _lastSkillCount > 0 && d.total_skills !== _lastSkillCount) {
-      fetch('/api/graph?_t=' + Date.now()).then(r=>r.json()).then(data=>{
-        buildGraph(data, true);
-      }).catch(_=>{});
+  myLinks.forEach(lk => {
+    const otherIdx = lk.a === myIdx ? lk.b : lk.a;
+    const other = NODES[otherIdx];
+    if(other){
+      const pill = document.createElement('span');
+      pill.className = 'insp-conn-pill';
+      pill.textContent = `${other.label} (${lk.label || 'connected'})`;
+      pill.onclick = () => { flyTo(other.id); openInspector(other); };
+      connsRow.appendChild(pill);
     }
+  });
 
-    // Activate new ones with use_count
-    cur.forEach(s=>{ if(!_lastPolled.has(s)) activateSkill(s, infoMap[s]||1); });
-    // Deactivate removed ones
-    _lastPolled.forEach(s=>{ if(!cur.has(s)) deactivateSkill(s); });
-    _lastPolled = cur;
-  }).catch(e=>{ dbgLog(`POLL ERR: ${e}`); });
+  insp.style.display = 'flex';
+  insp.style.borderColor = `${c}55`;
 }
 
-// SSE (also try, as bonus)
-(function connectSSE(){
-  try{
-    const es=new EventSource('/api/events');
-    es.onmessage=e=>{
-      try{
-        const d=JSON.parse(e.data);
-        if(d.type==='skill_activated'){
-          const ns=Array.isArray(d.skills)?d.skills:[d.skill].filter(Boolean);
-          ns.forEach(activateSkill);
-        } else if(d.type==='skill_deactivated'){
-          if(d.skill) deactivateSkill(d.skill);
-          else [...ACTIVE].forEach(deactivateSkill);
-        }
-      }catch(_){}
-    };
-    es.onerror=()=>setTimeout(connectSSE,5000);
-  }catch(_){}
-})();
+function closeInspector(){
+  selectedNode = null;
+  document.getElementById('inspector').style.display = 'none';
+}
+document.getElementById('insp-close').addEventListener('click', closeInspector);
 
-// ══════════════════════════════════════════
-// LOAD + BUILD GRAPH
-// ══════════════════════════════════════════
-function buildGraph(data, isLiveUpdate){
-  gData=data;
-  const nm={};
-  data.nodes.forEach(n=>nm[n.id]=n);
-
-  // Node sizes
-  const R_CORE=46, R_CLUSTER=28, R_SKILL=15, R_AGENT=15, R_SUB=10;
-
-  const core=data.nodes.find(n=>n.type==='core');
-  const clusters=data.nodes.filter(n=>n.type==='cluster' && !n.id.startsWith('.'));
-  const skills=data.nodes.filter(n=>n.type==='skill' && !n.id.startsWith('.') && (!n.category || !n.category.startsWith('.')));
-  const agents=data.nodes.filter(n=>n.type==='agent' && !n.id.startsWith('.'));
-  const subskills=data.nodes.filter(n=>n.type==='subskill' && !n.id.startsWith('.'))||[];
-
-  // Keep existing node state if live update
-  const oldMap=new Map();
-  NODES.forEach(n=>oldMap.set(n.id, n));
-
-  const newNodes=[];
-  const idx={};
-
-  // 1. Core (positioned on the right side)
-  const oldCore=oldMap.get(core.id);
-  const coreNode=oldCore?{...oldCore,...core, x:CX, y:CY, anchorX:CX, anchorY:CY, mass:Infinity}:{
-    ...core, x:CX,y:CY, anchorX:CX, anchorY:CY, vx:0,vy:0, r:R_CORE, mass:Infinity, dragging:false
-  };
-  newNodes.push(coreNode);
-  idx[core.id]=0;
-
-  // 2. Harmonious Cluster Ordering (Top-to-bottom strictly on the LEFT side of Hermes)
-  const CLUSTER_ORDER = [
-    'creative',
-    'agency-product-design',
-    'web',
-    'agency-growth',
-    'autonomous-ai-agents',
-    'agency-orchestration',
-    'agency-engineering',
-    'software-development',
-    'agency-qa-security',
-    'devops',
-    'agency-domain',
-    'research',
-    'social-media',
-    'email',
-    'media',
-    'note-taking',
-    'productivity',
-    'apple'
-  ];
-  clusters.sort((a,b)=>{
-    const ia = CLUSTER_ORDER.indexOf(a.id);
-    const ib = CLUSTER_ORDER.indexOf(b.id);
-    return (ia >= 0 ? ia : 99) - (ib >= 0 ? ib : 99);
+// Filter Bar Buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ACTIVE_FILTER = btn.getAttribute('data-filter');
+    showToast(`FILTER: ${btn.textContent}`);
   });
+});
 
-  // Calculate proportional angular budget for each cluster based on its skills, agents & subskills
-  const weights = {};
-  let totalWeight = 0;
-  clusters.forEach(cl=>{
-    const sks = skills.filter(s=>s.category===cl.id);
-    const ags = agents.filter(a=>a.category===cl.id);
-    const subs = subskills.filter(s=>s.category===cl.id);
-    const w = 3.0 + (sks.length + ags.length) * 0.40 + subs.length * 0.15;
-    weights[cl.id] = w;
-    totalWeight += w;
-  });
+// Drawer Navigation
+function updateDrawer(){
+  const list = document.getElementById('drawer-list');
+  list.innerHTML = '';
+  const q = SEARCH_QUERY.toLowerCase();
 
-  // Distribute all clusters smoothly in a full 360° circle around Hermes
-  const TOTAL_CLUSTERS = clusters.length;
-  const START_DEG = -90.0; // Start from top (12 o'clock)
-  const TOTAL_ARC_DEG = 360.0;
-  let curDeg = START_DEG;
+  NODES.forEach(n => {
+    if(q && !n.label.toLowerCase().includes(q) && !(n.ports||'').toLowerCase().includes(q) && !n.id.toLowerCase().includes(q)) return;
 
-  // Initial load / reload distance bounds (user dragging has NO bounds)
-  const MIN_INIT_ORBIT = 350;
-  const MAX_INIT_ORBIT = 440;
+    const row = document.createElement('div');
+    row.className = 'nav-item';
+    const c = getNodeColor(n);
 
-  // Place clusters circling completely around Hermes (360°)
-  clusters.forEach((cl,i)=>{
-    const spanDeg = (weights[cl.id] / totalWeight) * TOTAL_ARC_DEG;
-    const midDeg = curDeg + spanDeg * 0.5;
-    curDeg += spanDeg;
-
-    // Organic subtle angular jitter on fresh load
-    const angJitterDeg = isLiveUpdate ? 0 : (Math.random() - 0.5) * 2.0;
-    const c_ang = (midDeg + angJitterDeg) * Math.PI / 180;
-    const sectorSpan = spanDeg * Math.PI / 180;
-
-    // Organic randomized orbit distance bounded between [MIN_INIT_ORBIT, MAX_INIT_ORBIT] on fresh load
-    const randOrbit = MIN_INIT_ORBIT + Math.random() * (MAX_INIT_ORBIT - MIN_INIT_ORBIT);
-    const orbit = (oldMap.get(cl.id)?.orbitDist && isLiveUpdate) ? oldMap.get(cl.id).orbitDist : randOrbit;
-
-    const cx = CX + Math.cos(c_ang) * orbit;
-    const cy = CY + Math.sin(c_ang) * orbit;
-    const oldCl = oldMap.get(cl.id);
-    const ni = (oldCl && isLiveUpdate) ? {
-      ...oldCl, ...cl,
-      ang: oldCl.ang !== undefined ? oldCl.ang : c_ang,
-      orbitDist: oldCl.orbitDist !== undefined ? oldCl.orbitDist : orbit,
-      sectorSpan: sectorSpan,
-      r: R_CLUSTER, mass: 10.0
-    } : {
-      ...cl,
-      x: cx, y: cy,
-      anchorX: cx, anchorY: cy,
-      ang: c_ang, orbitDist: orbit,
-      sectorSpan: sectorSpan,
-      vx: 0, vy: 0,
-      r: R_CLUSTER, mass: 10.0,
-      dragging: false,
-      seed: (i+1)*37 + Math.random()*100
-    };
-    idx[cl.id] = newNodes.length;
-    newNodes.push(ni);
-  });
-
-  // 3. Skills & Agents — placed BEHIND their parent cluster with tiered radial expansion to the left
-  let si = 1;
-  const idxItems = [];
-  clusters.forEach(cl=>{
-    const clNode = newNodes[idx[cl.id]];
-    const c_ang = clNode.ang;
-    const sectorSpan = clNode.sectorSpan || ((weights[cl.id] / totalWeight) * (TOTAL_ARC_DEG * Math.PI / 180));
-    const usableSpread = Math.min(1.4, Math.max(0.12, sectorSpan * 0.95));
-
-    const cl_skills = skills.filter(s=>s.category===cl.id);
-    const cl_agents = agents.filter(a=>a.category===cl.id);
-    const cl_items = [...cl_skills, ...cl_agents];
-
-    cl_items.sort((a,b)=>{
-      const subA = subskills.filter(s=>s.parent===a.id).length;
-      const subB = subskills.filter(s=>s.parent===b.id).length;
-      return subB - subA;
-    });
-
-    const M = cl_items.length;
-    const tiers = Math.min(6, Math.max(1, Math.ceil(M / 7)));
-
-    cl_items.forEach((item, j)=>{
-      const tier = j % tiers;
-      const itemsInTier = Math.ceil(M / tiers);
-      const idxInTier = Math.floor(j / tiers);
-      const frac = itemsInTier > 1 ? (idxInTier - (itemsInTier - 1) / 2) / ((itemsInTier - 1) / 2) : 0;
-      const relAng = frac * (usableSpread * 0.48);
-      const item_ang = c_ang + relAng;
-
-    // Tiered radial distance from parent cluster: generous breathing room (140px - 490px)
-    const distBehind = 140 + tier * 70; // tiered depth: 140px, 210px, 280px, 350px, 420px, 490px
-    const sx = clNode.x + Math.cos(item_ang) * distBehind;
-    const sy = clNode.y + Math.sin(item_ang) * distBehind;
-
-      const isAgent = item.type === 'agent';
-      const rItem = isAgent ? R_AGENT : R_SKILL;
-
-      const oldItem = oldMap.get(item.id);
-      const ni = (oldItem && isLiveUpdate) ? {
-        ...oldItem, ...item,
-        ang: item_ang, relAng: relAng, relDist: distBehind, baseDist: distBehind,
-        parentIdx: idx[cl.id], r: rItem, mass: isAgent ? 2.0 : 1.8
-      } : {
-        ...item,
-        x: sx, y: sy,
-        ang: item_ang, relAng: relAng, relDist: distBehind, baseDist: distBehind,
-        vx: 0, vy: 0,
-        r: rItem, mass: isAgent ? 2.0 : 1.8,
-        parentIdx: idx[cl.id],
-        dragging: false,
-        _n: isAgent ? '◆' : String(si).padStart(2,'0'),
-        seed: (j+1)*73 + idx[cl.id]*19
-      };
-
-      idxItems.push({id:item.id, n:ni._n, col:col(item.category), label:item.label, type:item.type});
-      idx[item.id] = newNodes.length;
-      newNodes.push(ni);
-      if(!isAgent) si++;
-    });
-  });
-
-  // 4. Subskills — placed clearly behind their parent skill
-  skills.forEach(sk=>{
-    const skNode = newNodes[idx[sk.id]];
-    if(!skNode) return;
-    const subs = subskills.filter(s=>s.parent===sk.id);
-    const sub_M = subs.length;
-    if(!sub_M) return;
-
-    const sub_spread = Math.min(0.24, sub_M * 0.04);
-    subs.forEach((sub, k)=>{
-      const sub_frac = sub_M > 1 ? (k - (sub_M - 1) / 2) / ((sub_M - 1) / 2) : 0;
-      const sub_relAng = sub_frac * (sub_spread * 0.5);
-      // Generous distance from parent skill node (80px - 115px)
-      const sub_relDist = 80 + (k % 2) * 35;
-      const sub_ang = (skNode.ang || 0) + sub_relAng;
-      const sub_x = skNode.x + Math.cos(sub_ang) * sub_relDist;
-      const sub_y = skNode.y + Math.sin(sub_ang) * sub_relDist;
-
-      const oldSub = oldMap.get(sub.id);
-      const ni = (oldSub && isLiveUpdate) ? {
-        ...oldSub, ...sub,
-        relAng: sub_relAng, relDist: sub_relDist, baseDist: sub_relDist,
-        parentIdx: idx[sk.id], r: R_SUB, mass: 0.6
-      } : {
-        ...sub,
-        x: sub_x, y: sub_y,
-        relAng: sub_relAng, relDist: sub_relDist, baseDist: sub_relDist,
-        vx: 0, vy: 0,
-        r: R_SUB, mass: 0.6,
-        parentIdx: idx[sk.id],
-        dragging: false,
-        seed: (k+1)*91 + idx[sk.id]*13
-      };
-      idx[sub.id] = newNodes.length;
-      newNodes.push(ni);
-    });
-  });
-
-  // Update NODES array in-place
-  NODES.length=0;
-  newNodes.forEach(n=>NODES.push(n));
-
-  // Build LINKS array (index pairs)
-  LINKS.length=0;
-  data.links.forEach(lk=>{
-    const aid=lk.source?.id||lk.source;
-    const bid=lk.target?.id||lk.target;
-    if(idx[aid]!==undefined && idx[bid]!==undefined){
-      LINKS.push({a:idx[aid], b:idx[bid]});
-    }
-  });
-
-  // ── Grouped constellation index panel ─────────────────────────
-  const el = document.getElementById('idx-list');
-  el.innerHTML = '';
-  const countEl = document.getElementById('idx-total-count');
-  if(countEl) countEl.textContent = skills.length;
-
-  // Build clusterMap: clusterId -> { id, label, col, skills: [] }
-  const clusterMap = new Map();
-  clusters.forEach(cl=>{
-    clusterMap.set(cl.id, {
-      id: cl.id,
-      label: cl.label || cl.id.replace(/-/g, ' ').toUpperCase(),
-      col: col(cl.category || cl.id),
-      skills: []
-    });
-  });
-
-  // Group each skill/agent into its parent cluster
-  const allItems = [...skills, ...agents];
-  if(countEl) countEl.textContent = allItems.length;
-
-  allItems.forEach(it=>{
-    const cat = it.category || 'web';
-    let bucket = clusterMap.get(cat);
-    if(!bucket){
-      for(const [k, v] of clusterMap.entries()){
-        if(k.toLowerCase() === cat.toLowerCase()){ bucket = v; break; }
-      }
-    }
-    if(!bucket && clusterMap.size > 0){
-      bucket = clusterMap.values().next().value;
-    }
-    if(bucket){
-      bucket.skills.push(it);
-    }
-  });
-
-  // Render grouped accordion for each cluster
-  clusterMap.forEach((grp, clusterId)=>{
-    if(!grp.skills.length) return;
-    const group = document.createElement('div');
-    group.className = 'ic-group';
-
-    // Parent cluster header
-    const par = document.createElement('div');
-    par.className = 'ic-parent';
-    par.style.borderLeftColor = grp.col;
-    par.innerHTML = `
-      <span class="ic-parent-dot" style="background:${grp.col};box-shadow:0 0 6px ${grp.col}66"></span>
-      <span class="ic-parent-label">${grp.label}</span>
-      <span class="ic-parent-count">${grp.skills.length}</span>
-      <span class="ic-parent-arrow">▾</span>
+    row.innerHTML = `
+      <span style="display:flex;align-items:center;gap:6px">
+        <span style="width:6px;height:6px;border-radius:50%;background:${c}"></span>
+        <span>${n.label}</span>
+      </span>
+      <span class="nav-tag" style="background:${c}22;color:${c}">${n.type}</span>
     `;
 
-    // Children list container
-    const children = document.createElement('div');
-    children.className = 'ic-children';
-
-    // Clicking cluster row: toggle accordion + smoothly fly to cluster node
-    par.addEventListener('click', ()=>{
-      par.classList.toggle('collapsed');
-      children.classList.toggle('collapsed');
-      flyTo(clusterId);
-      const clNode = NODES.find(x=>x.id===clusterId);
-      if(clNode) showDetail(clNode);
+    row.addEventListener('click', () => {
+      flyTo(n.id);
+      openInspector(n);
     });
-
-    // Skill & Agent items
-    grp.skills.forEach(sk=>{
-      const isAgent = sk.type === 'agent';
-      const skSubs = isAgent ? [] : subskills.filter(s=>s.parent===sk.id);
-      const d = document.createElement('div');
-      d.className = 'ir' + (ACTIVE.has(sk.id) ? ' lit' : '');
-      d.id = `ix-${sk.id}`;
-      d.innerHTML = `
-        <span class="ir-dot" style="background:${isAgent ? '#f59e0b' : grp.col};border-radius:${isAgent ? '2px' : '50%'}"></span>
-        <span class="ir-label">${sk.label || sk.id}</span>
-        ${isAgent ? `<span class="ir-sub-count" style="color:#f59e0b;background:rgba(245,158,11,0.12);font-size:6.5px">AGENT</span>` : ''}
-        ${skSubs.length ? `<span class="ir-sub-count">${skSubs.length}</span><span class="ir-arrow">▾</span>` : ''}
-      `;
-
-      let subWrap = null;
-      if(skSubs.length){
-        subWrap = document.createElement('div');
-        subWrap.className = 'ic-subskills';
-        skSubs.forEach(sub=>{
-          const srow = document.createElement('div');
-          srow.className = 'ir ir-sub' + (ACTIVE.has(sub.id) ? ' lit' : '');
-          srow.id = `ix-${sub.id}`;
-          srow.innerHTML = `
-            <span class="ir-sub-line">└─</span>
-            <span class="ir-dot" style="background:${grp.col};opacity:.8;width:3px;height:3px;"></span>
-            <span class="ir-label">${sub.label}</span>
-          `;
-          srow.addEventListener('click', e=>{
-            e.stopPropagation();
-            document.querySelectorAll('.ir.selected').forEach(x=>x.classList.remove('selected'));
-            srow.classList.add('selected');
-            flyTo(sub.id);
-            const subNode = NODES.find(x=>x.id===sub.id);
-            if(subNode) showDetail(subNode);
-          });
-          subWrap.appendChild(srow);
-        });
-      }
-
-      d.addEventListener('click', e=>{
-        e.stopPropagation();
-        if(subWrap){
-          subWrap.classList.toggle('collapsed');
-          d.querySelector('.ir-arrow')?.classList.toggle('collapsed');
-        }
-        document.querySelectorAll('.ir.selected').forEach(x=>x.classList.remove('selected'));
-        d.classList.add('selected');
-        flyTo(sk.id);
-        const skNode = NODES.find(x=>x.id===sk.id);
-        if(skNode) showDetail(skNode);
-      });
-
-      children.appendChild(d);
-      if(subWrap) children.appendChild(subWrap);
-    });
-
-    group.appendChild(par);
-    group.appendChild(children);
-    el.appendChild(group);
+    list.appendChild(row);
   });
-
-  // UI Event Listeners for Index Toggle & Detail Close
-  const dclose = document.getElementById('dclose');
-  if(dclose && !dclose._bound){
-    dclose._bound = true;
-    dclose.addEventListener('click', e=>{
-      e.stopPropagation();
-      document.getElementById('detail').style.display = 'none';
-    });
-  }
-
-  const idxtoggle = document.getElementById('idx-toggle');
-  if(idxtoggle && !idxtoggle._bound){
-    idxtoggle._bound = true;
-    idxtoggle.addEventListener('click', ()=>{
-      document.getElementById('idx').classList.toggle('minimized');
-    });
-  }
-
-  document.getElementById('s-cl').textContent=clusters.length;
-  document.getElementById('s-sk').textContent=skills.length;
-  const sAg = document.getElementById('s-ag');
-  if(sAg) sAg.textContent = agents.length;
-  _lastSkillCount = skills.length + agents.length;
-
-  if(!_graphInitialized){
-    _graphInitialized = true;
-    loop();
-    setInterval(pollActive, 1500);
-    setTimeout(pollActive, 500);
-  }
 }
 
-// Initial fetch with cache-busting
-fetch('/api/graph?_t=' + Date.now()).then(r=>r.json()).then(data=>{
-  buildGraph(data, false);
+document.getElementById('node-search').addEventListener('input', e => {
+  SEARCH_QUERY = e.target.value;
+  updateDrawer();
 });
+
+document.getElementById('drawer-toggle').addEventListener('click', () => {
+  const dr = document.getElementById('drawer');
+  dr.classList.toggle('collapsed');
+  document.getElementById('drawer-toggle').textContent = dr.classList.contains('collapsed') ? '▶' : '◀';
+});
+
+// Recenter & Zoom Controls
+document.getElementById('btn-recenter').addEventListener('click', () => {
+  flyTo('hermes');
+});
+document.getElementById('btn-zoom-in').addEventListener('click', () => {
+  camZ = Math.min(3.2, camZ * 1.25);
+});
+document.getElementById('btn-zoom-out').addEventListener('click', () => {
+  camZ = Math.max(0.12, camZ * 0.8);
+});
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DATA INGESTION & INITIAL SECTOR LAYOUT
+// ══════════════════════════════════════════════════════════════════
+function buildGraph(data){
+  if(!data || !data.nodes) return;
+
+  const rawNodes = data.nodes;
+  const rawLinks = data.links;
+  const idMap = {};
+
+  NODES = [];
+  LINKS = [];
+
+  // Sector Angle Definitions for Services
+  const SECTOR_CONFIG = {
+    'hermes':           { r: 46, mass: 60.0, x: 0, y: 0 },
+    'service-9router':    { r: 34, mass: 14.0, ang: -130 * Math.PI/180, dist: 250 },
+    'service-honcho':     { r: 34, mass: 14.0, ang:  140 * Math.PI/180, dist: 260 },
+    'service-tailscale':  { r: 32, mass: 12.0, ang:  -90 * Math.PI/180, dist: 270 },
+    'service-mcp':        { r: 32, mass: 12.0, ang:  -40 * Math.PI/180, dist: 270 },
+    'service-clients':    { r: 32, mass: 12.0, ang:    5 * Math.PI/180, dist: 310 },
+    'service-monitoring': { r: 32, mass: 12.0, ang:   55 * Math.PI/180, dist: 280 },
+    'service-skills':     { r: 32, mass: 12.0, ang:  100 * Math.PI/180, dist: 290 },
+    'service-agents':     { r: 32, mass: 12.0, ang: -175 * Math.PI/180, dist: 330 }
+  };
+
+  // 1. Position Core and Primary Services in dedicated spacious sectors
+  rawNodes.forEach((n, idx) => {
+    let initX = 0, initY = 0, r = 18, mass = 2.0;
+
+    if(SECTOR_CONFIG[n.id]){
+      const cfg = SECTOR_CONFIG[n.id];
+      r = cfg.r; mass = cfg.mass;
+      if(n.id === 'hermes'){
+        initX = 0; initY = 0;
+      } else {
+        const jitterAng = (Math.random() - 0.5) * 0.08;
+        const jitterDist = (Math.random() - 0.5) * 20;
+        initX = Math.cos(cfg.ang + jitterAng) * (cfg.dist + jitterDist);
+        initY = Math.sin(cfg.ang + jitterAng) * (cfg.dist + jitterDist);
+      }
+    } else {
+      // Find parent connection to fan out nicely
+      const parentLink = rawLinks.find(lk => lk.target === n.id);
+      const parentId = parentLink ? parentLink.source : 'hermes';
+      const parentCfg = SECTOR_CONFIG[parentId] || { ang: 0, dist: 150 };
+
+      // Fan out radially beyond parent
+      const fanSpread = (Math.random() - 0.5) * 0.9;
+      const fanDist = 110 + Math.random() * 60;
+      const baseAng = parentCfg.ang || Math.atan2(Math.random()-0.5, Math.random()-0.5);
+
+      initX = Math.cos(baseAng + fanSpread) * ((parentCfg.dist || 200) + fanDist);
+      initY = Math.sin(baseAng + fanSpread) * ((parentCfg.dist || 200) + fanDist);
+      r = (n.type === 'model' || n.type === 'database') ? 22 : 16;
+      mass = 1.8;
+    }
+
+    const nodeObj = {
+      ...n,
+      x: initX, y: initY,
+      vx: (Math.random()-0.5)*0.2, vy: (Math.random()-0.5)*0.2,
+      r, mass,
+      anchorX: initX, anchorY: initY,
+      dragging: false
+    };
+
+    idMap[n.id] = NODES.length;
+    NODES.push(nodeObj);
+  });
+
+  // 2. Build index links
+  rawLinks.forEach(lk => {
+    const a = idMap[lk.source];
+    const b = idMap[lk.target];
+    if(a !== undefined && b !== undefined){
+      LINKS.push({
+        a, b,
+        kind: lk.kind || 'dep',
+        label: lk.label || '',
+        dir: lk.dir || 'out'
+      });
+    }
+  });
+
+  document.getElementById('stat-nodes').textContent = `NODES: ${NODES.length}`;
+  updateDrawer();
+  showToast(`GRAPH TOPOLOGY LOADED (${NODES.length} NODES)`);
+}
+
+// Load Graph from server
+fetch('/api/graph?_t=' + Date.now())
+  .then(res => res.json())
+  .then(data => {
+    buildGraph(data);
+    loop();
+  })
+  .catch(err => {
+    console.error('Failed to load graph API:', err);
+    showToast('FAILED TO LOAD TOPOLOGY DATA');
+  });
 </script>
 </body>
 </html>

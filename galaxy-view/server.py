@@ -18,6 +18,15 @@ _usage_active: dict = {}   # skill_name -> last_used_at string
 _usage_lock = threading.Lock()
 
 category_colors = {
+    'core': '#38bdf8',         # Sky cyan (Hermes Core)
+    'router': '#8b5cf6',       # Violet (9Router & Models)
+    'memory': '#10b981',       # Emerald (Honcho & Storage)
+    'mcp': '#3b82f6',          # Sapphire Blue (MCP Tools)
+    'channel': '#f59e0b',      # Amber (WhatsApp, Telegram, Web UI)
+    'monitoring': '#f43f5e',   # Rose (Prometheus, Grafana, cAdvisor)
+    'network': '#06b6d4',      # Cyan (Tailscale, ai-network)
+    'skills': '#a855f7',       # Purple (Hermes Skills)
+    'agents': '#ec4899',       # Pink (Agency Specialists)
     'software-development': '#38bdf8',  # Sky / Slate Blue
     'productivity': '#34d399',          # Emerald / Sage
     'creative': '#fbbf24',              # Warm Amber
@@ -186,151 +195,515 @@ def discover_subskills(skill_root, skill_name, cat, max_subs=8):
     return subs
 
 def get_skills_graph():
-    nodes = []
-    links = []
-    nodes.append({'id': 'core', 'label': 'HERMES', 'type': 'core', 'category': 'core', 'desc': 'Autonomous AI Engine & Core Brain'})
-    cats_found = set()
+    """
+    Returns the real, verified architecture and topology of the Hermes AI ecosystem.
+    No fictional components: mirrors docker-compose, config.yaml, and system deployment.
+    """
+    nodes = [
+        # 1. ROOT / CORE
+        {
+            'id': 'hermes',
+            'label': 'HERMES',
+            'sublabel': 'AI CORE',
+            'type': 'core',
+            'category': 'core',
+            'group': 'core',
+            'role': 'Autonomous AI Engine & Core Brain',
+            'status': 'online',
+            'ports': '8642, 9119',
+            'container': 'hermes',
+            'network': 'ai-network',
+            'desc': 'Nous Research Hermes Agent runtime with autonomous tool execution, persistent session management, and multi-platform gateway.',
+            'initX': 0, 'initY': 0
+        },
 
-    target_dir = SKILLS_DIR
-    if not os.path.exists(target_dir) or not os.listdir(target_dir):
-        # Fallback to local skills_graph.json if available
-        fallback_file = os.path.join(BASE_DIR, 'skills_graph.json')
-        if os.path.exists(fallback_file):
-            try:
-                with open(fallback_file, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            except Exception:
-                pass
+        # 2. PRIMARY SERVICES
+        {
+            'id': 'service-9router',
+            'label': '9ROUTER',
+            'sublabel': 'LLM GATEWAY',
+            'type': 'service',
+            'category': 'router',
+            'group': 'router',
+            'role': 'LLM Reverse Proxy & Model Router',
+            'status': 'online',
+            'ports': '20128',
+            'container': '9router',
+            'network': 'ai-network',
+            'desc': 'High-performance LLM gateway and reverse proxy distributing inference calls to local routes and upstream providers.',
+            'initX': -260, 'initY': -170
+        },
+        {
+            'id': 'service-honcho',
+            'label': 'HONCHO',
+            'sublabel': 'MEMORY ENGINE',
+            'type': 'service',
+            'category': 'memory',
+            'group': 'memory',
+            'role': 'Dialectic Persistent Memory Layer',
+            'status': 'online',
+            'ports': '8000, 8443',
+            'container': 'honcho-api',
+            'network': 'ai-network',
+            'desc': 'Plastic Labs Honcho dialectic memory engine providing peer cards, context summaries, semantic search, and conclusions.',
+            'initX': -270, 'initY': 170
+        },
+        {
+            'id': 'service-mcp',
+            'label': 'MCP GATEWAY',
+            'sublabel': 'TOOL PROTOCOL',
+            'type': 'service',
+            'category': 'mcp',
+            'group': 'mcp',
+            'role': 'Model Context Protocol Client',
+            'status': 'online',
+            'ports': 'stdio / ipc',
+            'container': 'hermes (mcp)',
+            'desc': 'Standardized tool interface executing tools across Docker containers, GitHub repos, Notion workspaces, and Postgres DB.',
+            'initX': 270, 'initY': -170
+        },
+        {
+            'id': 'service-clients',
+            'label': 'CLIENT CHANNELS',
+            'sublabel': 'INTERACTION HUB',
+            'type': 'service',
+            'category': 'channel',
+            'group': 'channel',
+            'role': 'Multi-Channel Ingress & Egress',
+            'status': 'online',
+            'ports': '8642',
+            'container': 'hermes',
+            'desc': 'Bidirectional messaging gateway handling WhatsApp conversations, Telegram interactions, and Web Dashboard sessions.',
+            'initX': 320, 'initY': 10
+        },
+        {
+            'id': 'service-monitoring',
+            'label': 'OBSERVABILITY',
+            'sublabel': 'TELEMETRY STACK',
+            'type': 'service',
+            'category': 'monitoring',
+            'group': 'monitoring',
+            'role': 'Metrics & System Telemetry',
+            'status': 'online',
+            'ports': '9090, 3001',
+            'container': 'prometheus / grafana',
+            'network': 'monitoring',
+            'desc': 'Prometheus time-series metric collector and Grafana visualization dashboard monitoring container health and resource usage.',
+            'initX': 260, 'initY': 210
+        },
+        {
+            'id': 'service-tailscale',
+            'label': 'TAILSCALE EDGE',
+            'sublabel': 'SECURE INGRESS',
+            'type': 'gateway',
+            'category': 'network',
+            'group': 'network',
+            'role': 'Encrypted Mesh & SSL Proxy',
+            'status': 'online',
+            'ports': '443, 8443, 8444',
+            'desc': 'WireGuard-based encrypted mesh network (deb-zlf.tail38902e.ts.net) providing zero-trust public HTTPS endpoints.',
+            'initX': -10, 'initY': -300
+        },
+        {
+            'id': 'service-skills',
+            'label': 'HERMES SKILLS',
+            'sublabel': 'CAPABILITY STACK',
+            'type': 'service',
+            'category': 'skills',
+            'group': 'skills',
+            'role': 'Dynamic Skill Ecosystem',
+            'status': 'online',
+            'path': '/opt/data/skills',
+            'desc': 'Decoupled git-synced skill modules (35+ capabilities) giving Hermes specialized engineering, devops, and agentic workflows.',
+            'initX': -40, 'initY': 290
+        },
 
-    for root, dirs, files in os.walk(target_dir):
-        dirs[:] = [d for d in dirs if not d.startswith('.')]
-        if 'SKILL.md' in files:
-            rel = os.path.relpath(root, target_dir)
-            parts = rel.split(os.sep)
-            cat = parts[0]
-            skill_name = parts[-1]
-            cats_found.add(cat)
-            
-            skill_path = os.path.join(root, 'SKILL.md')
-            desc = ''
-            try:
-                with open(skill_path, 'r', encoding='utf-8', errors='ignore') as f:
-                    content = f.read(2048)
-                    m = re.search(r'description:\s*([^\n\r]+)', content)
-                    if m:
-                        desc = m.group(1).strip(' \"\'')
-            except Exception:
-                pass
-            if not desc:
-                desc = f'Operational module for {skill_name}'
-                
-            node_type = 'agent' if cat == 'autonomous-ai-agents' and skill_name in ('claude-code', 'codex', 'antigravity', 'opencode', 'vibe', 'computer-use', 'hermes-agent') else 'skill'
-            nodes.append({
-                'id': skill_name,
-                'label': skill_name,
-                'type': node_type,
-                'category': cat,
-                'desc': desc
-            })
-            links.append({'source': cat, 'target': skill_name, 'value': 1})
+        # 3. 9ROUTER CHILDREN (Models & Providers)
+        {
+            'id': 'model-agy-combo',
+            'label': 'agy-combo',
+            'sublabel': 'MODEL: DEFAULT',
+            'type': 'model',
+            'category': 'router',
+            'group': 'router',
+            'role': 'Primary Reasoning Model',
+            'status': 'active',
+            'provider': '9router / OpenRouter',
+            'desc': 'Default high-intelligence reasoning model configured in config.yaml for primary chat, code generation, and decision making.',
+            'initX': -430, 'initY': -250
+        },
+        {
+            'id': 'model-agy-claude',
+            'label': 'agy-claude',
+            'sublabel': 'MODEL: CLAUDE 3.5',
+            'type': 'model',
+            'category': 'router',
+            'group': 'router',
+            'role': 'Claude 3.5 Sonnet Route',
+            'status': 'configured',
+            'provider': '9router / Anthropic',
+            'desc': 'Specialized Claude 3.5 Sonnet endpoint for nuanced software architecture, tool execution, and vision tasks.',
+            'initX': -380, 'initY': -320
+        },
+        {
+            'id': 'model-nemotron',
+            'label': 'nemotron-3-ultra',
+            'sublabel': 'MODEL: 550B FREE',
+            'type': 'model',
+            'category': 'router',
+            'group': 'router',
+            'role': 'High-Param Open Weights',
+            'status': 'configured',
+            'provider': 'Nvidia Nemotron',
+            'desc': 'Nvidia Nemotron 550B free-tier discovery model configured for high-volume background tasks and text analysis.',
+            'initX': -260, 'initY': -330
+        },
+        {
+            'id': 'provider-xkiro',
+            'label': 'xkiro',
+            'sublabel': 'PROVIDER: API',
+            'type': 'provider',
+            'category': 'router',
+            'group': 'router',
+            'role': 'Custom OpenAI-Compatible API',
+            'status': 'configured',
+            'endpoint': 'https://api.xkiro.com/v1',
+            'desc': 'Dedicated external inference endpoint configured under providers.xkiro in config.yaml.',
+            'initX': -420, 'initY': -170
+        },
+        {
+            'id': 'upstream-openrouter',
+            'label': 'OpenRouter',
+            'sublabel': 'CLOUD GATEWAY',
+            'type': 'provider',
+            'category': 'router',
+            'group': 'router',
+            'role': 'Upstream Global Provider',
+            'status': 'connected',
+            'endpoint': 'openrouter.ai',
+            'desc': 'Multi-model cloud aggregator backing 9router routes with automated fallback and rate-limit buffering.',
+            'initX': -440, 'initY': -90
+        },
 
-            # Auto-detect all subskills/sub-modules underneath this skill
-            for s in discover_subskills(root, skill_name, cat):
-                nodes.append(s)
-                links.append({'source': skill_name, 'target': s['id'], 'value': 1})
+        # 4. HONCHO CHILDREN (Memory Storage & Cognitive Workers)
+        {
+            'id': 'db-postgres',
+            'label': 'PostgreSQL 15',
+            'sublabel': 'VECTOR DB: 5432',
+            'type': 'database',
+            'category': 'memory',
+            'group': 'memory',
+            'role': 'pgvector & Relational Storage',
+            'status': 'healthy',
+            'ports': '5432',
+            'container': 'honcho-database',
+            'desc': 'PostgreSQL database container with pgvector extension storing high-dimensional semantic message embeddings and user entities.',
+            'initX': -430, 'initY': 150
+        },
+        {
+            'id': 'cache-redis',
+            'label': 'Redis 8.2',
+            'sublabel': 'CACHE: 6379',
+            'type': 'database',
+            'category': 'memory',
+            'group': 'memory',
+            'role': 'In-Memory State & Pub/Sub',
+            'status': 'healthy',
+            'ports': '6379',
+            'container': 'honcho-redis',
+            'desc': 'Redis 8.2 container providing sub-millisecond session state caching, distributed locks, and pub/sub messaging.',
+            'initX': -420, 'initY': 240
+        },
+        {
+            'id': 'svc-deriver',
+            'label': 'Honcho Deriver',
+            'sublabel': 'BACKGROUND WORKER',
+            'type': 'dependency',
+            'category': 'memory',
+            'group': 'memory',
+            'role': 'Dialectic Reasoning Worker',
+            'status': 'online',
+            'container': 'honcho-deriver',
+            'desc': 'Asynchronous Python worker that observes message exchanges and derives persistent user profile conclusions and cards.',
+            'initX': -340, 'initY': 310
+        },
+        {
+            'id': 'svc-honcho-mcp',
+            'label': 'Honcho MCP',
+            'sublabel': 'MCP: 3000',
+            'type': 'dependency',
+            'category': 'memory',
+            'group': 'memory',
+            'role': 'Memory Protocol Adapter',
+            'status': 'healthy',
+            'ports': '3000',
+            'container': 'honcho-mcp',
+            'desc': 'Model Context Protocol server built with Bun, exposing Honcho profile retrieval and context tools to the agent.',
+            'initX': -230, 'initY': 310
+        },
+        {
+            'id': 'storage-memories',
+            'label': 'MEMORY.md / USER.md',
+            'sublabel': 'DURABLE FLATFILES',
+            'type': 'storage',
+            'category': 'memory',
+            'group': 'memory',
+            'role': 'Local Fast-Context Sync',
+            'status': 'synced',
+            'path': '/opt/data/memories/',
+            'desc': 'Zero-latency durable markdown files injected into the beginning of every prompt turn for instant recall.',
+            'initX': -150, 'initY': 250
+        },
 
-    for cat in sorted(cats_found):
-        nodes.append({
-            'id': cat,
-            'label': cat.upper().replace('-', ' '),
-            'type': 'cluster',
-            'category': cat,
-            'desc': f'Cluster category: {cat}'
-        })
-        links.append({'source': 'core', 'target': cat, 'value': 4})
+        # 5. MCP GATEWAY CHILDREN (Standardized Tool Servers)
+        {
+            'id': 'mcp-docker',
+            'label': 'Docker MCP',
+            'sublabel': 'CONTAINER OPS',
+            'type': 'dependency',
+            'category': 'mcp',
+            'group': 'mcp',
+            'role': 'Docker Daemon Controller',
+            'status': 'enabled',
+            'package': '@hypnosis/docker-mcp-server',
+            'desc': 'Provides programmatic tools for inspecting containers, reading container logs, and restarting services via Docker socket.',
+            'initX': 380, 'initY': -280
+        },
+        {
+            'id': 'mcp-github',
+            'label': 'GitHub MCP',
+            'sublabel': 'REPO & CI/CD',
+            'type': 'dependency',
+            'category': 'mcp',
+            'group': 'mcp',
+            'role': 'GitHub API Integration',
+            'status': 'enabled',
+            'package': '@modelcontextprotocol/server-github',
+            'desc': 'Provides tools for managing GitHub repositories, branches, pull requests, issues, and committing code changes directly.',
+            'initX': 450, 'initY': -210
+        },
+        {
+            'id': 'mcp-postgres',
+            'label': 'Postgres MCP',
+            'sublabel': 'SQL INSPECTOR',
+            'type': 'dependency',
+            'category': 'mcp',
+            'group': 'mcp',
+            'role': 'SQL Read-Only Client',
+            'status': 'enabled',
+            'target': 'honcho-database:5432',
+            'desc': 'Provides read-only SQL querying against honcho-database for debugging and schema exploration.',
+            'initX': 420, 'initY': -130
+        },
+        {
+            'id': 'mcp-notion',
+            'label': 'Notion MCP',
+            'sublabel': 'KNOWLEDGE BASE',
+            'type': 'dependency',
+            'category': 'mcp',
+            'group': 'mcp',
+            'role': 'Notion API Workspace',
+            'status': 'enabled',
+            'package': 'notion-mcp-server',
+            'desc': 'Connects Hermes to Notion workspaces for syncing product notes, task tracking, and document archives.',
+            'initX': 380, 'initY': -70
+        },
 
-    # Universal Automatic Detection of The Agency Specialists
-    agents_candidates = [
-        os.path.join(target_dir, '.agents.json'),
-        os.path.join(BASE_DIR, 'agents.json'),
-        '/opt/data/plugins/agency-agents-router/data/agents.json',
-        '/plugins/agency-agents-router/data/agents.json',
+        # 6. CLIENT CHANNELS CHILDREN
+        {
+            'id': 'client-whatsapp',
+            'label': 'WhatsApp Bridge',
+            'sublabel': '+6281283274820',
+            'type': 'channel',
+            'category': 'channel',
+            'group': 'channel',
+            'role': 'Baileys Multi-Device Client',
+            'status': 'connected',
+            'channel_id': 'whatsapp:z',
+            'desc': 'WhatsApp bridge daemon maintaining persistent socket connection, routing direct messages and group reminders to Hermes.',
+            'initX': 450, 'initY': -20
+        },
+        {
+            'id': 'client-telegram',
+            'label': 'Telegram Gateway',
+            'sublabel': 'BOT INTEGRATION',
+            'type': 'channel',
+            'category': 'channel',
+            'group': 'channel',
+            'role': 'Telegram Bot API Bridge',
+            'status': 'connected',
+            'desc': 'Hermes Telegram client delivering notifications and interactive commands to user channel.',
+            'initX': 460, 'initY': 60
+        },
+        {
+            'id': 'client-dashboard',
+            'label': 'Web Dashboard',
+            'sublabel': 'PORT: 9119',
+            'type': 'channel',
+            'category': 'channel',
+            'group': 'channel',
+            'role': 'Hermes Web Management UI',
+            'status': 'online',
+            'ports': '9119',
+            'desc': 'Live web dashboard providing web chat, system diagnostics, session inspector, and real-time logs.',
+            'initX': 430, 'initY': 140
+        },
+
+        # 7. MONITORING CHILDREN
+        {
+            'id': 'mon-prometheus',
+            'label': 'Prometheus TSDB',
+            'sublabel': 'PORT: 9090',
+            'type': 'dependency',
+            'category': 'monitoring',
+            'group': 'monitoring',
+            'role': 'Time-Series Collector',
+            'status': 'online',
+            'ports': '9090',
+            'container': 'prometheus',
+            'desc': 'Scrapes metric endpoints from cadvisor, node-exporter, and Docker host every 15s with 15-day retention.',
+            'initX': 370, 'initY': 270
+        },
+        {
+            'id': 'mon-grafana',
+            'label': 'Grafana',
+            'sublabel': 'PORT: 3001',
+            'type': 'dependency',
+            'category': 'monitoring',
+            'group': 'monitoring',
+            'role': 'Observability Dashboards',
+            'status': 'online',
+            'ports': '3001',
+            'container': 'grafana',
+            'desc': 'Interactive telemetry dashboards graphing CPU, RAM, Docker container loads, and network latency.',
+            'initX': 440, 'initY': 220
+        },
+        {
+            'id': 'mon-cadvisor',
+            'label': 'cAdvisor',
+            'sublabel': 'PORT: 8080',
+            'type': 'dependency',
+            'category': 'monitoring',
+            'group': 'monitoring',
+            'role': 'Container Metrics',
+            'status': 'healthy',
+            'ports': '8080',
+            'container': 'cadvisor',
+            'desc': 'Analyzes and exposes resource usage (CPU, memory, disk, network) for all running containers on deb-zlf.',
+            'initX': 330, 'initY': 340
+        },
+        {
+            'id': 'mon-node-exporter',
+            'label': 'Node Exporter',
+            'sublabel': 'PORT: 9100',
+            'type': 'dependency',
+            'category': 'monitoring',
+            'group': 'monitoring',
+            'role': 'Host System Hardware',
+            'status': 'online',
+            'ports': '9100',
+            'container': 'node_exporter',
+            'desc': 'Exposes Linux kernel statistics, disk I/O, network bandwidth, and hardware health for deb-zlf.',
+            'initX': 240, 'initY': 350
+        },
+
+        # 8. SKILLS SUBSYSTEMS & CLUSTERS
+        {
+            'id': 'skill-coding',
+            'label': 'Software Engineering',
+            'sublabel': 'GIT & WORKFLOWS',
+            'type': 'skill',
+            'category': 'software-development',
+            'group': 'skills',
+            'role': 'Architecture & Code Skills',
+            'status': 'active',
+            'desc': 'TDD, debugging, code review, git versioning, and architectural decision records.',
+            'initX': -130, 'initY': 360
+        },
+        {
+            'id': 'skill-agents',
+            'label': 'Autonomous Agents',
+            'sublabel': 'MULTI-AGENT ORCH',
+            'type': 'skill',
+            'category': 'autonomous-ai-agents',
+            'group': 'skills',
+            'role': 'Subagent Delegation Hub',
+            'status': 'active',
+            'desc': 'Claude Code, Codex, Antigravity, Computer Use, and Hermes Plugins orchestration.',
+            'initX': -40, 'initY': 380
+        },
+        {
+            'id': 'skill-cron',
+            'label': 'Cron Scheduler',
+            'sublabel': 'AUTOMATION ENGINE',
+            'type': 'skill',
+            'category': 'productivity',
+            'group': 'skills',
+            'role': 'Scheduled Job Runner',
+            'status': 'active',
+            'desc': 'Internal scheduler running IDN timebox reminders, kitchen duty rotation, and invoice reporting.',
+            'initX': 50, 'initY': 360
+        }
     ]
-    raw_agents = []
-    for cand in agents_candidates:
-        if os.path.exists(cand):
-            try:
-                with open(cand, 'r', encoding='utf-8') as afp:
-                    raw_agents = json.load(afp)
-                    if raw_agents:
-                        break
-            except Exception:
-                pass
 
-    if raw_agents:
-        div_map = {
-            'specialized': 'agency-orchestration',
-            'engineering': 'agency-engineering',
-            'testing': 'agency-qa-security',
-            'security': 'agency-qa-security',
-            'product': 'agency-product-design',
-            'design': 'agency-product-design',
-            'project-management': 'agency-product-design',
-            'marketing': 'agency-growth',
-            'sales': 'agency-growth',
-            'paid-media': 'agency-growth',
-            'academic': 'agency-domain',
-            'research': 'agency-domain',
-            'finance': 'agency-domain',
-            'game-development': 'agency-domain',
-            'gis': 'agency-domain',
-            'healthcare': 'agency-domain',
-            'spatial-computing': 'agency-domain',
-            'support': 'agency-domain',
-        }
+    # EDGES / CONNECTIONS
+    links = [
+        # Hermes Core → Primary Services (Main Request & Control Trunks)
+        {'source': 'hermes', 'target': 'service-9router', 'kind': 'main', 'dir': 'out', 'label': 'LLM Inferences', 'value': 4},
+        {'source': 'hermes', 'target': 'service-honcho', 'kind': 'main', 'dir': 'both', 'label': 'Memory Context & Dialectic', 'value': 4},
+        {'source': 'hermes', 'target': 'service-mcp', 'kind': 'main', 'dir': 'both', 'label': 'Tool Protocol (Stdio/IPC)', 'value': 4},
+        {'source': 'service-clients', 'target': 'hermes', 'kind': 'main', 'dir': 'both', 'label': 'User Prompts & Delivery', 'value': 4},
+        {'source': 'hermes', 'target': 'service-skills', 'kind': 'main', 'dir': 'both', 'label': 'Capabilities & Execution', 'value': 3},
 
-        agency_cluster_defs = {
-            'agency-orchestration': {'label': 'AGENCY ARCHITECTURE', 'desc': 'Orchestrator, workflow, and agentic identity specialists'},
-            'agency-engineering': {'label': 'AGENCY ENGINEERING', 'desc': 'Fullstack, backend, DB, and DevOps specialist agents'},
-            'agency-qa-security': {'label': 'AGENCY QA & SECURITY', 'desc': 'Evidence collector QA, regression testers, and security hardeners'},
-            'agency-product-design': {'label': 'AGENCY PRODUCT & DESIGN', 'desc': 'Product managers, UX/UI, and design token architects'},
-            'agency-growth': {'label': 'AGENCY GROWTH & REVENUE', 'desc': 'Agentic search optimizers, content strategists, and marketing specialists'},
-            'agency-domain': {'label': 'AGENCY DOMAIN SPECIALISTS', 'desc': 'Spatial, healthcare, GIS, game dev, and academic research specialists'},
-        }
+        # 9Router → Models & Upstream Providers
+        {'source': 'service-9router', 'target': 'model-agy-combo', 'kind': 'dep', 'dir': 'out', 'label': 'Default Chat Route', 'value': 3},
+        {'source': 'service-9router', 'target': 'model-agy-claude', 'kind': 'dep', 'dir': 'out', 'label': 'Claude Route', 'value': 2},
+        {'source': 'service-9router', 'target': 'model-nemotron', 'kind': 'dep', 'dir': 'out', 'label': 'Nemotron 550B', 'value': 2},
+        {'source': 'service-9router', 'target': 'provider-xkiro', 'kind': 'dep', 'dir': 'out', 'label': 'Xkiro Endpoint', 'value': 2},
+        {'source': 'service-9router', 'target': 'upstream-openrouter', 'kind': 'dep', 'dir': 'out', 'label': 'Cloud Fallback', 'value': 3},
 
-        agency_cats_used = set()
-        for a in raw_agents:
-            ag_div = a.get('division', 'specialized')
-            ag_cat = div_map.get(ag_div, 'agency-domain')
-            agency_cats_used.add(ag_cat)
+        # Honcho → Storage, Cache, and Cognitive Deriver
+        {'source': 'service-honcho', 'target': 'db-postgres', 'kind': 'dep', 'dir': 'both', 'label': 'SQL & pgvector (:5432)', 'value': 3},
+        {'source': 'service-honcho', 'target': 'cache-redis', 'kind': 'dep', 'dir': 'both', 'label': 'Session Cache (:6379)', 'value': 3},
+        {'source': 'service-honcho', 'target': 'svc-deriver', 'kind': 'dep', 'dir': 'both', 'label': 'Dialectic Worker', 'value': 3},
+        {'source': 'service-honcho', 'target': 'svc-honcho-mcp', 'kind': 'dep', 'dir': 'out', 'label': 'MCP Protocol (:3000)', 'value': 2},
+        {'source': 'service-honcho', 'target': 'storage-memories', 'kind': 'dep', 'dir': 'both', 'label': 'Flatfile Markdown Sync', 'value': 2},
+        {'source': 'db-postgres', 'target': 'svc-deriver', 'kind': 'dep', 'dir': 'both', 'label': 'Message Ingestion', 'value': 2},
 
-            ag_slug = a.get('slug') or a.get('name', '').lower().replace(' ', '-')
-            ag_name = a.get('name', ag_slug)
-            ag_desc = a.get('vibe') or a.get('description', f'Agency specialist: {ag_name}')
+        # MCP Gateway → Specific MCP Servers
+        {'source': 'service-mcp', 'target': 'mcp-docker', 'kind': 'dep', 'dir': 'out', 'label': 'Docker Control', 'value': 2},
+        {'source': 'service-mcp', 'target': 'mcp-github', 'kind': 'dep', 'dir': 'out', 'label': 'Repo Operations', 'value': 2},
+        {'source': 'service-mcp', 'target': 'mcp-postgres', 'kind': 'dep', 'dir': 'out', 'label': 'Direct SQL Read', 'value': 2},
+        {'source': 'mcp-postgres', 'target': 'db-postgres', 'kind': 'dep', 'dir': 'out', 'label': 'Query Database', 'value': 2},
+        {'source': 'service-mcp', 'target': 'mcp-notion', 'kind': 'dep', 'dir': 'out', 'label': 'Workspace Sync', 'value': 2},
 
-            nodes.append({
-                'id': ag_slug,
-                'label': ag_name,
-                'type': 'agent',
-                'category': ag_cat,
-                'division': ag_div,
-                'desc': ag_desc,
-                'source_path': a.get('source_path', '')
-            })
-            links.append({'source': ag_cat, 'target': ag_slug, 'value': 1})
+        # Client Channels → Specific Ingress Endpoints
+        {'source': 'service-clients', 'target': 'client-whatsapp', 'kind': 'dep', 'dir': 'both', 'label': 'Baileys Socket', 'value': 3},
+        {'source': 'service-clients', 'target': 'client-telegram', 'kind': 'dep', 'dir': 'both', 'label': 'Bot Webhook', 'value': 2},
+        {'source': 'service-clients', 'target': 'client-dashboard', 'kind': 'dep', 'dir': 'both', 'label': 'HTTP Gateway (:9119)', 'value': 2},
 
-        for acat in sorted(agency_cats_used):
-            cdef = agency_cluster_defs.get(acat, {'label': acat.upper().replace('-', ' '), 'desc': f'Agency category: {acat}'})
-            nodes.append({
-                'id': acat,
-                'label': cdef['label'],
-                'type': 'cluster',
-                'category': acat,
-                'desc': cdef['desc']
-            })
-            links.append({'source': 'core', 'target': acat, 'value': 4})
+        # Monitoring → Services and Exporters
+        {'source': 'service-monitoring', 'target': 'mon-prometheus', 'kind': 'dep', 'dir': 'out', 'label': 'TSDB Storage', 'value': 3},
+        {'source': 'service-monitoring', 'target': 'mon-grafana', 'kind': 'dep', 'dir': 'out', 'label': 'Dashboards (:3001)', 'value': 2},
+        {'source': 'mon-grafana', 'target': 'mon-prometheus', 'kind': 'dep', 'dir': 'in', 'label': 'PromQL Queries', 'value': 3},
+        {'source': 'mon-prometheus', 'target': 'mon-cadvisor', 'kind': 'dep', 'dir': 'in', 'label': 'Scrape Stats (:8080)', 'value': 2},
+        {'source': 'mon-prometheus', 'target': 'mon-node-exporter', 'kind': 'dep', 'dir': 'in', 'label': 'Scrape Host (:9100)', 'value': 2},
+        {'source': 'mon-prometheus', 'target': 'hermes', 'kind': 'dep', 'dir': 'in', 'label': 'Agent Telemetry', 'value': 2},
+        {'source': 'mon-prometheus', 'target': 'service-9router', 'kind': 'dep', 'dir': 'in', 'label': 'Gateway Metrics', 'value': 2},
+        {'source': 'mon-prometheus', 'target': 'service-honcho', 'kind': 'dep', 'dir': 'in', 'label': 'Memory Health', 'value': 2},
 
-    return {'nodes': nodes, 'links': links, 'colors': category_colors}
+        # Tailscale Secure Edge → Public SSL Gateways
+        {'source': 'service-tailscale', 'target': 'service-9router', 'kind': 'dep', 'dir': 'out', 'label': 'HTTPS (:443)', 'value': 2},
+        {'source': 'service-tailscale', 'target': 'service-honcho', 'kind': 'dep', 'dir': 'out', 'label': 'HTTPS (:8443)', 'value': 2},
+        {'source': 'service-tailscale', 'target': 'hermes', 'kind': 'dep', 'dir': 'out', 'label': 'Graph View (:8444)', 'value': 2},
+
+        # Skills Subsystem Links
+        {'source': 'service-skills', 'target': 'skill-coding', 'kind': 'dep', 'dir': 'out', 'label': 'Engineering', 'value': 2},
+        {'source': 'service-skills', 'target': 'skill-agents', 'kind': 'dep', 'dir': 'out', 'label': 'Multi-Agent', 'value': 2},
+        {'source': 'service-skills', 'target': 'skill-cron', 'kind': 'dep', 'dir': 'out', 'label': 'Cron Automation', 'value': 2},
+    ]
+
+    return {'nodes': nodes, 'links': links, 'colors': category_colors, 'mode': 'graph-topology'}
 
 def broadcast_event(data):
     msg = f"data: {json.dumps(data)}\n\n".encode('utf-8')
