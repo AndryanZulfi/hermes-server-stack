@@ -3,3 +3,5 @@ Nama: Andryan Zulfi Rahmat Tri Saputra (panggilan: Zulfi). Asal Indonesia. Saat 
 UI redesign preference: when changing visual design, preserve existing behavior (drag, zoom, physics, interactions) exactly — only change the visual layer. Explicitly dislikes when a redesign accidentally breaks interactivity. Prefers natural physics feel (spring/damping/lerp) over instant or rigid animations.
 §
 Graph & Constellation dynamics preference: prefers cluster nodes positioned closely to the central core node (~0.22 screen radius); movement of clusters must be slow, viscous, and stately (capped velocity, heavy damping), never jumping or moving rapidly. Prefers automatic universal detection over hardcoding specific skills.
+§
+Tool usage preference: prioritizes using configured MCP servers (e.g. GitHub MCP @modelcontextprotocol/server-github) over ad-hoc curl or manual shell API bypasses whenever available.

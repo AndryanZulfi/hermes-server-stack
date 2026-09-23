@@ -21,3 +21,4 @@
 **/*.log
 **/.locks/
 **/.cache/
+**/node_modules/
