@@ -1,0 +1,6 @@
+name: galaxy-telemetry
+version: 1.0.0
+description: "Sends real-time skill activation/deactivation signals to the Hermes Skill Galaxy Visualizer (port 8899) via HTTP POST whenever a skill is loaded or used. Enables live synaptic animation in the galaxy view."
+author: NousResearch
+hooks:
+  - on_skill_lifecycle

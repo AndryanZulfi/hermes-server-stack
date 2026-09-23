@@ -7,10 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:#090d16;font-family:'JetBrains Mono',monospace;color:#e2e8f0}
-canvas{position:fixed;inset:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#090d16;font-family:'JetBrains Mono',monospace;color:#e2e8f0;user-select:none;-webkit-user-select:none;touch-action:none;-webkit-touch-callout:none;overscroll-behavior:none}
+canvas{position:fixed;inset:0;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 #bg{z-index:0}
-#main{z-index:1;cursor:grab}
+#main{z-index:1;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 #main.dragging{cursor:grabbing}
 #ui{position:fixed;inset:0;z-index:2;pointer-events:none}
 
@@ -94,11 +94,12 @@ canvas{position:fixed;inset:0}
 <canvas id="main"></canvas>
 
 <div id="hud">
-  <div class="logo"><div class="logo-dot"></div>HERMES SKILL MAP</div>
-  <div class="hud-sub">SKILL NEURAL MAP</div>
+  <div class="logo"><div class="logo-dot"></div>HERMES NEURAL MAP</div>
+  <div class="hud-sub">SKILLS & AGENTS</div>
   <div class="hud-stats">
     <div class="stat">CLUSTERS <b id="s-cl">—</b></div>
     <div class="stat">SKILLS <b id="s-sk">—</b></div>
+    <div class="stat">AGENTS <b id="s-ag" style="color:#f59e0b">—</b></div>
     <div class="stat">STATUS <b id="s-st" style="color:#38d9d4">IDLE</b></div>
   </div>
 </div>
@@ -118,6 +119,7 @@ canvas{position:fixed;inset:0}
   <div class="d-hr"></div>
   <div class="d-row">TYPE <span id="dtype">—</span></div>
   <div class="d-row">CATEGORY <span id="dcat">—</span></div>
+  <div class="d-row" id="ddivrow" style="display:none">DIVISION <span id="ddiv">—</span></div>
   <div class="d-row" id="dprow" style="display:none">PARENT <span id="dpar">—</span></div>
 </div>
 
@@ -170,7 +172,7 @@ const CV  = document.getElementById('main');
 const BCX = BG.getContext('2d');
 const CTX = CV.getContext('2d');
 let W = innerWidth, H = innerHeight;
-let camX = -80, camY = 0, camZ = 0.68; // centered with generous padding around whole constellation
+let camX = 0, camY = 0, camZ = 0.58; // centered with generous padding around whole constellation
 
 function resize(){
   W = innerWidth; H = innerHeight;
@@ -280,8 +282,9 @@ function drawBG(){
 // ══════════════════════════════════════════
 // PHYSICS ENGINE
 // ══════════════════════════════════════════
-const CX = 220, CY = 0; // Global Hermes core world anchor
-const R_CLUSTER_ORBIT = 350; // Global default orbit distance for clusters
+const CX = 0, CY = 0; // Global Hermes core world anchor (centered)
+const R_CLUSTER_ORBIT = 380; // Global default orbit distance for clusters
+const R_CORE = 46, R_CLUSTER = 28, R_SKILL = 15, R_AGENT = 15, R_SUB = 10;
 const NODES = [];      // all physics nodes
 const LINKS = [];      // {a, b} index pairs for bezier drawing
 let gData = null;
@@ -295,7 +298,7 @@ const MAX_VEL_SUB  = 2.2;    // subskill velocity cap
 
 function clampVel(n){
   const spd = Math.hypot(n.vx, n.vy);
-  const maxV = n.type==='cluster' ? MAX_VEL_CL : (n.type==='skill' ? MAX_VEL_SK : MAX_VEL_SUB);
+  const maxV = n.type==='core' ? 3.0 : (n.type==='cluster' ? MAX_VEL_CL : ((n.type==='skill'||n.type==='agent') ? MAX_VEL_SK : MAX_VEL_SUB));
   if(spd > maxV){ const f=maxV/spd; n.vx*=f; n.vy*=f; }
 }
 
@@ -309,39 +312,47 @@ function physicsTick(){
   NODES.forEach(n=>{
     if(n.dragging) return;
 
-    if(n.type==='cluster'){
-      // Target anchor: where it was placed on load or dropped/displaced by user
+    if(n.type==='core'){
+      // Gentle spring back toward its anchor (CX, CY or where dropped)
+      const ax = n.anchorX !== undefined ? n.anchorX : CX;
+      const ay = n.anchorY !== undefined ? n.anchorY : CY;
+      n.vx += (ax - n.x) * 0.015;
+      n.vy += (ay - n.y) * 0.015;
+    }
+
+    else if(n.type==='cluster'){
+      // Target anchor: strictly where it was placed on load or dropped by user (sway in place only!)
       const targetDist = n.orbitDist !== undefined ? n.orbitDist : R_CLUSTER_ORBIT;
       const targetAng = n.ang !== undefined ? n.ang : Math.PI;
 
-      // Organic living motion in place: gentle harmonic oscillation (never static / "diam di tempat")
+      // Organic gentle sway in place (strictly local breathing oscillation)
       const phaseX = time * 0.0008 + (n.seed || 0) * 1.7;
       const phaseY = time * 0.0006 + (n.seed || 0) * 2.3;
-      const swayX = Math.cos(phaseX) * 7.5;
-      const swayY = Math.sin(phaseY) * 7.5;
+      const swayX = Math.cos(phaseX) * 4.0;
+      const swayY = Math.sin(phaseY) * 4.0;
 
       const targetX = core.x + Math.cos(targetAng) * targetDist + swayX;
       const targetY = core.y + Math.sin(targetAng) * targetDist + swayY;
 
-      // Soft, elastic tether to living anchor
-      n.vx += (targetX - n.x) * 0.022;
-      n.vy += (targetY - n.y) * 0.022;
+      // Firm elastic tether holding cluster securely at its anchor in place
+      n.vx += (targetX - n.x) * 0.06;
+      n.vy += (targetY - n.y) * 0.06;
     }
 
-    else if(n.type==='skill' && n.parentIdx !== undefined){
+    else if((n.type==='skill' || n.type==='agent') && n.parentIdx !== undefined){
       const p = NODES[n.parentIdx];
       if(p){
         // Direction from core through parent cluster
         const pdx = p.x - core.x, pdy = p.y - core.y;
         const p_ang = Math.atan2(pdy, pdx);
-        const baseAng = p_ang + (n.relAng || 0);
+        const baseAng = (n.relAng !== undefined) ? (p_ang + n.relAng) : (p_ang + (n.seed || 0));
 
         // Natural slow radial breathing (slowly moving closer/farther from parent cluster)
         // ~21 seconds per cycle, ultra-smooth, zero jitter
-        const baseDist = n.baseDist || n.relDist || 85;
+        const baseDist = n.baseDist || n.relDist || 140;
         const breathPhase = time * 0.00030 + (n.seed || 0) * 1.5;
         const radialOffset = Math.sin(breathPhase) * 14;
-        const targetDist = Math.max(35, baseDist + radialOffset);
+        const targetDist = Math.max(80, baseDist + radialOffset);
 
         // Subtle gentle angular sway
         const angSway = Math.cos(breathPhase * 0.6) * 0.035;
@@ -350,9 +361,10 @@ function physicsTick(){
         const targetX = p.x + Math.cos(targetAng) * targetDist;
         const targetY = p.y + Math.sin(targetAng) * targetDist;
 
-        // Smooth critically damped acceleration to target (no jitter)
-        n.vx += (targetX - n.x) * 0.012;
-        n.vy += (targetY - n.y) * 0.012;
+        // Dynamic follow force: if parent was dragged/moved far, follow with stronger spring!
+        const springK = p.dragging ? 0.12 : 0.04;
+        n.vx += (targetX - n.x) * springK;
+        n.vy += (targetY - n.y) * springK;
       }
     }
 
@@ -362,26 +374,28 @@ function physicsTick(){
         const p = (ps.parentIdx !== undefined) ? NODES[ps.parentIdx] : core;
         const pdx = ps.x - p.x, pdy = ps.y - p.y;
         const ps_ang = Math.atan2(pdy, pdx);
-        const baseAng = ps_ang + (n.relAng || 0);
+        const baseAng = (n.relAng !== undefined) ? (ps_ang + n.relAng) : (ps_ang + (n.seed || 0));
 
-        const baseDist = n.baseDist || n.relDist || 40;
+        const baseDist = n.baseDist || n.relDist || 80;
         const subBreathPhase = time * 0.00040 + (n.seed || 0) * 2.1;
         const radialOffset = Math.sin(subBreathPhase) * 8;
-        const targetDist = Math.max(20, baseDist + radialOffset);
+        const targetDist = Math.max(65, baseDist + radialOffset);
         const angSway = Math.cos(subBreathPhase * 0.7) * 0.04;
         const targetAng = baseAng + angSway;
 
         const targetX = ps.x + Math.cos(targetAng) * targetDist;
         const targetY = ps.y + Math.sin(targetAng) * targetDist;
 
-        n.vx += (targetX - n.x) * 0.015;
-        n.vy += (targetY - n.y) * 0.015;
+        // Dynamic follow force
+        const springK = ps.dragging ? 0.14 : 0.045;
+        n.vx += (targetX - n.x) * springK;
+        n.vy += (targetY - n.y) * springK;
       }
     }
   });
 
-  // 2. Exact physical collision solver (contact at a.r + b.r, ZERO padding, NO penetration)
-  const ITER = 3;
+  // 2. Physical collision solver (fast, stable, no runaway drift)
+  const ITER = 2;
   for(let iter=0; iter<ITER; iter++){
     for(let i=0; i<N; i++){
       const a = NODES[i];
@@ -390,10 +404,14 @@ function physicsTick(){
         const isCoreA = a.type === 'core';
         const isCoreB = b.type === 'core';
 
-        // EXACT PHYSICAL CONTACT RADIUS — NO PADDING!
-        const minD = a.r + b.r;
+        const pad = (a.type === 'subskill' || b.type === 'subskill') ? 12 : ((a.type === 'skill' || b.type === 'skill') ? 14 : ((isCoreA || isCoreB) ? 35 : 6));
+        const minD = a.r + b.r + pad;
 
-        const dx = b.x - a.x, dy = b.y - a.y;
+        const dx = b.x - a.x;
+        if(Math.abs(dx) > minD) continue;
+        const dy = b.y - a.y;
+        if(Math.abs(dy) > minD) continue;
+
         const dist2 = dx*dx + dy*dy;
         if(dist2 < minD*minD && dist2 > 0.0001){
           const dist = Math.sqrt(dist2);
@@ -401,43 +419,31 @@ function physicsTick(){
           const nx = dx / dist, ny = dy / dist;
 
           if(isCoreA || isCoreB){
-            // Core is immovable anchor (infinite mass); other node yields smoothly
+            // Core is immovable anchor during collisions; other node yields smoothly outwards
             const other = isCoreA ? b : a;
             const sign = isCoreA ? 1 : -1;
-            other.x += nx * sign * overlap;
-            other.y += ny * sign * overlap;
-            other.vx += nx * sign * Math.max(1.0, overlap * 0.35);
-            other.vy += ny * sign * Math.max(1.0, overlap * 0.35);
-            if(other.type === 'cluster'){
-              other.anchorX = other.x; other.anchorY = other.y;
-              other.ang = Math.atan2(other.y - core.y, other.x - core.x);
-              other.orbitDist = Math.hypot(other.x - core.x, other.y - core.y);
+            if(!other.dragging){
+              other.x += nx * sign * overlap;
+              other.y += ny * sign * overlap;
+              other.vx += nx * sign * Math.min(1.2, overlap * 0.25);
+              other.vy += ny * sign * overlap * 0.25;
             }
           } else if(a.dragging && !b.dragging){
-            // a is being dragged by user: b is physically pushed out by the FULL overlap
+            // a is being dragged by user: b is pushed out
             b.x += nx * overlap;
             b.y += ny * overlap;
-            b.vx += nx * Math.max(1.2, overlap * 0.35);
-            b.vy += ny * Math.max(1.2, overlap * 0.35);
-            if(b.type === 'cluster'){
-              b.anchorX = b.x; b.anchorY = b.y;
-              b.ang = Math.atan2(b.y - core.y, b.x - core.x);
-              b.orbitDist = Math.hypot(b.x - core.x, b.y - core.y);
-            }
+            b.vx += nx * Math.min(1.2, overlap * 0.25);
+            b.vy += ny * Math.min(1.2, overlap * 0.25);
           } else if(b.dragging && !a.dragging){
-            // b is being dragged by user: a is physically pushed out by the FULL overlap
+            // b is being dragged by user: a is pushed out
             a.x -= nx * overlap;
             a.y -= ny * overlap;
-            a.vx -= nx * Math.max(1.2, overlap * 0.35);
-            a.vy -= ny * Math.max(1.2, overlap * 0.35);
-            if(a.type === 'cluster'){
-              a.anchorX = a.x; a.anchorY = a.y;
-              a.ang = Math.atan2(a.y - core.y, a.x - core.x);
-              a.orbitDist = Math.hypot(a.x - core.x, a.y - core.y);
-            }
+            a.vx -= nx * Math.min(1.2, overlap * 0.25);
+            a.vy -= ny * Math.min(1.2, overlap * 0.25);
           } else if(!a.dragging && !b.dragging){
-            // Both free: split overlap inversely by mass
-            const mA = a.mass || 1, mB = b.mass || 1;
+            // Both free: split overlap inversely by mass (clusters have mass 50 so skills yield to clusters)
+            const mA = a.type === 'cluster' ? 50.0 : (a.mass || 1.0);
+            const mB = b.type === 'cluster' ? 50.0 : (b.mass || 1.0);
             const ratioA = mB / (mA + mB);
             const ratioB = mA / (mA + mB);
 
@@ -446,22 +452,11 @@ function physicsTick(){
             b.x += nx * overlap * ratioB;
             b.y += ny * overlap * ratioB;
 
-            const force = Math.max(0.6, overlap * 0.25);
+            const force = Math.min(0.8, Math.max(0.15, overlap * 0.15));
             a.vx -= nx * force * ratioA;
             a.vy -= ny * force * ratioA;
             b.vx += nx * force * ratioB;
             b.vy += ny * force * ratioB;
-
-            if(a.type === 'cluster'){
-              a.anchorX = a.x; a.anchorY = a.y;
-              a.ang = Math.atan2(a.y - core.y, a.x - core.x);
-              a.orbitDist = Math.hypot(a.x - core.x, a.y - core.y);
-            }
-            if(b.type === 'cluster'){
-              b.anchorX = b.x; b.anchorY = b.y;
-              b.ang = Math.atan2(b.y - core.y, b.x - core.x);
-              b.orbitDist = Math.hypot(b.x - core.x, b.y - core.y);
-            }
           }
         }
       }
@@ -470,8 +465,8 @@ function physicsTick(){
 
   // 3. Integrate + viscous damping + natural rest settling
   NODES.forEach(n=>{
-    if(n.dragging || n.type==='core'){ return; }
-    const dmp = n.type==='cluster' ? DAMP_CL : DAMP_SK;
+    if(n.dragging){ return; }
+    const dmp = n.type==='core' ? 0.92 : (n.type==='cluster' ? DAMP_CL : DAMP_SK);
     n.vx *= dmp; n.vy *= dmp;
 
     // Settling threshold: if speed is below threshold, stop to peaceful rest
@@ -602,8 +597,8 @@ function renderFrame(){
     const a=NODES[lk.a], b=NODES[lk.b];
     if(!a || !b) return;
     const isCoreLink = a.type==='core' || b.type==='core';
-    const isClusterToSkill = (a.type==='cluster' && b.type==='skill') || (b.type==='cluster' && a.type==='skill');
-    const c = col(b.type==='skill'?b.category:(a.category||'core'));
+    const isClusterToItem = (a.type==='cluster' && (b.type==='skill'||b.type==='agent')) || (b.type==='cluster' && (a.type==='skill'||a.type==='agent'));
+    const c = col((b.type==='skill'||b.type==='agent')?b.category:(a.category||'core'));
 
     CTX.save();
 
@@ -619,12 +614,12 @@ function renderFrame(){
       }
       CTX.beginPath(); bezPath(CTX, a.x, a.y, b.x, b.y); CTX.stroke();
       CTX.shadowBlur = 0;
-    } else if(isClusterToSkill){
-      // Wavy axon from Cluster to Skill — retains category color at all times!
-      const sk = a.type==='skill' ? a : b;
-      const isSkActive = sk && ACTIVE.has(sk.id);
-      const cableCol = isSkActive ? c : hexAlpha(c, 0.38);
-      drawWavyAxon(CTX, a.x, a.y, b.x, b.y, isSkActive, cableCol);
+    } else if(isClusterToItem){
+      // Wavy axon from Cluster to Skill/Agent — retains category color at all times!
+      const itemNode = (a.type==='skill'||a.type==='agent') ? a : b;
+      const isItemActive = itemNode && ACTIVE.has(itemNode.id);
+      const cableCol = isItemActive ? c : hexAlpha(c, 0.38);
+      drawWavyAxon(CTX, a.x, a.y, b.x, b.y, isItemActive, cableCol);
     } else {
       // Skill → Subskill clean branch
       const parentSk = a.type==='skill' ? a : b;
@@ -871,6 +866,98 @@ function renderFrame(){
       }
     }
 
+    else if(type==='agent'){
+      const isAct=ACTIVE.has(n.id);
+      const isHov = hoveredNode && (hoveredNode.id === n.id || (hoveredNode.parentIdx !== undefined && hoveredNode.parentIdx === idx[n.id]));
+      const isParentHov = hoveredNode && (hoveredNode.type === 'cluster' && hoveredNode.id === n.category);
+      const rGem = r + (isAct?2.5:0);
+      const pulseTime = performance.now();
+
+      // Ripple pulse for active agent
+      if(isAct){
+        const ripAg1 = (pulseTime * 0.0022 + (n.seed || 0) * 0.5) % 1.0;
+        const ripAg2 = (pulseTime * 0.0022 + (n.seed || 0) * 0.5 + 0.5) % 1.0;
+        [ripAg1, ripAg2].forEach(rip => {
+          CTX.save();
+          CTX.translate(x, y);
+          CTX.rotate(Math.PI / 4);
+          const sz = (rGem + rip * 18) * 1.414;
+          CTX.beginPath();
+          CTX.rect(-sz/2, -sz/2, sz, sz);
+          CTX.strokeStyle = hexAlpha(c, (1 - rip) * 0.90);
+          CTX.lineWidth = 2.0;
+          CTX.stroke();
+          CTX.restore();
+        });
+      } else if(isHov){
+        CTX.save();
+        CTX.translate(x, y);
+        CTX.rotate(Math.PI / 4);
+        const sz = (rGem + 4) * 1.414;
+        CTX.beginPath();
+        CTX.rect(-sz/2, -sz/2, sz, sz);
+        CTX.strokeStyle = 'rgba(255,255,255,0.45)';
+        CTX.lineWidth = 1.2;
+        CTX.stroke();
+        CTX.restore();
+      }
+
+      // Diamond Body (Rotated 45-deg square)
+      CTX.save();
+      CTX.translate(x, y);
+      CTX.rotate(Math.PI / 4);
+      const sz = rGem * 1.35;
+      CTX.beginPath();
+      CTX.rect(-sz/2, -sz/2, sz, sz);
+      CTX.fillStyle = isAct ? c : '#0f172a';
+      CTX.fill();
+      CTX.strokeStyle = isAct ? '#ffffff' : hexAlpha(c, (isHov || isParentHov) ? 0.98 : 0.70);
+      CTX.lineWidth = isAct ? 2.4 : 1.4;
+      if(isAct || isHov){
+        CTX.shadowColor = c;
+        CTX.shadowBlur = 16;
+      }
+      CTX.stroke();
+      CTX.restore();
+      CTX.shadowBlur = 0;
+
+      // Inner icon: Sleek diamond bullet '◆'
+      CTX.fillStyle = isAct ? '#ffffff' : (isHov ? '#f8fafc' : '#f59e0b');
+      CTX.font = `700 ${Math.floor(rGem * 0.55)}px JetBrains Mono`;
+      CTX.textAlign = 'center';
+      CTX.textBaseline = 'middle';
+      CTX.fillText('◆', x, y);
+
+      // Label on hover or zoom
+      if(isAct || isHov || isParentHov || camZ > 0.85){
+        const fullLabel = label || n.id;
+        if(isHov){
+          CTX.font = '600 8.5px JetBrains Mono';
+          const tw = CTX.measureText(fullLabel).width;
+          const tx = (x<CX) ? (x - rGem - 11 - tw) : (x + rGem + 11);
+          CTX.fillStyle = 'rgba(15, 23, 42, 0.96)';
+          CTX.strokeStyle = c;
+          CTX.lineWidth = 1;
+          CTX.beginPath();
+          CTX.roundRect(tx - 4, y - 8, tw + 8, 16, 4);
+          CTX.fill();
+          CTX.stroke();
+          CTX.fillStyle = '#ffffff';
+          CTX.textAlign = 'left';
+          CTX.textBaseline = 'middle';
+          CTX.fillText(fullLabel, tx, y);
+        } else {
+          const chip = fullLabel.length>15 ? fullLabel.slice(0,15)+'…' : fullLabel;
+          CTX.fillStyle = isAct ? '#ffffff' : (isParentHov ? '#e2e8f0' : '#cbd5e1');
+          CTX.font = `${isAct ? '700' : '600'} 8px JetBrains Mono`;
+          CTX.textAlign = (x<CX) ? 'right' : 'left';
+          CTX.textBaseline = 'middle';
+          const stagY = ((parseInt(n._n||'0', 10) % 2 === 1) ? 2.5 : -2.5);
+          CTX.fillText(chip, (x<CX) ? (x-rGem-8) : (x+rGem+8), y + stagY);
+        }
+      }
+    }
+
     else if(type==='subskill'){
       const isAct=ACTIVE.has(n.id)||ACTIVE.has(n.parent);
       const isHov = hoveredNode && (hoveredNode.id === n.id || hoveredNode.id === n.parent);
@@ -985,176 +1072,234 @@ function flyTo(nodeId){
 }
 
 function hitTest(wx,wy){
-  // Reverse: subskills first (smaller), then skills, then clusters, then core
+  // Reverse: subskills first (smaller), then skills/agents, then clusters, then core
   const order=[...NODES].reverse();
   for(const n of order){
     const d=Math.hypot(wx-n.x, wy-n.y);
-    const hitR = n.type==='subskill'?20:(n.type==='skill'?24:(n.type==='cluster'?30:40));
+    const hitR = n.type==='subskill'?20:((n.type==='skill'||n.type==='agent')?24:(n.type==='cluster'?30:45));
     if(d < n.r+hitR) return n;
   }
   return null;
 }
 
-CV.addEventListener('mousedown',e=>{
-  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim=null; }
-  const[wx,wy]=sw(e.clientX,e.clientY);
-  const hit=hitTest(wx,wy);
-  if(hit){
-    dragNode=hit;
-    dragNode.dragging=true;
-    dragOffX=wx-hit.x; dragOffY=wy-hit.y;
-    CV.classList.add('dragging');
-  } else {
-    panStart={x:e.clientX,y:e.clientY};
-    panCamStart={x:camX,y:camY};
-  }
-});
-CV.addEventListener('mousemove',e=>{
-  const[wx,wy]=sw(e.clientX,e.clientY);
-  hoveredNode = hitTest(wx,wy);
-  CV.style.cursor = hoveredNode ? 'pointer' : (dragNode ? 'grabbing' : 'grab');
+// Prevent browser from initiating HTML5 drag, text selection, or long-press context menu
+window.addEventListener('dragstart', e => e.preventDefault());
+window.addEventListener('selectstart', e => { if(dragNode || panStart) e.preventDefault(); });
+window.addEventListener('contextmenu', e => { if(dragNode || panStart) e.preventDefault(); });
 
-  if(dragNode){
-    const targetX = wx-dragOffX;
-    const targetY = wy-dragOffY;
-    dragNode.vx = (targetX - dragNode.x) * 0.45;
-    dragNode.vy = (targetY - dragNode.y) * 0.45;
-    dragNode.x = targetX;
-    dragNode.y = targetY;
-  } else if(panStart){
-    camX=panCamStart.x-(e.clientX-panStart.x)/camZ;
-    camY=panCamStart.y-(e.clientY-panStart.y)/camZ;
+const activePointers = new Map();
+let mainPointerId = null;
+let pointerDownInfo = null;
+let touchPinchDist0 = 0;
+
+function handlePointerDown(e){
+  if(e.pointerType === 'mouse' && e.button !== 0) return;
+  e.preventDefault();
+  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim=null; }
+
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  if(activePointers.size === 1){
+    mainPointerId = e.pointerId;
+    try { CV.setPointerCapture(e.pointerId); } catch(_){}
+
+    const[wx,wy]=sw(e.clientX,e.clientY);
+    const hit=hitTest(wx,wy);
+    pointerDownInfo = { x: e.clientX, y: e.clientY, t: performance.now(), hit };
+
+    if(hit){
+      dragNode = hit;
+      dragNode.dragging = true;
+      dragOffX = wx - hit.x;
+      dragOffY = wy - hit.y;
+      CV.classList.add('dragging');
+    } else {
+      panStart = { x: e.clientX, y: e.clientY };
+      panCamStart = { x: camX, y: camY };
+    }
+  } else if(activePointers.size === 2 && !dragNode){
+    panStart = null;
+    const pts = Array.from(activePointers.values());
+    touchPinchDist0 = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    touchZoom0 = camZ;
   }
-});
-CV.addEventListener('mouseleave', ()=>{ hoveredNode = null; });
+}
+
+function handlePointerMove(e){
+  if(!activePointers.has(e.pointerId)) return;
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  // Two-finger pinch zoom (only when no node is being dragged)
+  if(activePointers.size === 2 && !dragNode && touchPinchDist0 > 0){
+    const pts = Array.from(activePointers.values());
+    const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    camZ = Math.min(3, Math.max(0.08, touchZoom0 * (dist / touchPinchDist0)));
+    e.preventDefault();
+    return;
+  }
+
+  // Single-pointer drag or pan
+  if(e.pointerId === mainPointerId){
+    const[wx,wy]=sw(e.clientX,e.clientY);
+
+    if(dragNode){
+      const targetX = wx - dragOffX;
+      const targetY = wy - dragOffY;
+      const dx = targetX - dragNode.x;
+      const dy = targetY - dragNode.y;
+
+      dragNode.vx = dx * 0.5;
+      dragNode.vy = dy * 0.5;
+      dragNode.x = targetX;
+      dragNode.y = targetY;
+
+      if(dragNode.type === 'core'){
+        NODES.forEach(other => {
+          if(other !== dragNode){
+            other.x += dx;
+            other.y += dy;
+            if(other.anchorX !== undefined) other.anchorX += dx;
+            if(other.anchorY !== undefined) other.anchorY += dy;
+          }
+        });
+      } else if(dragNode.type === 'cluster'){
+        const core = NODES[0] || {x:0, y:0};
+        const cdx = dragNode.x - core.x, cdy = dragNode.y - core.y;
+        const cdist = Math.hypot(cdx, cdy);
+        const minCoreD = R_CORE + R_CLUSTER + 50;
+        if(cdist < minCoreD){
+          const safeAng = cdist > 0.01 ? Math.atan2(cdy, cdx) : (dragNode.ang !== undefined ? dragNode.ang : 0);
+          dragNode.x = core.x + Math.cos(safeAng) * minCoreD;
+          dragNode.y = core.y + Math.sin(safeAng) * minCoreD;
+        }
+
+        const cIdx = NODES.indexOf(dragNode);
+        NODES.forEach(child => {
+          if(child.parentIdx === cIdx){
+            child.vx += dx * 0.35;
+            child.vy += dy * 0.35;
+            const sIdx = NODES.indexOf(child);
+            NODES.forEach(sub => {
+              if(sub.parentIdx === sIdx){
+                sub.vx += dx * 0.35;
+                sub.vy += dy * 0.35;
+              }
+            });
+          }
+        });
+      } else if(dragNode.type === 'skill' || dragNode.type === 'agent'){
+        const sIdx = NODES.indexOf(dragNode);
+        NODES.forEach(sub => {
+          if(sub.parentIdx === sIdx){
+            sub.vx += dx * 0.35;
+            sub.vy += dy * 0.35;
+          }
+        });
+      }
+      e.preventDefault();
+    } else if(panStart){
+      camX = panCamStart.x - (e.clientX - panStart.x) / camZ;
+      camY = panCamStart.y - (e.clientY - panStart.y) / camZ;
+      e.preventDefault();
+    }
+  }
+}
 function onNodeDrop(n){
   if(!n) return;
   const core = NODES[0] || {x:0, y:0};
-  if(n.type === 'cluster'){
-    const dx = n.x - core.x, dy = n.y - core.y;
-    n.ang = Math.atan2(dy, dx);
-    n.orbitDist = Math.hypot(dx, dy) || 1;
+  if(n.type === 'core'){
     n.anchorX = n.x;
     n.anchorY = n.y;
-  } else if(n.type === 'skill' && n.parentIdx !== undefined){
+    n.vx = Math.min(1.8, Math.max(-1.8, n.vx));
+    n.vy = Math.min(1.8, Math.max(-1.8, n.vy));
+  } else if(n.type === 'cluster'){
+    const dx = n.x - core.x, dy = n.y - core.y;
+    const dist = Math.hypot(dx, dy);
+    // Enforce safe orbit distance so cluster NEVER collapses or disappears inside Core
+    const minOrbit = R_CORE + R_CLUSTER + 75; // 46 + 28 + 75 = 149px
+    const safeDist = Math.max(minOrbit, dist);
+    n.ang = (dx === 0 && dy === 0) ? (n.ang !== undefined ? n.ang : 0) : Math.atan2(dy, dx);
+    n.orbitDist = safeDist;
+    n.anchorX = core.x + Math.cos(n.ang) * safeDist;
+    n.anchorY = core.y + Math.sin(n.ang) * safeDist;
+    n.x = n.anchorX;
+    n.y = n.anchorY;
+    n.vx = 0;
+    n.vy = 0;
+  } else if((n.type === 'skill' || n.type === 'agent') && n.parentIdx !== undefined){
     const p = NODES[n.parentIdx];
     if(p){
-      const pdx = p.x - core.x, pdy = p.y - core.y;
-      const p_ang = Math.atan2(pdy, pdx);
       const sdx = n.x - p.x, sdy = n.y - p.y;
-      const s_ang = Math.atan2(sdy, sdx);
-      n.relAng = s_ang - p_ang;
       n.baseDist = Math.hypot(sdx, sdy);
       n.relDist = n.baseDist;
+      const pdx = p.x - core.x, pdy = p.y - core.y;
+      const p_ang = Math.atan2(pdy, pdx);
+      const s_ang = Math.atan2(sdy, sdx);
+      n.relAng = s_ang - p_ang;
+      n.vx = Math.min(1.5, Math.max(-1.5, n.vx));
+      n.vy = Math.min(1.5, Math.max(-1.5, n.vy));
     }
   } else if(n.type === 'subskill' && n.parentIdx !== undefined){
     const ps = NODES[n.parentIdx];
     if(ps){
+      const subdx = n.x - ps.x, subdy = n.y - ps.y;
+      n.baseDist = Math.hypot(subdx, subdy);
+      n.relDist = n.baseDist;
       const p = (ps.parentIdx !== undefined) ? NODES[ps.parentIdx] : core;
       const pdx = ps.x - p.x, pdy = ps.y - p.y;
       const ps_ang = Math.atan2(pdy, pdx);
-      const subdx = n.x - ps.x, subdy = n.y - ps.y;
       const sub_ang = Math.atan2(subdy, subdx);
       n.relAng = sub_ang - ps_ang;
-      n.baseDist = Math.hypot(subdx, subdy);
-      n.relDist = n.baseDist;
+      n.vx = Math.min(1.5, Math.max(-1.5, n.vx));
+      n.vy = Math.min(1.5, Math.max(-1.5, n.vy));
     }
   }
 }
 
-CV.addEventListener('mouseup',e=>{
-  if(dragNode){
-    onNodeDrop(dragNode);
-    dragNode.dragging=false;
-    dragNode=null;
-    CV.classList.remove('dragging');
-  }
-  panStart=null;
-});
-CV.addEventListener('mouseleave',e=>{
-  if(dragNode){
-    onNodeDrop(dragNode);
-    dragNode.dragging=false;
-    dragNode=null;
-  }
-  panStart=null; CV.classList.remove('dragging');
-});
+function handlePointerUp(e){
+  activePointers.delete(e.pointerId);
 
-// Click (not drag)
-CV.addEventListener('click',e=>{
-  const[wx,wy]=sw(e.clientX,e.clientY);
-  const hit=hitTest(wx,wy);
-  if(hit) showDetail(hit);
-  else document.getElementById('detail').style.display='none';
-});
+  if(e.pointerId === mainPointerId){
+    try { CV.releasePointerCapture(e.pointerId); } catch(_){}
 
-// Touch
-CV.addEventListener('touchstart',e=>{
-  if(_flyAnim){ cancelAnimationFrame(_flyAnim); _flyAnim=null; }
-  if(e.touches.length === 2){
-    dragNode = null;
-    panStart = null;
-    touchDist0 = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-    touchZoom0 = camZ;
-    e.preventDefault();
-    return;
-  }
-  const t=e.touches[0];
-  const[wx,wy]=sw(t.clientX,t.clientY);
-  const hit=hitTest(wx,wy);
-  touchStartInfo = { x: t.clientX, y: t.clientY, t: performance.now(), hit };
-  if(hit){
-    dragNode=hit; dragNode.dragging=true; dragOffX=wx-hit.x; dragOffY=wy-hit.y;
-    CV.classList.add('dragging');
-  } else {
-    panStart={x:t.clientX,y:t.clientY}; panCamStart={x:camX,y:camY};
-  }
-  e.preventDefault();
-},{passive:false});
-
-CV.addEventListener('touchmove',e=>{
-  if(e.touches.length === 2 && touchDist0 > 0){
-    const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-    camZ = Math.min(3, Math.max(0.08, touchZoom0 * (dist / touchDist0)));
-    e.preventDefault();
-    return;
-  }
-  const t=e.touches[0];
-  if(dragNode){
-    const[wx,wy]=sw(t.clientX,t.clientY);
-    const targetX = wx-dragOffX;
-    const targetY = wy-dragOffY;
-    dragNode.vx = (targetX - dragNode.x) * 0.45;
-    dragNode.vy = (targetY - dragNode.y) * 0.45;
-    dragNode.x = targetX;
-    dragNode.y = targetY;
-  } else if(panStart){
-    camX=panCamStart.x-(t.clientX-panStart.x)/camZ;
-    camY=panCamStart.y-(t.clientY-panStart.y)/camZ;
-  }
-  e.preventDefault();
-},{passive:false});
-
-CV.addEventListener('touchend',e=>{
-  if(e.touches.length < 2) touchDist0 = 0;
-  if(touchStartInfo){
-    const dt = performance.now() - touchStartInfo.t;
-    const t = e.changedTouches ? e.changedTouches[0] : null;
-    const dx = t ? Math.abs(t.clientX - touchStartInfo.x) : 0;
-    const dy = t ? Math.abs(t.clientY - touchStartInfo.y) : 0;
-    if(dt < 350 && dx < 12 && dy < 12){
-      if(touchStartInfo.hit) showDetail(touchStartInfo.hit);
-      else document.getElementById('detail').style.display='none';
+    // Check for quick click/tap to inspect node detail
+    if(pointerDownInfo){
+      const d = Math.hypot(e.clientX - pointerDownInfo.x, e.clientY - pointerDownInfo.y);
+      const dt = performance.now() - pointerDownInfo.t;
+      if(d < 10 && dt < 450){
+        if(pointerDownInfo.hit) showDetail(pointerDownInfo.hit);
+        else document.getElementById('detail').style.display = 'none';
+      }
+      pointerDownInfo = null;
     }
-    touchStartInfo = null;
+
+    if(dragNode){
+      onNodeDrop(dragNode);
+      dragNode.dragging = false;
+      dragNode = null;
+      CV.classList.remove('dragging');
+    }
+    panStart = null;
+    mainPointerId = null;
   }
-  if(dragNode){
-    onNodeDrop(dragNode);
-    dragNode.dragging=false;
-    dragNode=null;
-    CV.classList.remove('dragging');
+
+  if(activePointers.size === 0){
+    touchPinchDist0 = 0;
   }
-  panStart=null;
+}
+
+CV.addEventListener('pointerdown', handlePointerDown);
+CV.addEventListener('pointermove', handlePointerMove);
+CV.addEventListener('pointerup', handlePointerUp);
+CV.addEventListener('pointercancel', handlePointerUp);
+
+// Hover effect when moving mouse without clicking
+window.addEventListener('pointermove', e => {
+  if(!dragNode && activePointers.size === 0){
+    const[wx,wy]=sw(e.clientX,e.clientY);
+    hoveredNode = hitTest(wx,wy);
+    CV.style.cursor = hoveredNode ? 'pointer' : 'grab';
+  }
 });
 
 // Zoom
@@ -1181,6 +1326,13 @@ function showDetail(n){
   document.getElementById('ddesc').textContent=n.desc||'—';
   document.getElementById('dtype').textContent=n.type;
   document.getElementById('dcat').textContent=n.category||'—';
+  const ddivrow = document.getElementById('ddivrow');
+  if(n.division){
+    ddivrow.style.display = 'flex';
+    document.getElementById('ddiv').textContent = n.division.toUpperCase();
+  } else {
+    ddivrow.style.display = 'none';
+  }
   const dprow = document.getElementById('dprow');
   if(n.parent){
     dprow.style.display = 'flex';
@@ -1288,11 +1440,12 @@ function buildGraph(data, isLiveUpdate){
   data.nodes.forEach(n=>nm[n.id]=n);
 
   // Node sizes
-  const R_CORE=46, R_CLUSTER=28, R_SKILL=15, R_SUB=10;
+  const R_CORE=46, R_CLUSTER=28, R_SKILL=15, R_AGENT=15, R_SUB=10;
 
   const core=data.nodes.find(n=>n.type==='core');
   const clusters=data.nodes.filter(n=>n.type==='cluster' && !n.id.startsWith('.'));
   const skills=data.nodes.filter(n=>n.type==='skill' && !n.id.startsWith('.') && (!n.category || !n.category.startsWith('.')));
+  const agents=data.nodes.filter(n=>n.type==='agent' && !n.id.startsWith('.'));
   const subskills=data.nodes.filter(n=>n.type==='subskill' && !n.id.startsWith('.'))||[];
 
   // Keep existing node state if live update
@@ -1313,17 +1466,23 @@ function buildGraph(data, isLiveUpdate){
   // 2. Harmonious Cluster Ordering (Top-to-bottom strictly on the LEFT side of Hermes)
   const CLUSTER_ORDER = [
     'creative',
+    'agency-product-design',
     'web',
+    'agency-growth',
     'autonomous-ai-agents',
-    'apple',
+    'agency-orchestration',
+    'agency-engineering',
     'software-development',
+    'agency-qa-security',
     'devops',
+    'agency-domain',
     'research',
     'social-media',
     'email',
     'media',
     'note-taking',
-    'productivity'
+    'productivity',
+    'apple'
   ];
   clusters.sort((a,b)=>{
     const ia = CLUSTER_ORDER.indexOf(a.id);
@@ -1331,35 +1490,36 @@ function buildGraph(data, isLiveUpdate){
     return (ia >= 0 ? ia : 99) - (ib >= 0 ? ib : 99);
   });
 
-  // Calculate proportional angular budget for each cluster based on its skills & subskills
+  // Calculate proportional angular budget for each cluster based on its skills, agents & subskills
   const weights = {};
   let totalWeight = 0;
   clusters.forEach(cl=>{
     const sks = skills.filter(s=>s.category===cl.id);
+    const ags = agents.filter(a=>a.category===cl.id);
     const subs = subskills.filter(s=>s.category===cl.id);
-    const w = 3.0 + sks.length * 1.0 + subs.length * 0.20;
+    const w = 3.0 + (sks.length + ags.length) * 0.40 + subs.length * 0.15;
     weights[cl.id] = w;
     totalWeight += w;
   });
 
-  // Sweep strictly along the LEFT semicircle (244° down to 116°, cos(θ) < 0 always)
-  const START_DEG = 244.0;
-  const TOTAL_ARC_DEG = 128.0;
+  // Distribute all clusters smoothly in a full 360° circle around Hermes
+  const TOTAL_CLUSTERS = clusters.length;
+  const START_DEG = -90.0; // Start from top (12 o'clock)
+  const TOTAL_ARC_DEG = 360.0;
   let curDeg = START_DEG;
-  const gapDeg = 1.4;
 
   // Initial load / reload distance bounds (user dragging has NO bounds)
-  const MIN_INIT_ORBIT = 285;
-  const MAX_INIT_ORBIT = 430;
+  const MIN_INIT_ORBIT = 350;
+  const MAX_INIT_ORBIT = 440;
 
-  // Place clusters strictly on the LEFT side of Hermes
+  // Place clusters circling completely around Hermes (360°)
   clusters.forEach((cl,i)=>{
     const spanDeg = (weights[cl.id] / totalWeight) * TOTAL_ARC_DEG;
-    const midDeg = curDeg - spanDeg * 0.5;
-    curDeg -= spanDeg;
+    const midDeg = curDeg + spanDeg * 0.5;
+    curDeg += spanDeg;
 
-    // Organic random angular jitter on fresh load
-    const angJitterDeg = isLiveUpdate ? 0 : (Math.random() - 0.5) * 5.0;
+    // Organic subtle angular jitter on fresh load
+    const angJitterDeg = isLiveUpdate ? 0 : (Math.random() - 0.5) * 2.0;
     const c_ang = (midDeg + angJitterDeg) * Math.PI / 180;
     const sectorSpan = spanDeg * Math.PI / 180;
 
@@ -1391,56 +1551,65 @@ function buildGraph(data, isLiveUpdate){
     newNodes.push(ni);
   });
 
-  // 3. Skills — placed BEHIND their parent cluster with tiered radial expansion to the left
+  // 3. Skills & Agents — placed BEHIND their parent cluster with tiered radial expansion to the left
   let si = 1;
   const idxItems = [];
   clusters.forEach(cl=>{
     const clNode = newNodes[idx[cl.id]];
     const c_ang = clNode.ang;
     const sectorSpan = clNode.sectorSpan || ((weights[cl.id] / totalWeight) * (TOTAL_ARC_DEG * Math.PI / 180));
-    const usableSpread = Math.max(0.06, sectorSpan - (gapDeg * Math.PI / 180) * 2);
+    const usableSpread = Math.min(1.4, Math.max(0.12, sectorSpan * 0.95));
 
     const cl_skills = skills.filter(s=>s.category===cl.id);
-    cl_skills.sort((a,b)=>{
+    const cl_agents = agents.filter(a=>a.category===cl.id);
+    const cl_items = [...cl_skills, ...cl_agents];
+
+    cl_items.sort((a,b)=>{
       const subA = subskills.filter(s=>s.parent===a.id).length;
       const subB = subskills.filter(s=>s.parent===b.id).length;
       return subB - subA;
     });
 
-    const M = cl_skills.length;
-    const tiers = M > 10 ? 3 : (M > 4 ? 2 : 1);
+    const M = cl_items.length;
+    const tiers = Math.min(6, Math.max(1, Math.ceil(M / 7)));
 
-    cl_skills.forEach((sk, j)=>{
-      const frac = M > 1 ? (j - (M - 1) / 2) / ((M - 1) / 2) : 0;
-      const relAng = frac * (usableSpread * 0.48);
-      const sk_ang = c_ang + relAng;
-
+    cl_items.forEach((item, j)=>{
       const tier = j % tiers;
-      const distBehind = 75 + tier * 50; // tiered depth: 75px, 125px, 175px
-      const sx = clNode.x + Math.cos(sk_ang) * distBehind;
-      const sy = clNode.y + Math.sin(sk_ang) * distBehind;
+      const itemsInTier = Math.ceil(M / tiers);
+      const idxInTier = Math.floor(j / tiers);
+      const frac = itemsInTier > 1 ? (idxInTier - (itemsInTier - 1) / 2) / ((itemsInTier - 1) / 2) : 0;
+      const relAng = frac * (usableSpread * 0.48);
+      const item_ang = c_ang + relAng;
 
-      const oldSk = oldMap.get(sk.id);
-      const ni = (oldSk && isLiveUpdate) ? {
-        ...oldSk, ...sk,
-        ang: sk_ang, relAng: relAng, relDist: distBehind, baseDist: distBehind,
-        parentIdx: idx[cl.id], r: R_SKILL, mass: 1.8
+    // Tiered radial distance from parent cluster: generous breathing room (140px - 490px)
+    const distBehind = 140 + tier * 70; // tiered depth: 140px, 210px, 280px, 350px, 420px, 490px
+    const sx = clNode.x + Math.cos(item_ang) * distBehind;
+    const sy = clNode.y + Math.sin(item_ang) * distBehind;
+
+      const isAgent = item.type === 'agent';
+      const rItem = isAgent ? R_AGENT : R_SKILL;
+
+      const oldItem = oldMap.get(item.id);
+      const ni = (oldItem && isLiveUpdate) ? {
+        ...oldItem, ...item,
+        ang: item_ang, relAng: relAng, relDist: distBehind, baseDist: distBehind,
+        parentIdx: idx[cl.id], r: rItem, mass: isAgent ? 2.0 : 1.8
       } : {
-        ...sk,
+        ...item,
         x: sx, y: sy,
-        ang: sk_ang, relAng: relAng, relDist: distBehind, baseDist: distBehind,
+        ang: item_ang, relAng: relAng, relDist: distBehind, baseDist: distBehind,
         vx: 0, vy: 0,
-        r: R_SKILL, mass: 1.8,
+        r: rItem, mass: isAgent ? 2.0 : 1.8,
         parentIdx: idx[cl.id],
         dragging: false,
-        _n: String(si).padStart(2,'0'),
+        _n: isAgent ? '◆' : String(si).padStart(2,'0'),
         seed: (j+1)*73 + idx[cl.id]*19
       };
 
-      idxItems.push({id:sk.id, n:ni._n, col:col(sk.category), label:sk.label});
-      idx[sk.id] = newNodes.length;
+      idxItems.push({id:item.id, n:ni._n, col:col(item.category), label:item.label, type:item.type});
+      idx[item.id] = newNodes.length;
       newNodes.push(ni);
-      si++;
+      if(!isAgent) si++;
     });
   });
 
@@ -1452,11 +1621,12 @@ function buildGraph(data, isLiveUpdate){
     const sub_M = subs.length;
     if(!sub_M) return;
 
-    const sub_spread = Math.min(0.12, sub_M * 0.02);
+    const sub_spread = Math.min(0.24, sub_M * 0.04);
     subs.forEach((sub, k)=>{
       const sub_frac = sub_M > 1 ? (k - (sub_M - 1) / 2) / ((sub_M - 1) / 2) : 0;
       const sub_relAng = sub_frac * (sub_spread * 0.5);
-      const sub_relDist = 38 + (k % 2) * 18;
+      // Generous distance from parent skill node (80px - 115px)
+      const sub_relDist = 80 + (k % 2) * 35;
       const sub_ang = (skNode.ang || 0) + sub_relAng;
       const sub_x = skNode.x + Math.cos(sub_ang) * sub_relDist;
       const sub_y = skNode.y + Math.sin(sub_ang) * sub_relDist;
@@ -1512,9 +1682,12 @@ function buildGraph(data, isLiveUpdate){
     });
   });
 
-  // Group each skill into its parent cluster
-  skills.forEach(sk=>{
-    const cat = sk.category || 'web';
+  // Group each skill/agent into its parent cluster
+  const allItems = [...skills, ...agents];
+  if(countEl) countEl.textContent = allItems.length;
+
+  allItems.forEach(it=>{
+    const cat = it.category || 'web';
     let bucket = clusterMap.get(cat);
     if(!bucket){
       for(const [k, v] of clusterMap.entries()){
@@ -1525,7 +1698,7 @@ function buildGraph(data, isLiveUpdate){
       bucket = clusterMap.values().next().value;
     }
     if(bucket){
-      bucket.skills.push(sk);
+      bucket.skills.push(it);
     }
   });
 
@@ -1559,15 +1732,17 @@ function buildGraph(data, isLiveUpdate){
       if(clNode) showDetail(clNode);
     });
 
-    // Skill items
+    // Skill & Agent items
     grp.skills.forEach(sk=>{
-      const skSubs = subskills.filter(s=>s.parent===sk.id);
+      const isAgent = sk.type === 'agent';
+      const skSubs = isAgent ? [] : subskills.filter(s=>s.parent===sk.id);
       const d = document.createElement('div');
       d.className = 'ir' + (ACTIVE.has(sk.id) ? ' lit' : '');
       d.id = `ix-${sk.id}`;
       d.innerHTML = `
-        <span class="ir-dot" style="background:${grp.col}"></span>
+        <span class="ir-dot" style="background:${isAgent ? '#f59e0b' : grp.col};border-radius:${isAgent ? '2px' : '50%'}"></span>
         <span class="ir-label">${sk.label || sk.id}</span>
+        ${isAgent ? `<span class="ir-sub-count" style="color:#f59e0b;background:rgba(245,158,11,0.12);font-size:6.5px">AGENT</span>` : ''}
         ${skSubs.length ? `<span class="ir-sub-count">${skSubs.length}</span><span class="ir-arrow">▾</span>` : ''}
       `;
 
@@ -1638,7 +1813,9 @@ function buildGraph(data, isLiveUpdate){
 
   document.getElementById('s-cl').textContent=clusters.length;
   document.getElementById('s-sk').textContent=skills.length;
-  _lastSkillCount = skills.length;
+  const sAg = document.getElementById('s-ag');
+  if(sAg) sAg.textContent = agents.length;
+  _lastSkillCount = skills.length + agents.length;
 
   if(!_graphInitialized){
     _graphInitialized = true;

@@ -1,0 +1,5 @@
+Nama: Andryan Zulfi Rahmat Tri Saputra (panggilan: Zulfi). Asal Indonesia. Saat ini di ID-Networkers jurusan Programmer. Minat: programming, software engineering, jaringan komputer, Linux, DevOps, AI, embedded systems. Gaya belajar: otodidak, hands-on, analogi & contoh nyata, bukan hafalan/teori panjang. Ingin paham "kenapa & bagaimana" di balik sesuatu. Mudah lupa jika hanya membaca. Ingin dikoreksi jika salah. Harapan: AI bantu bangun pola pikir, bukan sekadar beri jawaban. Info lengkap di ~/user.md.
+§
+UI redesign preference: when changing visual design, preserve existing behavior (drag, zoom, physics, interactions) exactly — only change the visual layer. Explicitly dislikes when a redesign accidentally breaks interactivity. Prefers natural physics feel (spring/damping/lerp) over instant or rigid animations.
+§
+Graph & Constellation dynamics preference: prefers cluster nodes positioned closely to the central core node (~0.22 screen radius); movement of clusters must be slow, viscous, and stately (capped velocity, heavy damping), never jumping or moving rapidly. Prefers automatic universal detection over hardcoding specific skills.

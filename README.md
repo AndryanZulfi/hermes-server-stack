@@ -22,7 +22,7 @@ Production infrastructure blueprint and Docker orchestration for **Hermes Agent*
          ┌────────────────┴────────────────┐
          ▼                                 ▼
    [ hermes-skills ]             [ Monitoring Stack ]
- (Decoupled Git Repo)          (Prometheus :9090, Grafana :3001)
+ (Decoupled Submodule)         (Prometheus :9090, Grafana :3001)
 ```
 
 ## Directory Structure
@@ -30,43 +30,65 @@ Production infrastructure blueprint and Docker orchestration for **Hermes Agent*
 * **`9router-hermes/`**: Core agent orchestration:
   * `9router`: LLM reverse proxy and routing gateway (port 20128).
   * `hermes`: Autonomous AI Agent gateway and runtime environment (ports 8642, 9119).
-* **`honcho/`**: Dialectic memory engine and persistent cognitive graph (ports 8000, 8443).
+* **`galaxy-view/`**: Real-time interactive neural skill constellation map with 285 Agency specialists and Hermes skills (port 8899 / Tailscale :8444).
+* **`skills/`**: Git submodule pointing to [`hermes-skills`](https://github.com/AndryanZulfi/hermes-skills.git).
+* **`honcho/`**: Git submodule pointing to [`honcho`](https://github.com/plastic-labs/honcho.git) (ports 8000, 8443).
+* **`hermes-config/`**: Portable seed templates for zero-touch configuration:
+  * `memories/`: Persistent user persona (`USER.md`) and operational context (`MEMORY.md`).
+  * `user.md` & `SOUL.md`: Identity and behavioral directives.
+  * `plugins/`: Loaded plugins (`agency-agents-router`, `galaxy-telemetry`).
+  * `cron/`: Scheduled jobs (`jobs.json`).
+  * `config.yaml.template`: Sanitized Hermes agent configuration.
 * **`monitoring/`**: Observability telemetry stack (Prometheus :9090, Grafana :3001, cAdvisor, Node Exporter).
-* **`galaxy-view/`**: Real-time interactive neural skill constellation map (port 8899 / Tailscale :8444).
 
-## Disaster Recovery & Deployment
+---
 
-### 1. Prerequisites
+## 1-Click Deployment (Zero-Touch Setup)
+
+When setting up on a fresh machine:
+
 ```bash
-# Create shared bridge network
-docker network create ai-network 2>/dev/null || true
+# 1. Clone repository with submodules
+git clone --recursive https://github.com/AndryanZulfi/hermes-server-stack.git
+cd hermes-server-stack
+
+# 2. Run bootstrap script (sets up memories, skills, plugins, cron, galaxy-view)
+./setup.sh
+
+# 3. Configure secrets in .env
+# Edit 9router-hermes/.env with your LLM API keys and credentials
+nano 9router-hermes/.env
+
+# 4. Launch all services
+docker compose -f 9router-hermes/docker-compose.yml up -d
+docker compose -f galaxy-view/docker-compose.yml up -d
+docker compose -f honcho/docker-compose.yml up -d
 ```
 
-### 2. Configure Environment Files
-Copy each `.env.example` to `.env` and fill in your respective API keys and credentials:
+---
+
+## Managing Galaxy View (Gravity View)
+
+The interactive skill visualizer is containerized under `galaxy-view`:
+* **Port Internal:** `http://localhost:8899`
+* **Tailscale Serve:** `https://deb-zlf.tail38902e.ts.net:8444/`
+* **Features:** 360° celestial orbit, unified PointerEvents drag-and-drop, real-time telemetry integration with Hermes Agent.
+
 ```bash
-cp 9router-hermes/.env.example 9router-hermes/.env
-cp monitoring/.env.example monitoring/.env
-cp honcho/.env.template honcho/.env
+cd galaxy-view
+docker compose up -d --build
 ```
 
-### 3. Connect Hermes Skills
-The skills ecosystem is decoupled in its own modular repository:
+---
+
+## Syncing & Backups
+
+To sync your skills and configurations across devices:
+
 ```bash
-git clone https://github.com/AndryanZulfi/hermes-skills.git 9router-hermes/hermes-data/skills
-```
+# Push skills updates
+git -C skills add -A && git -C skills commit -m "update skills" && git -C skills push
 
-### 4. Launch the Entire Stack
-```bash
-# 1. Start core LLM Router & Hermes Brain
-cd 9router-hermes && docker compose up -d && cd ..
-
-# 2. Start Honcho Memory
-cd honcho && docker compose up -d && cd ..
-
-# 3. Start Galaxy View Visualizer
-cd galaxy-view && docker compose up -d && cd ..
-
-# 4. Start Monitoring (Optional)
-cd monitoring && docker compose up -d && cd ..
+# Push stack and configuration updates
+git add -A && git commit -m "update server stack & configs" && git push
 ```

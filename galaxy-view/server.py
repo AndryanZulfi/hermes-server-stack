@@ -29,7 +29,13 @@ category_colors = {
     'devops': '#60a5fa',                # Technical Blue
     'note-taking': '#10b981',           # Jade
     'social-media': '#cbd5e1',          # Silver
-    'web': '#0ea5e9'                    # Deep Sky
+    'web': '#0ea5e9',                   # Deep Sky
+    'agency-orchestration': '#f59e0b',  # Amber Gold
+    'agency-engineering': '#38bdf8',    # Sky Blue
+    'agency-qa-security': '#f43f5e',    # Rose Crimson
+    'agency-product-design': '#ec4899', # Magenta Pink
+    'agency-growth': '#10b981',         # Emerald Green
+    'agency-domain': '#a78bfa'          # Iris Slate
 }
 
 # Subscribed SSE clients
@@ -218,10 +224,11 @@ def get_skills_graph():
             if not desc:
                 desc = f'Operational module for {skill_name}'
                 
+            node_type = 'agent' if cat == 'autonomous-ai-agents' and skill_name in ('claude-code', 'codex', 'antigravity', 'opencode', 'vibe', 'computer-use', 'hermes-agent') else 'skill'
             nodes.append({
                 'id': skill_name,
                 'label': skill_name,
-                'type': 'skill',
+                'type': node_type,
                 'category': cat,
                 'desc': desc
             })
@@ -241,6 +248,87 @@ def get_skills_graph():
             'desc': f'Cluster category: {cat}'
         })
         links.append({'source': 'core', 'target': cat, 'value': 4})
+
+    # Universal Automatic Detection of The Agency Specialists
+    agents_candidates = [
+        os.path.join(target_dir, '.agents.json'),
+        os.path.join(BASE_DIR, 'agents.json'),
+        '/opt/data/plugins/agency-agents-router/data/agents.json',
+        '/plugins/agency-agents-router/data/agents.json',
+    ]
+    raw_agents = []
+    for cand in agents_candidates:
+        if os.path.exists(cand):
+            try:
+                with open(cand, 'r', encoding='utf-8') as afp:
+                    raw_agents = json.load(afp)
+                    if raw_agents:
+                        break
+            except Exception:
+                pass
+
+    if raw_agents:
+        div_map = {
+            'specialized': 'agency-orchestration',
+            'engineering': 'agency-engineering',
+            'testing': 'agency-qa-security',
+            'security': 'agency-qa-security',
+            'product': 'agency-product-design',
+            'design': 'agency-product-design',
+            'project-management': 'agency-product-design',
+            'marketing': 'agency-growth',
+            'sales': 'agency-growth',
+            'paid-media': 'agency-growth',
+            'academic': 'agency-domain',
+            'research': 'agency-domain',
+            'finance': 'agency-domain',
+            'game-development': 'agency-domain',
+            'gis': 'agency-domain',
+            'healthcare': 'agency-domain',
+            'spatial-computing': 'agency-domain',
+            'support': 'agency-domain',
+        }
+
+        agency_cluster_defs = {
+            'agency-orchestration': {'label': 'AGENCY ARCHITECTURE', 'desc': 'Orchestrator, workflow, and agentic identity specialists'},
+            'agency-engineering': {'label': 'AGENCY ENGINEERING', 'desc': 'Fullstack, backend, DB, and DevOps specialist agents'},
+            'agency-qa-security': {'label': 'AGENCY QA & SECURITY', 'desc': 'Evidence collector QA, regression testers, and security hardeners'},
+            'agency-product-design': {'label': 'AGENCY PRODUCT & DESIGN', 'desc': 'Product managers, UX/UI, and design token architects'},
+            'agency-growth': {'label': 'AGENCY GROWTH & REVENUE', 'desc': 'Agentic search optimizers, content strategists, and marketing specialists'},
+            'agency-domain': {'label': 'AGENCY DOMAIN SPECIALISTS', 'desc': 'Spatial, healthcare, GIS, game dev, and academic research specialists'},
+        }
+
+        agency_cats_used = set()
+        for a in raw_agents:
+            ag_div = a.get('division', 'specialized')
+            ag_cat = div_map.get(ag_div, 'agency-domain')
+            agency_cats_used.add(ag_cat)
+
+            ag_slug = a.get('slug') or a.get('name', '').lower().replace(' ', '-')
+            ag_name = a.get('name', ag_slug)
+            ag_desc = a.get('vibe') or a.get('description', f'Agency specialist: {ag_name}')
+
+            nodes.append({
+                'id': ag_slug,
+                'label': ag_name,
+                'type': 'agent',
+                'category': ag_cat,
+                'division': ag_div,
+                'desc': ag_desc,
+                'source_path': a.get('source_path', '')
+            })
+            links.append({'source': ag_cat, 'target': ag_slug, 'value': 1})
+
+        for acat in sorted(agency_cats_used):
+            cdef = agency_cluster_defs.get(acat, {'label': acat.upper().replace('-', ' '), 'desc': f'Agency category: {acat}'})
+            nodes.append({
+                'id': acat,
+                'label': cdef['label'],
+                'type': 'cluster',
+                'category': acat,
+                'desc': cdef['desc']
+            })
+            links.append({'source': 'core', 'target': acat, 'value': 4})
 
     return {'nodes': nodes, 'links': links, 'colors': category_colors}
 

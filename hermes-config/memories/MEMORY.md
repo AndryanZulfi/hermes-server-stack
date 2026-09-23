@@ -1,0 +1,19 @@
+Infrastructure Tailscale URLs: 9router public endpoint at https://deb-zlf.tail38902e.ts.net/v1 (LLM gateway), Honcho API at https://deb-zlf.tail38902e.ts.net:8443 (port 8443 -> 8000). Both on deb-zlf host via Tailscale network.
+§
+Host ssh-zlf [Server Belajar]: IP 172.23.0.142 (user: zlf, pass user: zlf, pass root: idnmantab)
+§
+Host deb-zlf (running 9router, hermes, honcho, Tailscale): IP 172.23.0.134 (user: zulfi, pass: zlf, pass root: zlf_16)
+§
+Google Workspace OAuth terhubung: token tersimpan di /opt/data/google_token.json dan kredensial di /opt/data/google_client_secret.json (Project ID: hermes-assistant-509114). Google Calendar, Google Sheets, dan Google Drive API aktif dan terverifikasi. Drive/Gmail/Docs memiliki scope token.
+§
+WhatsApp Group IDs: Group testing 'Group ku' (6288803918389-1617164069@g.us), Group operasional IDN 'Cod musang area palmerah' (120363410899436681@g.us). Bot WhatsApp sender: +6281283274820 (LID: 275106295230526).
+§
+Hermes cron config gotcha: global LLM provider for cron must be pinned via `cron.model_provider: custom:9router` in config.yaml, otherwise agent-based cron jobs take bare 'custom' snapshot and fail auth against OpenRouter.
+WhatsApp bridge: bot number is +6281283274820; group delivery uses target 'whatsapp:<group_id>@g.us'. "Cod musang area palmerah" group ID: 120363410899436681@g.us.
+Docker setup: env_file points to ./hermes-data/.env (/opt/data/.env inside container) as single source of truth.
+§
+Google Sheets API aktif dan terverifikasi di project hermes-assistant-509114. Spreadsheet pengujian dibuat di akun user.
+§
+Project NARA: Repo https://github.com/AndryanZulfi/mockup-nara. Active development & decoupled modular architecture is on branch `feat/nara-mvp-v2` (Go Fiber API :8088 + Nuxt 3 :3000 + NARA Lab standalone microservice :8081).
+§
+Project NARA: repo AndryanZulfi/mockup-nara (branches: feat/nara-mvp-v2 decoupled proxy, feat/nara-mvp-v3 production-scale edge router with Caddy, pnpm-workspace, Go CLI). Architecture: decoupled pluggable monorepo with Core + extension modules (e.g. nara-lab).

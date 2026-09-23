@@ -1,3 +1,6 @@
 [submodule "honcho"]
 	path = honcho
 	url = https://github.com/plastic-labs/honcho.git
+[submodule "skills"]
+	path = skills
+	url = https://github.com/AndryanZulfi/hermes-skills.git
