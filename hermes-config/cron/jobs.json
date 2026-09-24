@@ -1,122 +1,6 @@
 {
   "jobs": [
     {
-      "id": "29213999b5e0",
-      "name": "Pengingat Timebox IDN Academy",
-      "prompt": "Halo Zulfi! Sudah pukul 08.45 WIB. Waktunya mengisi dan mengirimkan timebox harian ke group WhatsApp IDN Academy programmer. Semangat beraktivitas!",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": "custom:9router",
-      "provider_snapshot": null,
-      "model_snapshot": "agy-combo",
-      "base_url": null,
-      "script": null,
-      "no_agent": false,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "cron",
-        "expr": "45 8 * * 0,1,2,3,4,6",
-        "display": "45 8 * * 0,1,2,3,4,6"
-      },
-      "schedule_display": "45 8 * * 0,1,2,3,4,6",
-      "repeat": {
-        "times": null,
-        "completed": 7
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-09-19T04:34:59.343190+00:00",
-      "next_run_at": "2026-09-26T08:45:00+07:00",
-      "last_run_at": "2026-09-24T08:45:36.564221+07:00",
-      "last_status": "ok",
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "origin",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "224983305470121@lid",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null,
-      "fire_claim": null,
-      "last_dispatch": {
-        "scheduled_at": "2026-09-24T08:45:00+07:00",
-        "dispatched_at": "2026-09-24T08:45:32.016856+07:00",
-        "lateness_seconds": 32.0,
-        "kind": "on_time"
-      }
-    },
-    {
-      "id": "74937e513ea5",
-      "name": "Pengingat Laporan Invoice Pintar",
-      "prompt": "Pengingat laporan harian pembuatan/update fitur invoice pintar",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": null,
-      "model_snapshot": null,
-      "base_url": null,
-      "script": "invoice_report_reminder.py",
-      "no_agent": true,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "cron",
-        "expr": "45 20 * * 0,1,2,3,4,6",
-        "display": "45 20 * * 0,1,2,3,4,6"
-      },
-      "schedule_display": "45 20 * * 0,1,2,3,4,6",
-      "repeat": {
-        "times": null,
-        "completed": 3
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-09-20T21:17:28.115655+07:00",
-      "next_run_at": "2026-09-24T20:45:00+07:00",
-      "last_run_at": "2026-09-23T20:45:33.216117+07:00",
-      "last_status": "ok",
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "origin",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "224983305470121@lid",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null,
-      "last_dispatch": {
-        "scheduled_at": "2026-09-23T20:45:00+07:00",
-        "dispatched_at": "2026-09-23T20:45:32.016020+07:00",
-        "lateness_seconds": 32.0,
-        "kind": "on_time"
-      },
-      "fire_claim": null
-    },
-    {
       "id": "a2abeed5ebf0",
       "name": "Sinkronisasi Otomatis GitHub Skills & Agent (Tiap 1 Jam)",
       "prompt": "Sinkronisasi otomatis (pull & push) perubahan skills dan konfigurasi agent ke GitHub setiap 1 jam sekali",
@@ -141,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 7
+        "completed": 8
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-09-24T18:00:00+07:00",
-      "last_run_at": "2026-09-24T16:01:15.838057+07:00",
+      "next_run_at": "2026-09-24T19:00:00+07:00",
+      "last_run_at": "2026-09-24T17:00:48.118406+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -167,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-09-24T17:00:00+07:00",
-        "dispatched_at": "2026-09-24T17:00:35.657069+07:00",
+        "scheduled_at": "2026-09-24T18:00:00+07:00",
+        "dispatched_at": "2026-09-24T18:00:35.652324+07:00",
         "lateness_seconds": 35.7,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-09-24T17:00:35.850804+07:00",
-        "by": "41c362afdf5b:43043:0eeb6176722e40c5ad919957d7afdcde"
+        "at": "2026-09-24T18:00:35.789465+07:00",
+        "by": "41c362afdf5b:43043:a5cfd6ba3e3a46bf8ef8d8befb566380"
       }
     },
     {
@@ -527,228 +411,7 @@
       "workdir": null,
       "run_claim": null,
       "fire_claim": null
-    },
-    {
-      "id": "8b1ab4de282f",
-      "name": "Pengingat Logbook Programmer IDN (16.30 WIB)",
-      "prompt": "Halo Zulfi! Sudah pukul 16.30 WIB. Waktunya mengisi Logbook Programmer IDN Academy hari ini. 📝\n\nLink Google Spreadsheet:\nhttps://docs.google.com/spreadsheets/d/1SrVE7CQNai_Rq1Alehpya51sDdyaWHR4U9GdfSI3W0U/edit?gid=976570885#gid=976570885\nSheet: 'Andryan Zulfi'\n\n💡 Anda bisa langsung membalas chat ini dengan ringkasan aktivitas hari ini (misal: pengerjaan project, belajar rust/lainnya, kendala, atau output pembelajaran), dan saya akan langsung mengisikannya ke baris spreadsheet hari ini untuk Anda!",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": "custom",
-      "model_snapshot": "agy-combo",
-      "base_url": null,
-      "script": null,
-      "no_agent": false,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": [
-        "self"
-      ],
-      "schedule": {
-        "kind": "cron",
-        "expr": "30 16 * * 0,1,2,3,4,6",
-        "display": "30 16 * * 0,1,2,3,4,6"
-      },
-      "schedule_display": "30 16 * * 0,1,2,3,4,6",
-      "repeat": {
-        "times": null,
-        "completed": 1
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-09-24T11:56:11.307306+07:00",
-      "next_run_at": "2026-09-26T16:30:00+07:00",
-      "last_run_at": "2026-09-24T16:30:57.859565+07:00",
-      "last_status": "ok",
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "origin",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "224983305470121@lid",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null,
-      "attach_to_session": true,
-      "last_dispatch": {
-        "scheduled_at": "2026-09-24T16:30:00+07:00",
-        "dispatched_at": "2026-09-24T16:30:35.657039+07:00",
-        "lateness_seconds": 35.7,
-        "kind": "on_time"
-      },
-      "fire_claim": null
-    },
-    {
-      "id": "07f4586112aa",
-      "name": "Pengingat Sesi Pagi (08.55 WIB)",
-      "prompt": "Pengingat sesi pagi 5 menit sebelum 09.00 WIB",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": null,
-      "model_snapshot": null,
-      "base_url": null,
-      "script": "schedule_reminder.py",
-      "no_agent": true,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "cron",
-        "expr": "55 8 * * 0,1,2,3,4,6",
-        "display": "55 8 * * 0,1,2,3,4,6"
-      },
-      "schedule_display": "55 8 * * 0,1,2,3,4,6",
-      "repeat": {
-        "times": null,
-        "completed": 0
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-09-24T13:36:26.615137+07:00",
-      "next_run_at": "2026-09-26T08:55:00+07:00",
-      "last_run_at": null,
-      "last_status": null,
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "origin",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "224983305470121@lid",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null
-    },
-    {
-      "id": "647e2f6983c6",
-      "name": "Pengingat Sesi Siang (13.25 WIB)",
-      "prompt": "Pengingat sesi siang 5 menit sebelum 13.30 WIB",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": null,
-      "model_snapshot": null,
-      "base_url": null,
-      "script": "schedule_reminder.py",
-      "no_agent": true,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "cron",
-        "expr": "25 13 * * 0,1,2,3,4,6",
-        "display": "25 13 * * 0,1,2,3,4,6"
-      },
-      "schedule_display": "25 13 * * 0,1,2,3,4,6",
-      "repeat": {
-        "times": null,
-        "completed": 0
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-09-24T13:36:32.317260+07:00",
-      "next_run_at": "2026-09-26T13:25:00+07:00",
-      "last_run_at": null,
-      "last_status": null,
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "origin",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "224983305470121@lid",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null
-    },
-    {
-      "id": "a7ca828d07de",
-      "name": "Pengingat Sesi Sore (15.55 WIB)",
-      "prompt": "Pengingat sesi sore 5 menit sebelum 16.00 WIB",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": null,
-      "model_snapshot": null,
-      "base_url": null,
-      "script": "schedule_reminder.py",
-      "no_agent": true,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "cron",
-        "expr": "55 15 * * 0,1,2,3,4,6",
-        "display": "55 15 * * 0,1,2,3,4,6"
-      },
-      "schedule_display": "55 15 * * 0,1,2,3,4,6",
-      "repeat": {
-        "times": null,
-        "completed": 1
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-09-24T13:36:43.392697+07:00",
-      "next_run_at": "2026-09-26T15:55:00+07:00",
-      "last_run_at": "2026-09-24T15:55:27.980871+07:00",
-      "last_status": "ok",
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "origin",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "224983305470121@lid",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null,
-      "last_dispatch": {
-        "scheduled_at": "2026-09-24T15:55:00+07:00",
-        "dispatched_at": "2026-09-24T15:55:26.742273+07:00",
-        "lateness_seconds": 26.7,
-        "kind": "on_time"
-      },
-      "fire_claim": null
     }
   ],
-  "updated_at": "2026-09-24T17:00:35.854822+07:00"
+  "updated_at": "2026-09-24T18:00:35.792674+07:00"
 }
