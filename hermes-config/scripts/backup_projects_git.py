@@ -44,8 +44,36 @@ def backup_local_repo(repo_dir, repo_name, branch="main"):
     if not os.path.isdir(repo_dir) or not os.path.isdir(os.path.join(repo_dir, ".git")):
         return None
 
+    git_cmd = ["git", "-C", repo_dir, "-c", "credential.helper=store --file=/opt/data/home/.git-credentials"]
+
+    # 1. Pull latest changes from remote first (using --rebase to keep linear history)
+    pulled = False
+    try:
+        pull_res = subprocess.run(
+            git_cmd + ["pull", "--rebase", "origin", branch],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        if "Already up to date" not in pull_res.stdout:
+            pulled = True
+    except subprocess.CalledProcessError as e:
+        subprocess.run(git_cmd + ["rebase", "--abort"], capture_output=True)
+        return {
+            "name": repo_name,
+            "status": "error",
+            "error": f"Pull rebase gagal: {e.stderr.strip() if e.stderr else str(e)}"
+        }
+
     status = get_git_status_porcelain(repo_dir)
     if not status:
+        if pulled:
+            return {
+                "name": repo_name,
+                "status": "pulled",
+                "count": "pulled updates",
+                "sample": "sinkron dari GitHub"
+            }
         return None
 
     changed_files = [line.strip().split()[-1] for line in status.splitlines() if line.strip()]
@@ -55,12 +83,11 @@ def backup_local_repo(repo_dir, repo_name, branch="main"):
         sample += f" (+{count - 3} lainnya)"
 
     now_str = get_wib_now_str()
-    commit_msg = f"chore({repo_name}): auto-backup ({now_str})\n\nUpdated files ({count}):\n" + "\n".join(f"- {f}" for f in changed_files[:20])
+    commit_msg = f"chore({repo_name}): auto-sync ({now_str})\n\nUpdated files ({count}):\n" + "\n".join(f"- {f}" for f in changed_files[:20])
     if count > 20:
         commit_msg += f"\n- ... and {count - 20} more files"
 
     try:
-        git_cmd = ["git", "-C", repo_dir, "-c", "credential.helper=store --file=/opt/data/home/.git-credentials"]
         subprocess.run(git_cmd + ["add", "-A"], check=True, capture_output=True)
         subprocess.run(git_cmd + ["commit", "-m", commit_msg], check=True, capture_output=True)
         subprocess.run(git_cmd + ["push", "origin", branch], check=True, capture_output=True)
@@ -140,6 +167,9 @@ cleanup() {{
 }}
 trap cleanup EXIT INT TERM
 
+# Pull latest changes from remote first
+git pull --rebase origin main 2>/dev/null || true
+
 # Check status
 STATUS=$(git status --porcelain)
 if [ -z "$STATUS" ]; then
@@ -149,7 +179,7 @@ fi
 
 # Stage and commit
 git add -A
-git commit -m "chore(stack): auto-backup server infrastructure & seed configs ({now_str})"
+git commit -m "chore(stack): auto-sync server infrastructure & seed configs ({now_str})"
 git push origin main
 echo "PUSHED_OK"
 """

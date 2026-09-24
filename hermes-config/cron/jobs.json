@@ -25,15 +25,15 @@
       "schedule_display": "45 8 * * 0,1,2,3,4,6",
       "repeat": {
         "times": null,
-        "completed": 6
+        "completed": 7
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-19T04:34:59.343190+00:00",
-      "next_run_at": "2026-09-24T08:45:00+07:00",
-      "last_run_at": "2026-09-23T08:46:16.894281+07:00",
+      "next_run_at": "2026-09-26T08:45:00+07:00",
+      "last_run_at": "2026-09-24T08:45:36.564221+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -52,9 +52,9 @@
       "workdir": null,
       "fire_claim": null,
       "last_dispatch": {
-        "scheduled_at": "2026-09-23T08:45:00+07:00",
-        "dispatched_at": "2026-09-23T08:45:45.309881+07:00",
-        "lateness_seconds": 45.3,
+        "scheduled_at": "2026-09-24T08:45:00+07:00",
+        "dispatched_at": "2026-09-24T08:45:32.016856+07:00",
+        "lateness_seconds": 32.0,
         "kind": "on_time"
       }
     },
@@ -83,15 +83,15 @@
       "schedule_display": "30 7 * * *",
       "repeat": {
         "times": null,
-        "completed": 5
+        "completed": 6
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-20T05:24:58.907913+07:00",
-      "next_run_at": "2026-09-24T07:30:00+07:00",
-      "last_run_at": "2026-09-23T07:30:46.948892+07:00",
+      "next_run_at": "2026-09-25T07:30:00+07:00",
+      "last_run_at": "2026-09-24T07:30:33.381660+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -110,9 +110,9 @@
       "workdir": null,
       "fire_claim": null,
       "last_dispatch": {
-        "scheduled_at": "2026-09-23T07:30:00+07:00",
-        "dispatched_at": "2026-09-23T07:30:45.309285+07:00",
-        "lateness_seconds": 45.3,
+        "scheduled_at": "2026-09-24T07:30:00+07:00",
+        "dispatched_at": "2026-09-24T07:30:32.017924+07:00",
+        "lateness_seconds": 32.0,
         "kind": "on_time"
       }
     },
@@ -293,7 +293,7 @@
     {
       "id": "76a9ff2c5f91",
       "name": "Latihan Berpikir Kritis Harian",
-      "prompt": "Kamu adalah sparring partner berpikir kritis untuk Zulfi.\nTugasmu setiap hari pukul 04:45 WIB adalah mengirimkan 1 stimulus latihan berpikir kritis pagi hari yang tajam, membuka perspektif, dan memicu nalar.\n\nFormat output pesan WhatsApp (gunakan markdown WhatsApp: *bold*, _italic_, monospace; JANGAN gunakan tabel):\n\n1. *Kategori & Topik Hari Ini*:\n   Pilih topik secara variatif dan bergantian (cek riwayat sebelumnya agar tidak repetitif):\n   - Teknologi, AI, & Rekayasa Sistem\n   - Ekonomi, Finansial, Bisnis & Insentif Pasar\n   - Berita Terkini, Regulasi & Kebijakan Publik\n   - Sains, Statistik & Bias Riset (Korelasi vs Kausalitas)\n   - Psikologi Kognisi & Pengambilan Keputusan (Bias Kognitif, Second-order Effects)\n   - Kasus Dilema Strategis / Red Team Thinking\n\n2. *Skenario / Klaim Kasus (2-3 paragraf ringkas & konkret)*:\n   Paparkan sebuah pernyataan populer, kebijakan kontroversial, keputusan bisnis, atau fenomena nyata yang sepintas terdengar sangat benar atau masuk akal, padahal menyimpan asumsi rapuh atau trade-off berat.\n\n3. *Tantangan Nalar (2-3 pertanyaan kritis)*:\n   Tantang Zulfi untuk:\n   - Membedah apa asumsi tersembunyi di balik klaim/skenario tersebut.\n   - Menemukan trade-off atau dampak tingkat dua (second-order effect) yang sering diabaikan orang.\n   - Memberikan kondisi ekstrem di mana pendekatan/klaim itu justru jadi bumerang atau gagal total.\n\n4. *Call-to-Action*:\n   Ingatkan Zulfi untuk langsung membalas chat ini dengan analisismu kapan pun sempat pagi/siang ini untuk kita bedah dan diskusikan bersama.\n\nGaya bahasa: Lugas, segar, cerdas, tanpa basa-basi korporat. Pastikan deliverable langsung berupa pesan WhatsApp yang siap dibaca.",
+      "prompt": "Kamu adalah sparring partner berpikir kritis untuk Zulfi.\nTugasmu setiap hari pukul 05:45 WIB adalah mengirimkan latihan berpikir kritis pagi yang bertahap (progressive difficulty), dimulai dari level DASAR/FUNDAMENTAL, bukan kasus arsitektur rumit.\n\nPrinsip Progresi Tingkat Kesulitan:\n- Level Dasar (Mulai dari sini): Kasus nyata sehari-hari yang sangat dekat (kebiasaan belajar, gadget, keputusan kecil harian, klaim berita populer, atau analogi sederhana). Pertanyaan fokus pada 1 hal konkret: misal membedakan FAKTA vs OPINI, atau menemukan 1 ASUMSI paling jelas.\n- Jangan gunakan jargon teknis yang berat atau pertanyaan filosofis bertingkat-tingkat di awal. Buat skenario yang mudah dibayangkan dalam 30 detik.\n- Cek riwayat respon Zulfi sebelumnya (continuity). Jika Zulfi sudah lancar menjawab level dasar, naikkan tingkat kesulitan secara bertahap (Level Menengah: Trade-off 2 pilihan -> Level Lanjut: Second-order effects & cascading failures).\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Level Latihan*: Cantumkan level (misal: Level 1 - Dasar: Fakta vs Opini / Bongkar Asumsi).\n2. *Kasus/Klaim Sederhana*: Cerita pendek 1-2 paragraf yang konkret dan relate dengan kehidupan sehari-hari / dunia kerja pemula.\n3. *1 Pertanyaan Kunci*: CUKUP 1 atau maksimal 2 pertanyaan lugas, langsung ke inti (contoh: 'Menurutmu, apa asumsi yang belum tentu benar dari klaim di atas?').\n4. *Call-to-Action*: Ajak Zulfi menjawab santai 1-2 kalimat.\n\nGaya bahasa: Akrab, jelas, membumi, tidak menggurui.",
       "skills": [],
       "skill": null,
       "model": null,
@@ -311,22 +311,22 @@
       ],
       "schedule": {
         "kind": "cron",
-        "expr": "45 4 * * *",
-        "display": "45 4 * * *"
+        "expr": "45 5 * * *",
+        "display": "45 5 * * *"
       },
-      "schedule_display": "45 4 * * *",
+      "schedule_display": "45 5 * * *",
       "repeat": {
         "times": null,
-        "completed": 0
+        "completed": 1
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T18:57:02.448049+07:00",
-      "next_run_at": "2026-09-24T04:45:00+07:00",
-      "last_run_at": null,
-      "last_status": null,
+      "next_run_at": "2026-09-25T05:45:00+07:00",
+      "last_run_at": "2026-09-24T05:45:54.486311+07:00",
+      "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
       "last_delivery_unverified": null,
@@ -342,7 +342,14 @@
       },
       "enabled_toolsets": null,
       "workdir": null,
-      "attach_to_session": true
+      "attach_to_session": true,
+      "last_dispatch": {
+        "scheduled_at": "2026-09-24T05:45:00+07:00",
+        "dispatched_at": "2026-09-24T05:45:32.016701+07:00",
+        "lateness_seconds": 32.0,
+        "kind": "on_time"
+      },
+      "fire_claim": null
     },
     {
       "id": "737b0fc2fea5",
@@ -432,16 +439,16 @@
       "schedule_display": "30 8 * * *",
       "repeat": {
         "times": null,
-        "completed": 0
+        "completed": 1
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T22:48:57.745370+07:00",
-      "next_run_at": "2026-09-24T08:30:00+07:00",
-      "last_run_at": null,
-      "last_status": null,
+      "next_run_at": "2026-09-25T08:30:00+07:00",
+      "last_run_at": "2026-09-24T08:31:15.833817+07:00",
+      "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
       "last_delivery_unverified": null,
@@ -457,7 +464,14 @@
       },
       "enabled_toolsets": null,
       "workdir": null,
-      "attach_to_session": true
+      "attach_to_session": true,
+      "last_dispatch": {
+        "scheduled_at": "2026-09-24T08:30:00+07:00",
+        "dispatched_at": "2026-09-24T08:30:32.016392+07:00",
+        "lateness_seconds": 32.0,
+        "kind": "on_time"
+      },
+      "fire_claim": null
     },
     {
       "id": "a7b3fa5ff22f",
@@ -566,7 +580,60 @@
       "enabled_toolsets": null,
       "workdir": null,
       "attach_to_session": true
+    },
+    {
+      "id": "d12801f62fa9",
+      "name": "Pengingat Menjemur Baju",
+      "prompt": "Halo Zulfi! Sudah 30 menit berlalu. Waktunya menjemur baju sekarang ya! 👕☀️",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": "custom:9router",
+      "provider_snapshot": null,
+      "model_snapshot": "agy-combo",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "once",
+        "run_at": "2026-09-24T08:42:47.782216+07:00",
+        "display": "once in 30m"
+      },
+      "schedule_display": "once in 30m",
+      "repeat": {
+        "times": 1,
+        "completed": 1
+      },
+      "enabled": false,
+      "state": "completed",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-09-24T08:12:47.782493+07:00",
+      "next_run_at": null,
+      "last_run_at": "2026-09-24T08:43:48.822410+07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "224983305470121@lid",
+        "chat_name": "z",
+        "thread_id": null,
+        "user_id": "224983305470121@lid",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "run_claim": null,
+      "fire_claim": null
     }
   ],
-  "updated_at": "2026-09-24T02:00:39.721542+07:00"
+  "updated_at": "2026-09-24T08:45:36.567269+07:00"
 }
