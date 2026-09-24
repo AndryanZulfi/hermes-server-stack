@@ -257,7 +257,7 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 1
+        "completed": 2
       },
       "enabled": true,
       "state": "scheduled",
@@ -265,7 +265,7 @@
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
       "next_run_at": "2026-09-24T12:00:00+07:00",
-      "last_run_at": "2026-09-24T02:00:39.719508+07:00",
+      "last_run_at": "2026-09-24T11:00:44.311254+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -288,10 +288,7 @@
         "lateness_seconds": 32.0,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-09-24T11:00:32.155404+07:00",
-        "by": "41c362afdf5b:28827:4dc14b0693e04ae69cc180c7070a5b6c"
-      }
+      "fire_claim": null
     },
     {
       "id": "76a9ff2c5f91",
@@ -636,7 +633,61 @@
       "workdir": null,
       "run_claim": null,
       "fire_claim": null
+    },
+    {
+      "id": "8b1ab4de282f",
+      "name": "Pengingat Logbook Programmer IDN (16.30 WIB)",
+      "prompt": "Halo Zulfi! Sudah pukul 16.30 WIB. Waktunya mengisi Logbook Programmer IDN Academy hari ini. 📝\n\nLink Google Spreadsheet:\nhttps://docs.google.com/spreadsheets/d/1SrVE7CQNai_Rq1Alehpya51sDdyaWHR4U9GdfSI3W0U/edit?gid=976570885#gid=976570885\nSheet: 'Andryan Zulfi'\n\n💡 Anda bisa langsung membalas chat ini dengan ringkasan aktivitas hari ini (misal: pengerjaan project, belajar rust/lainnya, kendala, atau output pembelajaran), dan saya akan langsung mengisikannya ke baris spreadsheet hari ini untuk Anda!",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "custom",
+      "model_snapshot": "agy-combo",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": [
+        "self"
+      ],
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 16 * * *",
+        "display": "30 16 * * *"
+      },
+      "schedule_display": "30 16 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-09-24T11:56:11.307306+07:00",
+      "next_run_at": "2026-09-24T16:30:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "224983305470121@lid",
+        "chat_name": "z",
+        "thread_id": null,
+        "user_id": "224983305470121@lid",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "attach_to_session": true
     }
   ],
-  "updated_at": "2026-09-24T11:00:32.157852+07:00"
+  "updated_at": "2026-09-24T11:56:11.379449+07:00"
 }
