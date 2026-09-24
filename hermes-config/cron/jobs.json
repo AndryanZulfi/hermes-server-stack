@@ -59,122 +59,6 @@
       }
     },
     {
-      "id": "11530bc0c581",
-      "name": "Pengingat Piket Dapur (Pagi 07.30)",
-      "prompt": "Pengingat piket dapur pagi ke group",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": null,
-      "model_snapshot": null,
-      "base_url": null,
-      "script": "piket_reminder.py",
-      "no_agent": true,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "cron",
-        "expr": "30 7 * * *",
-        "display": "30 7 * * *"
-      },
-      "schedule_display": "30 7 * * *",
-      "repeat": {
-        "times": null,
-        "completed": 6
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-09-20T05:24:58.907913+07:00",
-      "next_run_at": "2026-09-25T07:30:00+07:00",
-      "last_run_at": "2026-09-24T07:30:33.381660+07:00",
-      "last_status": "ok",
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "whatsapp:120363410899436681@g.us",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "224983305470121@lid",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null,
-      "fire_claim": null,
-      "last_dispatch": {
-        "scheduled_at": "2026-09-24T07:30:00+07:00",
-        "dispatched_at": "2026-09-24T07:30:32.017924+07:00",
-        "lateness_seconds": 32.0,
-        "kind": "on_time"
-      }
-    },
-    {
-      "id": "8f8ec5c0bcf3",
-      "name": "Pengingat Piket Dapur (Siang & Malam)",
-      "prompt": "Pengingat piket dapur siang dan malam ke group",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": null,
-      "model_snapshot": null,
-      "base_url": null,
-      "script": "piket_reminder.py",
-      "no_agent": true,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "cron",
-        "expr": "0 13,20 * * *",
-        "display": "0 13,20 * * *"
-      },
-      "schedule_display": "0 13,20 * * *",
-      "repeat": {
-        "times": null,
-        "completed": 10
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-09-20T05:25:01.065539+07:00",
-      "next_run_at": "2026-09-24T20:00:00+07:00",
-      "last_run_at": "2026-09-24T13:00:34.097040+07:00",
-      "last_status": "ok",
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "whatsapp:120363410899436681@g.us",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "224983305470121@lid",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null,
-      "fire_claim": null,
-      "last_dispatch": {
-        "scheduled_at": "2026-09-24T13:00:00+07:00",
-        "dispatched_at": "2026-09-24T13:00:32.022023+07:00",
-        "lateness_seconds": 32.0,
-        "kind": "on_time"
-      }
-    },
-    {
       "id": "74937e513ea5",
       "name": "Pengingat Laporan Invoice Pintar",
       "prompt": "Pengingat laporan harian pembuatan/update fitur invoice pintar",
@@ -257,15 +141,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 5
+        "completed": 6
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-09-24T16:00:00+07:00",
-      "last_run_at": "2026-09-24T14:00:45.663205+07:00",
+      "next_run_at": "2026-09-24T17:00:00+07:00",
+      "last_run_at": "2026-09-24T15:00:49.176434+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -283,14 +167,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-09-24T15:00:00+07:00",
-        "dispatched_at": "2026-09-24T15:00:32.021801+07:00",
-        "lateness_seconds": 32.0,
+        "scheduled_at": "2026-09-24T16:00:00+07:00",
+        "dispatched_at": "2026-09-24T16:00:58.080197+07:00",
+        "lateness_seconds": 58.1,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-09-24T15:00:32.171947+07:00",
-        "by": "41c362afdf5b:28827:a966ae1436214471a0ee05d2d4683227"
+        "at": "2026-09-24T16:00:58.318210+07:00",
+        "by": "41c362afdf5b:42427:7c0686ee35f84728b26854aeb4bdd95a"
       }
     },
     {
@@ -825,16 +709,16 @@
       "schedule_display": "55 15 * * 0,1,2,3,4,6",
       "repeat": {
         "times": null,
-        "completed": 0
+        "completed": 1
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-24T13:36:43.392697+07:00",
-      "next_run_at": "2026-09-24T15:55:00+07:00",
-      "last_run_at": null,
-      "last_status": null,
+      "next_run_at": "2026-09-26T15:55:00+07:00",
+      "last_run_at": "2026-09-24T15:55:27.980871+07:00",
+      "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
       "last_delivery_unverified": null,
@@ -849,8 +733,15 @@
         "scope_id": null
       },
       "enabled_toolsets": null,
-      "workdir": null
+      "workdir": null,
+      "last_dispatch": {
+        "scheduled_at": "2026-09-24T15:55:00+07:00",
+        "dispatched_at": "2026-09-24T15:55:26.742273+07:00",
+        "lateness_seconds": 26.7,
+        "kind": "on_time"
+      },
+      "fire_claim": null
     }
   ],
-  "updated_at": "2026-09-24T15:00:32.174479+07:00"
+  "updated_at": "2026-09-24T16:00:58.321904+07:00"
 }
