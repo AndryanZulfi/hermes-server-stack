@@ -24,6 +24,30 @@ ROSTER = [
     ("Kahfi", "6285751202762"),
 ]
 
+BASE_ROUTES = [
+    {
+        "name": "idn-academy-group",
+        "platform": "whatsapp",
+        "chat_id": "6288803918389-1617164069@g.us",
+        "profile": "idn-academy",
+        "enabled": True,
+    },
+    {
+        "name": "cod-musang-area-palmerah",
+        "platform": "whatsapp",
+        "chat_id": "120363410899436681@g.us",
+        "profile": "idn-academy",
+        "enabled": True,
+    },
+    {
+        "name": "idn-programmer-group",
+        "platform": "whatsapp",
+        "chat_id": "120363430531430052@g.us",
+        "profile": "idn-programmer",
+        "enabled": True,
+    },
+]
+
 def get_active_ketua(target_date=None):
     if target_date is None:
         tz = ZoneInfo("Asia/Jakarta")
@@ -48,11 +72,25 @@ def sync_allowlist():
     
     hermes_bin = "/opt/hermes/.venv/bin/hermes"
     
-    # Pastikan konfigurasi allow_from dan require_mention terpasang
+    # 1. Update allowlist & mention requirement di level gateway
     subprocess.run([hermes_bin, "config", "set", "whatsapp.allow_from", val_json], check=True)
     subprocess.run([hermes_bin, "config", "set", "whatsapp.require_mention", "true"], check=True)
     
-    # Reload/restart gateway dengan sinyal SIGUSR1 jika proses berjalan
+    # 2. RBAC Routing: Pastikan DM dari ketua terisolasi ke profile idn-academy
+    routes = list(BASE_ROUTES)
+    if phone != ADMIN_PHONE:
+        routes.append({
+            "name": "active-ketua-dm",
+            "platform": "whatsapp",
+            "user_id": str(phone),
+            "profile": "idn-academy",
+            "enabled": True,
+        })
+    routes_json = json.dumps(routes)
+    subprocess.run([hermes_bin, "config", "set", "gateway.profile_routes", routes_json], check=True)
+    print("✓ RBAC profile routes berhasil diperbarui.")
+    
+    # 3. Reload/restart gateway dengan sinyal SIGUSR1 jika proses berjalan
     try:
         res = subprocess.run(["pgrep", "-f", "hermes gateway run"], capture_output=True, text=True)
         pids = [int(p) for p in res.stdout.strip().split() if p]
