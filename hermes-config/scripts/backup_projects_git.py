@@ -120,6 +120,7 @@ cp -f /host_p/9router-hermes/hermes-data/memories/USER.md /host_p/hermes-config/
 cp -f /host_p/9router-hermes/hermes-data/user.md /host_p/hermes-config/ 2>/dev/null || true
 cp -f /host_p/9router-hermes/hermes-data/SOUL.md /host_p/hermes-config/ 2>/dev/null || true
 cp -f /host_p/9router-hermes/hermes-data/cron/jobs.json /host_p/hermes-config/cron/ 2>/dev/null || true
+cp -f /host_p/9router-hermes/hermes-data/vocab_history.json /host_p/hermes-config/vocab_history.json 2>/dev/null || true
 
 # Sync plugins and scripts (excluding node_modules / caches)
 if [ -d /host_p/9router-hermes/hermes-data/plugins ]; then
