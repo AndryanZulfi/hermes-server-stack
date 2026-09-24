@@ -46,7 +46,40 @@ def backup_local_repo(repo_dir, repo_name, branch="main"):
 
     git_cmd = ["git", "-C", repo_dir, "-c", "credential.helper=store --file=/opt/data/home/.git-credentials"]
 
-    # 1. Pull latest changes from remote first (using --rebase to keep linear history)
+    # Clean tracked runtime noise if any
+    subprocess.run(git_cmd + ["checkout", "--", ".usage.json"], capture_output=True)
+
+    status = get_git_status_porcelain(repo_dir)
+    committed = False
+    count = 0
+    sample = ""
+
+    # 1. Commit local changes first if any exist
+    if status:
+        changed_files = [line.strip().split()[-1] for line in status.splitlines() if line.strip()]
+        count = len(changed_files)
+        sample = ", ".join(changed_files[:3])
+        if count > 3:
+            sample += f" (+{count - 3} lainnya)"
+
+        now_str = get_wib_now_str()
+        commit_msg = f"chore({repo_name}): auto-sync ({now_str})\n\nUpdated files ({count}):\n" + "\n".join(f"- {f}" for f in changed_files[:20])
+        if count > 20:
+            commit_msg += f"\n- ... and {count - 20} more files"
+
+        try:
+            subprocess.run(git_cmd + ["add", "-A"], check=True, capture_output=True)
+            subprocess.run(git_cmd + ["commit", "-m", commit_msg], check=True, capture_output=True)
+            committed = True
+        except subprocess.CalledProcessError as e:
+            err_msg = e.stderr.decode() if isinstance(e.stderr, bytes) else str(e.stderr)
+            return {
+                "name": repo_name,
+                "status": "error",
+                "error": f"Commit gagal: {err_msg or str(e)}"
+            }
+
+    # 2. Pull latest changes from remote with rebase
     pulled = False
     try:
         pull_res = subprocess.run(
@@ -65,45 +98,40 @@ def backup_local_repo(repo_dir, repo_name, branch="main"):
             "error": f"Pull rebase gagal: {e.stderr.strip() if e.stderr else str(e)}"
         }
 
-    status = get_git_status_porcelain(repo_dir)
-    if not status:
-        if pulled:
-            return {
-                "name": repo_name,
-                "status": "pulled",
-                "count": "pulled updates",
-                "sample": "sinkron dari GitHub"
-            }
-        return None
-
-    changed_files = [line.strip().split()[-1] for line in status.splitlines() if line.strip()]
-    count = len(changed_files)
-    sample = ", ".join(changed_files[:3])
-    if count > 3:
-        sample += f" (+{count - 3} lainnya)"
-
-    now_str = get_wib_now_str()
-    commit_msg = f"chore({repo_name}): auto-sync ({now_str})\n\nUpdated files ({count}):\n" + "\n".join(f"- {f}" for f in changed_files[:20])
-    if count > 20:
-        commit_msg += f"\n- ... and {count - 20} more files"
-
+    # 3. Push to remote if we committed changes or are ahead of remote
+    pushed = False
     try:
-        subprocess.run(git_cmd + ["add", "-A"], check=True, capture_output=True)
-        subprocess.run(git_cmd + ["commit", "-m", commit_msg], check=True, capture_output=True)
-        subprocess.run(git_cmd + ["push", "origin", branch], check=True, capture_output=True)
-        return {
-            "name": repo_name,
-            "status": "pushed",
-            "count": count,
-            "sample": sample
-        }
+        push_res = subprocess.run(
+            git_cmd + ["push", "origin", branch],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        if "Everything up-to-date" not in push_res.stderr and "Everything up-to-date" not in push_res.stdout:
+            pushed = True
     except subprocess.CalledProcessError as e:
         err_msg = e.stderr.decode() if isinstance(e.stderr, bytes) else str(e.stderr)
         return {
             "name": repo_name,
             "status": "error",
-            "error": err_msg or str(e)
+            "error": f"Push gagal: {err_msg or str(e)}"
         }
+
+    if committed or pushed:
+        return {
+            "name": repo_name,
+            "status": "pushed",
+            "count": count if count > 0 else "sync",
+            "sample": sample if sample else "sync upstream"
+        }
+    elif pulled:
+        return {
+            "name": repo_name,
+            "status": "pulled",
+            "count": "pulled updates",
+            "sample": "sinkron dari GitHub"
+        }
+    return None
 
 def sync_hermes_config_to_host():
     """Sync live seed configuration files from /opt/data into host hermes-config directory."""
@@ -168,19 +196,17 @@ cleanup() {{
 }}
 trap cleanup EXIT INT TERM
 
-# Pull latest changes from remote first
-git pull --rebase origin main 2>/dev/null || true
-
-# Check status
+# Check status and commit if changes exist
 STATUS=$(git status --porcelain)
-if [ -z "$STATUS" ]; then
-    echo "NO_CHANGES"
-    exit 0
+if [ -n "$STATUS" ]; then
+    git add -A
+    git commit -m "chore(stack): auto-sync server infrastructure & seed configs ({now_str})"
 fi
 
-# Stage and commit
-git add -A
-git commit -m "chore(stack): auto-sync server infrastructure & seed configs ({now_str})"
+# Pull latest changes from remote with rebase
+git pull --rebase origin main
+
+# Push to remote
 git push origin main
 echo "PUSHED_OK"
 """
