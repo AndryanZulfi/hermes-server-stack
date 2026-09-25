@@ -46,6 +46,13 @@ BASE_ROUTES = [
         "profile": "idn-programmer",
         "enabled": True,
     },
+    {
+        "name": "report-and-log-agent",
+        "platform": "whatsapp",
+        "chat_id": "120363414423509222@g.us",
+        "profile": "default",
+        "enabled": True,
+    },
 ]
 
 def get_active_ketua(target_date=None):

@@ -39,7 +39,7 @@
       "last_delivery_error": null,
       "last_delivery_unverified": null,
       "failure_streak": 0,
-      "deliver": "origin",
+      "deliver": "whatsapp:120363414423509222@g.us",
       "origin": {
         "platform": "whatsapp",
         "chat_id": "224983305470121@lid",
@@ -56,7 +56,10 @@
         "lateness_seconds": 22.5,
         "kind": "on_time"
       },
-      "fire_claim": null
+      "fire_claim": {
+        "at": "2026-09-25T08:13:56.103364+07:00",
+        "by": "41c362afdf5b:52890:bf49c8e334f84c2ab262ebf1b2dad9ed"
+      }
     },
     {
       "id": "76a9ff2c5f91",
@@ -455,7 +458,7 @@
       "last_delivery_error": null,
       "last_delivery_unverified": null,
       "failure_streak": 0,
-      "deliver": "local",
+      "deliver": "whatsapp:120363414423509222@g.us",
       "origin": {
         "platform": "whatsapp",
         "chat_id": "224983305470121@lid",
@@ -469,5 +472,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-09-25T08:00:36.045643+07:00"
+  "updated_at": "2026-09-25T08:13:56.140223+07:00"
 }

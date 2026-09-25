@@ -6,7 +6,7 @@ Host deb-zlf (running 9router, hermes, honcho, Tailscale): IP 172.23.0.134 (user
 §
 Google Workspace OAuth terhubung: token tersimpan di /opt/data/google_token.json dan kredensial di /opt/data/google_client_secret.json (Project ID: hermes-assistant-509114). Google Calendar, Google Sheets, dan Google Drive API aktif dan terverifikasi. Drive/Gmail/Docs memiliki scope token.
 §
-WhatsApp Group IDs: Group testing 'Group ku' (6288803918389-1617164069@g.us), Group operasional IDN 'Cod musang area palmerah' (120363410899436681@g.us). Bot WhatsApp sender: +6281283274820 (LID: 275106295230526).
+WhatsApp Groups: 'Group ku' (6288803918389-1617164069@g.us), IDN Academy 'Cod musang area palmerah' (120363410899436681@g.us), IDN Programmer (120363430531430052@g.us), 'Report & Log Agent' (120363414423509222@g.us). Bot sender: +6281283274820 (LID: 275106295230526). Deliver format: 'whatsapp:<group_id>@g.us'.
 §
 Hermes cron config gotcha: global LLM provider for cron must be pinned via `cron.model_provider: custom:9router` in config.yaml, otherwise agent-based cron jobs take bare 'custom' snapshot and fail auth against OpenRouter.
 WhatsApp bridge: bot number is +6281283274820; group delivery uses target 'whatsapp:<group_id>@g.us'. "Cod musang area palmerah" group ID: 120363410899436681@g.us.
