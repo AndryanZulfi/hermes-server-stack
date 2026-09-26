@@ -31,7 +31,9 @@ HERMES_DIR = os.path.expanduser("~/.hermes")
 SKILLS_DIR = os.path.join(HERMES_DIR, "skills")
 PROFILES_DIR = os.path.join(HERMES_DIR, "profiles")
 AGENT_DIR = os.path.join(HERMES_DIR, "hermes-agent")
-STACK_DIR = os.path.expanduser("~/Documents/hermes-server-stack")
+STACK_DIR = os.path.expanduser("~/Projects/hermes-server-stack")
+if not os.path.isdir(STACK_DIR):
+    STACK_DIR = os.path.expanduser("~/Documents/hermes-server-stack")
 STACK_CONFIG_DIR = os.path.join(STACK_DIR, "hermes-config")
 LOCK_FILE = os.path.join(HERMES_DIR, "cache", "hermes_git_sync.lock")
 
