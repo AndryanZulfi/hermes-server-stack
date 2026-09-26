@@ -1118,6 +1118,41 @@ app.get('/chat/:id', async (req, res) => {
   });
 });
 
+// Resolve a group invite link/code to its JID and join the group.
+// Accepts { inviteCode } (the code after /chat.whatsapp.com/), or a full
+// https://chat.whatsapp.com/<code> URL. Joins the group so the bot can
+// deliver there, and returns { jid, name, subject }.
+app.post('/resolve-invite', async (req, res) => {
+  if (!sock || connectionState !== 'connected') {
+    return res.status(503).json({ error: 'Not connected to WhatsApp' });
+  }
+  let code = String(req.body?.inviteCode || req.body?.code || req.body?.url || '').trim();
+  const m = code.match(/chat\.whatsapp\.com\/([A-Za-z0-9_-]+)/);
+  if (m) code = m[1];
+  if (!code) return res.status(400).json({ error: 'inviteCode required' });
+  try {
+    let jid;
+    try {
+      const info = await sock.groupGetInviteInfo(code);
+      jid = info?.id;
+    } catch {
+      // Fall through to accept (may be a code we can only resolve by joining)
+    }
+    if (!jid) {
+      jid = await sock.groupAcceptInvite(code);
+    }
+    const meta = jid ? await sock.groupMetadata(jid).catch(() => null) : null;
+    return res.json({
+      success: true,
+      jid,
+      name: meta?.subject || null,
+      subject: meta?.subject || null,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({
