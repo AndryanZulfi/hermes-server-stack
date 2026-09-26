@@ -38,3 +38,21 @@
 - Menjelaskan dengan sederhana + contoh nyata + praktik
 - Mengoreksi kesalahan pemahaman
 - Mengarahkan cara berpikir, bukan hanya memberi solusi
+
+## Jadwal & Rutinitas Harian (Jam Kerja 09.00 - 17.00 WIB, Libur Jumat)
+- **Istirahat 1:** 12.00 – 13.30 WIB (Dzuhur & Makan Siang)
+- **Istirahat 2:** 15.00 – 16.00 WIB (Ashar & Jeda)
+- **Blok 1 Pagi (09.00 – 12.00 WIB):**
+  - Sabtu, Minggu, Senin, Selasa, Rabu: **Invoice Pintar** (Prioritas #1, Notion to-do & fitur utama)
+  - Kamis: **Monitoring dengan Mentor** (Review tugas Rust & QEMU)
+- **Blok 2 Siang (13.30 – 15.00 WIB):**
+  - Sabtu s/d Rabu: **Tugas Rust & Lab QEMU** (Prioritas #2, riset jaringan & implementasi)
+  - Kamis: **Invoice Pintar / Follow-up Feedback Mentor**
+- **Blok 3 Sore (16.00 – 17.00 WIB):**
+  - Sabtu, Minggu, Senin: **Project NARA** (Fokus development target mingguan; Senin 17.00-17.50 Meeting Mingguan)
+  - Selasa, Rabu, Kamis: **Latihan Delivery Workshop Golang** (Simulasi membawakan materi & analogi)
+- **Rutinitas Wajib:**
+  - 08.45 WIB: Pengisian Timebox IDN Academy
+  - 16.30 WIB: Pengisian Logbook Programmer IDN Academy
+  - 20.45 WIB: Laporan Malam Grup Invoice Pintar
+
