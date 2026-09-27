@@ -25,20 +25,20 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 79
+        "completed": 80
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-09-27T17:00:00+07:00",
-      "last_run_at": "2026-09-27T15:00:16.988407+07:00",
-      "last_status": "error",
-      "last_error": "Script exited with code -15",
-      "last_delivery_error": "delivery error: WhatsApp send failed: Cannot connect to host localhost:3000 ssl:default [Connect call failed ('127.0.0.1', 3000)] (target whatsapp:120363414423509222@g.us)",
+      "next_run_at": "2026-09-27T18:00:00+07:00",
+      "last_run_at": "2026-09-27T16:01:15.372183+07:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 1,
+      "failure_streak": 0,
       "deliver": "whatsapp:120363414423509222@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-09-27T16:00:00+07:00",
-        "dispatched_at": "2026-09-27T16:00:54.393881+07:00",
+        "scheduled_at": "2026-09-27T17:00:00+07:00",
+        "dispatched_at": "2026-09-27T17:00:54.396678+07:00",
         "lateness_seconds": 54.4,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-09-27T16:00:54.482733+07:00",
-        "by": "41c362afdf5b:188:d96ab9d3e9cc49979a53ff7052c3081c"
+        "at": "2026-09-27T17:00:54.558192+07:00",
+        "by": "41c362afdf5b:188:4ab12e9ff2704ff5a2f475f2bc2fe363"
       }
     },
     {
@@ -478,5 +478,5 @@
       }
     }
   ],
-  "updated_at": "2026-09-27T16:00:54.493020+07:00"
+  "updated_at": "2026-09-27T17:00:54.559941+07:00"
 }
