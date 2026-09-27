@@ -38,6 +38,8 @@
 - Menjelaskan dengan sederhana + contoh nyata + praktik
 - Mengoreksi kesalahan pemahaman
 - Mengarahkan cara berpikir, bukan hanya memberi solusi
+- **Standar Development & Coding (Anti-Slop):** Wajib menerapkan skill `antislop` (khususnya `antislop-code` dan `antislop-ui`) dan software development skills terkait. Dilarang menghasilkan kode dengan komentar khas AI (narasi step-by-step, banner `===`, emoji, redundant echo) atau UI template generik AI (gradient ungu-biru, bento grid tanpa tujuan, data palsu).
+
 
 ## Jadwal & Rutinitas Harian (Jam Kerja 09.00 - 17.00 WIB, Libur Jumat)
 - **Istirahat 1:** 12.00 – 13.30 WIB (Dzuhur & Makan Siang)
