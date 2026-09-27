@@ -188,7 +188,7 @@ def backup_host_server_stack():
 set -e
 cd /host_p
 git config --global --add safe.directory /host_p
-git config credential.helper "store --file=/host_p/9router-hermes/hermes-data/home/.git-credentials"
+git config --global credential.helper "store --file=/host_p/9router-hermes/hermes-data/home/.git-credentials"
 
 cleanup() {{
     chown 10000:10000 /host_p/9router-hermes/hermes-data/home/.git-credentials 2>/dev/null || true
@@ -198,17 +198,24 @@ trap cleanup EXIT INT TERM
 
 # Check status and commit if changes exist
 STATUS=$(git status --porcelain)
+COMMITTED=0
 if [ -n "$STATUS" ]; then
     git add -A
     git commit -m "chore(stack): auto-sync server infrastructure & seed configs ({now_str})"
+    COMMITTED=1
 fi
 
-# Pull latest changes from remote with rebase
-git pull --rebase origin main
+# Pull latest changes from remote with rebase (skip submodule fetch — skills backed up separately)
+git pull --rebase --no-recurse-submodules origin main
 
-# Push to remote
-git push origin main
-echo "PUSHED_OK"
+# Push only if we committed or are ahead of remote
+AHEAD=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo 0)
+if [ "$COMMITTED" = "1" ] || [ "$AHEAD" -gt 0 ]; then
+    git push origin main
+    echo "PUSHED_OK"
+else
+    echo "UP_TO_DATE"
+fi
 """
 
     try:
@@ -232,7 +239,7 @@ echo "PUSHED_OK"
                 "count": "configs/stack",
                 "sample": "hermes-config & server stack"
             }
-        return None
+        return None  # UP_TO_DATE — no changes to report
     except subprocess.CalledProcessError as e:
         err = e.stderr.strip() if e.stderr else str(e)
         return {
