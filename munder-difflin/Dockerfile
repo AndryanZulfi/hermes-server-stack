@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcairo2 \
     libxshmfence1 \
     libglu1-mesa \
+    libgtk-3-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Buat direktori kerja

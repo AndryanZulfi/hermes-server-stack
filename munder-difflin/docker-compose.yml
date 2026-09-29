@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  munder-difflin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: munder-difflin
+    restart: unless-stopped
+    # WAJIB: Chromium & Pixi.js butuh shared memory besar agar tidak crash
+    shm_size: '1gb'
+    ports:
+      - "6080:6080" # Akses Web noVNC dari browser
+    environment:
+      - DISPLAY=:99
+      - RESOLUTION=1600x900x24 # Ukuran layar virtual
+      - TZ=Asia/Jakarta
+    volumes:
+      # Data persisten (memori agen, setting, database)
+      - ./munder_data:/root/.munder-difflin
+      # Mount SSH key agar bisa remote ke Komputer Laptop via Tailscale
+      - ~/.ssh:/root/.ssh:ro
+    networks:
+      - ai-network
+
+networks:
+  ai-network:
+    # Jika sudah punya network docker untuk Hermes Server, pasang external: true
+    external: true
