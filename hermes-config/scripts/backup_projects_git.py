@@ -189,12 +189,18 @@ set -e
 cd /host_p
 git config --global --add safe.directory /host_p
 git config --global credential.helper "store --file=/host_p/9router-hermes/hermes-data/home/.git-credentials"
+export GIT_EDITOR=:
 
 cleanup() {{
     chown 10000:10000 /host_p/9router-hermes/hermes-data/home/.git-credentials 2>/dev/null || true
     chmod 600 /host_p/9router-hermes/hermes-data/home/.git-credentials 2>/dev/null || true
 }}
 trap cleanup EXIT INT TERM
+
+# If a previous rebase was stuck, abort it safely
+if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
+    git rebase --abort 2>/dev/null || rm -rf .git/rebase-merge .git/rebase-apply
+fi
 
 # Check status and commit if changes exist
 STATUS=$(git status --porcelain)
@@ -206,7 +212,11 @@ if [ -n "$STATUS" ]; then
 fi
 
 # Pull latest changes from remote with rebase (skip submodule fetch — skills backed up separately)
-git pull --rebase --no-recurse-submodules origin main
+if ! git pull --rebase --no-recurse-submodules origin main; then
+    # If conflict occurs (e.g. submodule pointer diff), accept remote or abort
+    git rebase --abort 2>/dev/null || rm -rf .git/rebase-merge .git/rebase-apply
+    git pull origin main --no-rebase -X theirs --no-recurse-submodules -m "chore: merge upstream changes"
+fi
 
 # Push only if we committed or are ahead of remote
 AHEAD=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo 0)
