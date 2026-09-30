@@ -1,0 +1,107 @@
+{
+  "onboardingComplete": false,
+  "harnessHome": null,
+  "recentHives": [],
+  "registeredRepos": [],
+  "autoMode": true,
+  "orchestratorMaySpawn": false,
+  "defaultCommand": "claude",
+  "godProvider": "claude",
+  "godModel": "claude-opus-4-8",
+  "defaultModel": "claude-fable-5",
+  "mcpDefaults": {
+    "sequential-thinking": {
+      "enabled": true
+    },
+    "time": {
+      "enabled": true
+    },
+    "fetch": {
+      "enabled": true
+    },
+    "context7": {
+      "enabled": true
+    },
+    "filesystem": {
+      "enabled": true
+    },
+    "git": {
+      "enabled": true
+    },
+    "github-token": {
+      "enabled": false
+    },
+    "db": {
+      "enabled": false
+    },
+    "email-calendar": {
+      "enabled": false
+    },
+    "search-with-key": {
+      "enabled": false
+    }
+  },
+  "maxConcurrentWorkers": 4,
+  "workerIdleTimeoutMinutes": 20,
+  "integrations": [],
+  "defaultWorkerTokenCap": 0,
+  "semanticMemory": true,
+  "embeddingModel": "minilm",
+  "missions": [
+    {
+      "id": "ops-standup",
+      "label": "Hourly ops standup",
+      "intervalMs": 3600000,
+      "to": "god",
+      "body": "Hourly ops standup. Review every agent: who is doing what, and confirm each is still running (not stalled or idle-stale). Check the task board — are in-flight tasks on track, and is anything blocked or unowned? Flag stale agents and at-risk tasks, and keep the board accurate. (As part of this standup each working agent is asked to summarise its current task and the next step, then compact and resume from the same point — so terminal contexts stay bounded without losing work. The compaction is queued and runs when an agent is idle, so it never interrupts work mid-step.)",
+      "enabled": true,
+      "lastFiredAt": 1790753252619
+    }
+  ],
+  "notifications": false,
+  "strongKeepalive": false,
+  "autoUpdate": true,
+  "telemetryEnabled": true,
+  "multiWindow": true,
+  "tvShowOffices": false,
+  "officeTheme": "office",
+  "slackEnabled": false,
+  "slackProactivePosting": false,
+  "freeflowEnabled": true,
+  "freeflowModel": "whisper-large-v3-turbo",
+  "realtimeVoiceEnabled": false,
+  "realtimeIdleDisconnectMs": 180000,
+  "webhookEnabled": false,
+  "contextTrigger": {
+    "compact": {
+      "enabled": true,
+      "everyMs": 7200000,
+      "minContextPct": 60,
+      "minContextPctLargeWindow": 40,
+      "message": "Keep the current task, recent decisions, open questions, and file paths in play. Drop resolved tangents."
+    },
+    "clear": {
+      "enabled": false,
+      "everyMs": 7200000,
+      "minContextPct": 90,
+      "minContextPctLargeWindow": 80,
+      "message": ""
+    }
+  },
+  "webhookTriggers": [],
+  "orgTrigger": {
+    "apiKey": "",
+    "enabled": false,
+    "mode": "strict"
+  },
+  "triggersMigratedV1": true,
+  "reflectEnabled": true,
+  "reflectIntervalMs": 1800000,
+  "reflectByteTriggerPct": 50,
+  "reflectSectionTrigger": 50,
+  "reflectRecentKeep": 12,
+  "reflectMinBytes": 16384,
+  "knowledgeGraph": {
+    "enabled": false
+  }
+}
