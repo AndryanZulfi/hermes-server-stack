@@ -83,7 +83,24 @@ export function matchesInboundWhatsAppGroup({
     return false;
   }
   if (groupPolicy === 'allowlist') {
-    return matchesAllowedUser(chatId, groupAllowedUsers, sessionDir);
+    if (matchesAllowedUser(chatId, groupAllowedUsers, sessionDir)) {
+      return true;
+    }
+    try {
+      const envPath = path.join('/opt/data', '.env');
+      if (existsSync(envPath)) {
+        const text = readFileSync(envPath, 'utf8');
+        for (const line of text.split('\n')) {
+          if (line.startsWith('WHATSAPP_GROUP_ALLOWED_USERS=')) {
+            const raw = line.slice('WHATSAPP_GROUP_ALLOWED_USERS='.length);
+            if (matchesAllowedUser(chatId, parseAllowedUsers(raw), sessionDir)) {
+              return true;
+            }
+          }
+        }
+      }
+    } catch {}
+    return false;
   }
   return groupPolicy === 'open';
 }

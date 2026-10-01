@@ -50,3 +50,12 @@
   - 16.30 WIB: Pengisian Logbook Programmer IDN Academy
   - 20.45 WIB: Laporan Malam Grup Invoice Pintar
 
+## Project Invoice Pintar & Notion Tracking
+- **Halaman Utama Notion:** `Project Invoice Pintar` (`3c5132f7-ca42-80f5-9d8a-eb8b4ea758cb`)
+- **Tasks Database:** `99e132f7-ca42-8386-a96b-076c3b86c7eb`
+- **Grup WhatsApp Invoice Pintar:** JID `120363428902431958@g.us` (`https://chat.whatsapp.com/Hoz0lc50EHjIw0rMrDCALG`)
+- **Alur Pencatatan & Checklist Otomatis:**
+  1. *Pencatatan Fitur Baru:* Setiap ada request/ide/pembahasan fitur baru di grup WhatsApp `invoice pintar`, AI langsung mencatatnya ke halaman Notion tanggal berjalan (format `DD-MM-YYYY`) di database Tasks dengan checklist `- [ ] [Nama Fitur]`.
+  2. *Checklist Otomatis:* Ketika Zulfi mengirim pesan bahwa suatu fitur selesai (baik di chat personal, workspace, maupun grup), AI otomatis mencari item fitur terkait di halaman Notion berjalan dan mengubahnya menjadi `- [x] [Nama Fitur] (Done)`.
+
+
