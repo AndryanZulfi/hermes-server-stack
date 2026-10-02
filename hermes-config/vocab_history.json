@@ -14,5 +14,21 @@
     "word": "touch base",
     "type": "idiom / phrasal verb",
     "pos": "verb phrase / idiom"
+  },
+  {
+    "date": "2026-10-01",
+    "time": "08:30 WIB",
+    "slot": "morning",
+    "word": "wrap up",
+    "type": "phrasal verb",
+    "pos": "phrasal verb"
+  },
+  {
+    "date": "2026-10-02",
+    "time": "08:30 WIB",
+    "slot": "morning",
+    "word": "trade-off",
+    "type": "noun",
+    "pos": "noun"
   }
 ]
