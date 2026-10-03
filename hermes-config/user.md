@@ -57,5 +57,7 @@
 - **Alur Pencatatan & Checklist Otomatis:**
   1. *Pencatatan Fitur Baru:* Setiap ada request/ide/pembahasan fitur baru di grup WhatsApp `invoice pintar`, AI langsung mencatatnya ke halaman Notion tanggal berjalan (format `DD-MM-YYYY`) di database Tasks dengan checklist `- [ ] [Nama Fitur]`.
   2. *Checklist Otomatis:* Ketika Zulfi mengirim pesan bahwa suatu fitur selesai (baik di chat personal, workspace, maupun grup), AI otomatis mencari item fitur terkait di halaman Notion berjalan dan mengubahnya menjadi `- [x] [Nama Fitur] (Done)`.
+  3. *Auto-Generate Page Hari Berikutnya (Seterusnya):* Setiap kali Zulfi selesai melaporkan pembuatan fitur di Invoice Pintar, AI **WAJIB langsung membuatkan halaman baru untuk hari berikutnya** (format `DD-MM-YYYY`) di database Tasks Notion, yang memindahkan seluruh task backlog yang belum selesai beserta task baru yang ditambahkan.
+
 
 
