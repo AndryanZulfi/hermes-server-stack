@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 240
+        "completed": 241
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-10-04T13:00:00+07:00",
-      "last_run_at": "2026-10-04T11:00:59.445048+07:00",
+      "next_run_at": "2026-10-04T14:00:00+07:00",
+      "last_run_at": "2026-10-04T12:00:58.451059+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-04T12:00:00+07:00",
-        "dispatched_at": "2026-10-04T12:00:46.536922+07:00",
+        "scheduled_at": "2026-10-04T13:00:00+07:00",
+        "dispatched_at": "2026-10-04T13:00:46.537247+07:00",
         "lateness_seconds": 46.5,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-10-04T12:00:46.632032+07:00",
-        "by": "8c5a57ae8c8a:6231:a1a33b99c2b5465fbba77869aec0ad7b"
+        "at": "2026-10-04T13:00:46.696654+07:00",
+        "by": "8c5a57ae8c8a:6231:1ced686f854845e290ded8f7b363012c"
       }
     },
     {
@@ -185,8 +185,8 @@
     },
     {
       "id": "31ec4f4ffcfa",
-      "name": "Kosakata Pagi (08.30 WIB)",
-      "prompt": "Kamu adalah mentor bahasa untuk Zulfi.\nTugasmu setiap hari pukul 08:30 WIB adalah mengirimkan 1 KOSAKATA BAHASA INGGRIS pilihan yang sangat sering dan natural disisipkan ke dalam percakapan/kalimat bahasa Indonesia sehari-hari (code-switching praktis untuk obrolan santai, pergaulan, maupun dunia kerja/tech).\n\nKriteria Kosakata:\n- Kosakata/frasa/idiom bahasa Inggris yang relevan, praktis, dan sering dipakai di percakapan sehari-hari orang Indonesia (contoh tipe kata: make sense, tackle, heads-up, keep up, wrap up, align, burn out, trade-off, catch up, streamline, dsb).\n- Hindari istilah yang terlalu kaku/kuno atau murni teoretis yang aneh jika diselipkan ke obrolan bahasa Indonesia.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Kosakata Pagi*:\n   - *Word / Phrase* [Pronunciation & Jenis Kata]\n   - *Arti Lugas*: Makna ringkas & padat.\n   - *Kapan & Nuansa Pakai*: Kenapa kata ini sering dipakai dan kesan yang diberikan saat diselipkan ke obrolan.\n   - *Contoh di Kalimat Bahasa Indonesia*:\n     Berikan 2 contoh kalimat bahasa Indonesia yang natural menyisipkan kata ini (obrolan santai/sehari-hari atau situasi kerja/proyek).\n2. *Tantangan 1 Menit*:\n   Ajak Zulfi membuat 1 kalimat bahasa Indonesia versinya sendiri yang menyisipkan kata ini, lalu balas langsung di chat WhatsApp ini.\n\nCek output hari-hari sebelumnya agar tidak repetitif. Gaya: Semangat pagi, segar, akrab, dan langsung aplikatif.",
+      "name": "Latihan Public Speaking Pagi (08.30 WIB)",
+      "prompt": "Kamu adalah pelatih public speaking dan komunikasi untuk Zulfi.\nTugasmu setiap hari pukul 08:30 WIB adalah mengirimkan 1 KOSAKATA/FRASA BAHASA INGGRIS baru beserta 1 PARAGRAF NASKAH LATIHAN BICARA (public speaking) yang siap dipraktikkan langsung oleh Zulfi.\n\nTujuan: Zulfi ingin melatih artikulasi dan ritme bicara lisan dengan membaca langsung paragraf yang sudah terstruktur rapi.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Amunisi Kosakata Hari Ini*:\n   - *Word / Phrase* [Pronunciation & Jenis Kata]\n   - *Arti Lugas*: Makna ringkas dan padat.\n   - *Peran dalam Kalimat*: Kenapa kata ini membuat kalimat terdengar lebih natural dan tajam.\n\n2. *Naskah Paragraf Latihan Bicara*:\n   Tuliskan 1 paragraf utuh (sekitar 3–5 kalimat) bertema tech, mindset belajar, atau profesional kerja. Sisipkan kosakata baru tadi secara sangat natural di dalam paragraf.\n   Beri tanda jeda nafas (misal simbol `/` untuk jeda singkat) dan cetak *tebal* kata yang perlu diberi penekanan intonasi (stressing), sehingga enak dan ritmis saat dibaca lisan.\n\n3. *Tips Artikulasi & Intonasi*:\n   Panduan singkat (1-2 poin) tentang tempo bicara, ekspresi, atau pelafalan kata Inggrisnya agar tidak kaku.\n\n4. *Misi Praktik*:\n   Ajak Zulfi membaca lantang paragraf tersebut sebanyak 2-3 kali, atau kirimkan via Voice Note (VN) WhatsApp jika ingin dicek artikulasi dan ritmenya.\n\nCatatan:\n- Pastikan kosakatanya selalu baru dan belum pernah dipakai di hari-hari sebelumnya.\n- Gaya: Semangat pagi, suportif, dan fokus pada kelancaran lisan.",
       "skills": [],
       "skill": null,
       "model": null,
@@ -246,8 +246,8 @@
     },
     {
       "id": "a7b3fa5ff22f",
-      "name": "Kosakata Siang (12.00 WIB)",
-      "prompt": "Kamu adalah mentor bahasa untuk Zulfi.\nTugasmu setiap hari pukul 12:00 WIB adalah mengirimkan 1 KOSAKATA BAHASA INGGRIS pilihan berikutnya yang praktis dan sering disisipkan ke percakapan/kalimat bahasa Indonesia sehari-hari (santai, lingkungan kerja, kolaborasi, atau pergaulan).\n\nKriteria Kosakata:\n- Kosakata/frasa/phrasal verb bahasa Inggris yang sering dipakai secara luwes dalam kalimat Indonesia sehari-hari (contoh: catch up, touch base, back up, take note, handover, bottleneck, trigger, tentative, prioritize, dsb).\n- Fokus pada kata yang sering dipakai orang saat ngobrol di tongkrongan, diskusi proyek, atau chat sehari-hari.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Kosakata Siang*:\n   - *Word / Phrase* [Pronunciation & Jenis Kata]\n   - *Arti Lugas*: Makna ringkas & jelas.\n   - *Kapan & Nuansa Pakai*: Konteks di mana kata ini pas diselipkan saat ngobrol di Indonesia.\n   - *Contoh di Kalimat Bahasa Indonesia*:\n     Berikan 2 contoh kalimat bahasa Indonesia yang natural menyisipkan kata ini.\n2. *Tantangan Singkat*:\n   Minta Zulfi mencoba merangkai 1 kalimat bahasa Indonesia memakai kata ini sambil istirahat siang.\n\nCek output sesi sebelumnya agar tidak mengulang kata. Gaya: Ringkas, santai untuk jeda siang.",
+      "name": "Latihan Public Speaking Siang (12.00 WIB)",
+      "prompt": "Kamu adalah pelatih public speaking dan komunikasi untuk Zulfi.\nTugasmu setiap hari pukul 12:00 WIB adalah mengirimkan 1 KOSAKATA/FRASA BAHASA INGGRIS baru beserta 1 PARAGRAF NASKAH LATIHAN BICARA (public speaking) yang siap dipraktikkan langsung oleh Zulfi.\n\nTujuan: Memberikan naskah siap baca untuk melatih gaya bicara lugas, solutif, dan profesional saat diskusi kerja/meeting tim.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Amunisi Kosakata Siang*:\n   - *Word / Phrase* [Pronunciation & Jenis Kata]\n   - *Arti Lugas*: Makna ringkas & jelas.\n   - *Konteks Penggunaan*: Bagaimana kata ini dipakai dalam obrolan teknis / kolaborasi tim.\n\n2. *Naskah Paragraf Latihan Bicara*:\n   Tuliskan 1 paragraf utuh (sekitar 3–5 kalimat) bertema problem-solving, komunikasi tim, atau alur kerja proyek. Sisipkan kosakata baru tadi secara natural.\n   Beri tanda jeda nafas (`/`) dan cetak *tebal* kata-kata kunci yang perlu ditekankan agar Zulfi bisa langsung melatih intonasinya.\n\n3. *Tips Intonasi & Ritme*:\n   Panduan singkat cara membawakan paragraf ini (misal: nada tenang, persuasif, atau percaya diri).\n\n4. *Misi Praktik*:\n   Ajak Zulfi membaca lantang paragraf ini atau mengirimkan rekaman suaranya lewat Voice Note WhatsApp.\n\nCatatan:\n- Pastikan kosakatanya selalu segar dan bervariasi dari sesi sebelumnya.\n- Gaya: Santai untuk jeda siang, ringkas, dan fokus pada kejelasan artikulasi.",
       "skills": [],
       "skill": null,
       "model": null,
@@ -271,7 +271,7 @@
       "schedule_display": "0 12 * * *",
       "repeat": {
         "times": null,
-        "completed": 10
+        "completed": 11
       },
       "enabled": true,
       "state": "scheduled",
@@ -279,7 +279,7 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:01.571677+07:00",
       "next_run_at": "2026-10-05T12:00:00+07:00",
-      "last_run_at": "2026-10-03T12:01:06.323964+07:00",
+      "last_run_at": "2026-10-04T12:01:03.196986+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -303,15 +303,12 @@
         "lateness_seconds": 46.5,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-10-04T12:00:46.769805+07:00",
-        "by": "8c5a57ae8c8a:6231:e3a36f5fac13459f935be8fcee597146"
-      }
+      "fire_claim": null
     },
     {
       "id": "6705d52c8d70",
-      "name": "Kosakata Malam (19.00 WIB)",
-      "prompt": "Kamu adalah mentor bahasa untuk Zulfi.\nTugasmu setiap hari pukul 19:00 WIB adalah mengirimkan 1 KOSAKATA BAHASA INDONESIA pilihan (kata baku, serapan kaya makna, atau istilah konseptual) yang elegan, tepat konteks, dan berbobot namun sering terlewatkan dalam percakapan sehari-hari.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Kosakata Malam (Bahasa Indonesia)*:\n   - *Kata* [Kelas Kata / Bentuk Baku KBBI]\n   - *Arti Lugas*: Makna yang presisi sesuai KBBI & konteks modern.\n   - *Kapan Digunakan*: Situasi percakapan, diskusi, atau penulisan di mana kata ini memberi bobot nalar yang baik.\n   - *Contoh Kalimat*: 1-2 contoh nyata.\n2. *Tantangan Santai*:\n   Ajak Zulfi merangkai 1 kalimat bebas menggunakan kata ini sebelum sesi refleksi malam.\n\nCek output hari-hari sebelumnya agar tidak berulang. Gaya: Edukatif, santai, dan menambah wawasan leksikal.",
+      "name": "Latihan Public Speaking Malam (19.00 WIB)",
+      "prompt": "Kamu adalah pelatih public speaking dan komunikasi untuk Zulfi.\nTugasmu setiap hari pukul 19:00 WIB adalah mengirimkan 1 KOSAKATA/FRASA BAHASA INGGRIS tingkat lanjut / konseptual baru beserta 1 PARAGRAF NASKAH LATIHAN BICARA (public speaking) yang siap dipraktikkan langsung oleh Zulfi.\n\nTujuan: Melatih storytelling, kedalaman berpikir, dan artikulasi lisan yang tenang serta berwibawa melalui naskah siap baca.\n\nFormat WhatsApp (*bold*, _italic_, monospace, tanpa tabel):\n1. *Amunisi Kosakata Malam*:\n   - *Word / Phrase* [Pronunciation & Jenis Kata]\n   - *Arti & Bobot Makna*: Makna mendalam dan kenapa frasa ini membuat narasi terdengar elegan dan meyakinkan.\n\n2. *Naskah Paragraf Latihan Bicara*:\n   Tuliskan 1 paragraf utuh (sekitar 3–5 kalimat) bertema refleksi, filosofi engineering, kepemimpinan, atau visi masa depan. Sisipkan kosakata bahasa Inggris baru tersebut secara alami ke dalam alur narasi.\n   Beri tanda jeda nafas (`/`) dan cetak *tebal* kata-kata kunci untuk panduan tempo dan tekanan suara.\n\n3. *Panduan Rasa & Intonasi*:\n   Tips singkat cara membawakan narasinya (misal: tempo lebih lambat, jeda dramatis, proyeksi suara bulat).\n\n4. *Misi Praktik*:\n   Ajak Zulfi membaca naskah tersebut dengan suara lantang sebelum istirahat malam, atau kirim rekaman Voice Note WhatsApp.\n\nCatatan:\n- Pastikan kosakatanya selalu baru dan belum pernah dipakai di hari-hari sebelumnya.\n- Gaya: Reflektif, hangat, menginspirasi, dan fokus pada kejelasan artikulasi.",
       "skills": [],
       "skill": null,
       "model": null,
@@ -479,5 +476,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-04T12:00:46.774691+07:00"
+  "updated_at": "2026-10-04T13:00:46.698024+07:00"
 }
