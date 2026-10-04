@@ -83,8 +83,13 @@ def sync_allowlist():
     subprocess.run([hermes_bin, "config", "set", "whatsapp.allow_from", val_json], check=True)
     subprocess.run([hermes_bin, "config", "set", "whatsapp.require_mention", "true"], check=True)
     
-    # 2. RBAC Routing: Pastikan DM dari ketua terisolasi ke profile idn-academy
-    routes = list(BASE_ROUTES)
+    # 2. RBAC Routing: Pastikan DM dari ketua terisolasi ke profile idn-academy tanpa menghapus routes profil lain
+    try:
+        proc = subprocess.run([hermes_bin, "config", "get", "gateway.profile_routes", "--json"], capture_output=True, text=True, check=True)
+        existing_routes = json.loads(proc.stdout)
+        routes = [r for r in existing_routes if r.get("name") != "active-ketua-dm"]
+    except Exception as e:
+        routes = list(BASE_ROUTES)
     if phone != ADMIN_PHONE:
         routes.append({
             "name": "active-ketua-dm",

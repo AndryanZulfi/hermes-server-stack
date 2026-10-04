@@ -1106,8 +1106,8 @@ app.get('/chat/:id', async (req, res) => {
         isGroup: true,
         participants: metadata.participants.map(p => p.id),
       });
-    } catch {
-      // Fall through to default
+    } catch (err) {
+      console.error('[groupMetadata error]', chatId, err);
     }
   }
 
@@ -1154,6 +1154,16 @@ app.post('/resolve-invite', async (req, res) => {
 });
 
 // Health check
+app.get('/all-groups', async (req, res) => {
+  if (!sock) return res.status(503).json({ error: 'No sock' });
+  try {
+    const groups = await sock.groupFetchAllParticipating();
+    return res.json(groups);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 app.get('/health', (req, res) => {
   res.json({
     status: connectionState,
