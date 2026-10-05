@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 281
+        "completed": 282
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-10-06T06:00:00+07:00",
-      "last_run_at": "2026-10-06T04:01:34.832347+07:00",
+      "next_run_at": "2026-10-06T07:00:00+07:00",
+      "last_run_at": "2026-10-06T05:01:33.256665+07:00",
       "last_status": "delivery_failed",
       "last_error": null,
       "last_delivery_error": "live adapter send failed: {\"error\":\"Not connected to WhatsApp\"}; live adapter delivery to whatsapp:120363414423509222@g.us failed: {\"error\":\"Not connected to WhatsApp\"}; delivery error: WhatsApp bridge error (503): {\"error\":\"Not connected to WhatsApp\"} (target whatsapp:120363414423509222@g.us)",
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-06T05:00:00+07:00",
-        "dispatched_at": "2026-10-06T05:00:54.584968+07:00",
-        "lateness_seconds": 54.6,
+        "scheduled_at": "2026-10-06T06:00:00+07:00",
+        "dispatched_at": "2026-10-06T06:00:01.234412+07:00",
+        "lateness_seconds": 1.2,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-10-06T05:00:54.679795+07:00",
-        "by": "8c5a57ae8c8a:223:b1774356977a43e292eaed5a0b6d6a27"
+        "at": "2026-10-06T06:00:01.312426+07:00",
+        "by": "8c5a57ae8c8a:200:bfaf908c99a84b6dbb4b0a34d933b0d7"
       }
     },
     {
@@ -95,7 +95,7 @@
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T18:57:02.448049+07:00",
-      "next_run_at": "2026-10-06T05:45:00+07:00",
+      "next_run_at": "2026-10-07T05:45:00+07:00",
       "last_run_at": "2026-10-05T05:46:13.672840+07:00",
       "last_status": "ok",
       "last_error": null,
@@ -115,12 +115,15 @@
       "workdir": null,
       "attach_to_session": true,
       "last_dispatch": {
-        "scheduled_at": "2026-10-05T05:45:00+07:00",
-        "dispatched_at": "2026-10-05T05:45:57.890467+07:00",
-        "lateness_seconds": 57.9,
+        "scheduled_at": "2026-10-06T05:45:00+07:00",
+        "dispatched_at": "2026-10-06T05:45:01.234924+07:00",
+        "lateness_seconds": 1.2,
         "kind": "on_time"
       },
-      "fire_claim": null
+      "fire_claim": {
+        "at": "2026-10-06T06:00:01.509478+07:00",
+        "by": "8c5a57ae8c8a:200:99078a3b7189450abb7771c23c664aa1"
+      }
     },
     {
       "id": "737b0fc2fea5",
@@ -476,5 +479,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-06T05:00:54.681650+07:00"
+  "updated_at": "2026-10-06T06:00:01.510381+07:00"
 }
