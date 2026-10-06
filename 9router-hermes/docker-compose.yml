@@ -16,8 +16,8 @@ services:
       HOSTNAME: "0.0.0.0"
       NODE_ENV: production
       INITIAL_PASSWORD: "andryan_16"
-      APP_URL: "https://deb-zlf.tail38902e.ts.net"
-      ORIGIN: "https://deb-zlf.tail38902e.ts.net"
+ #     APP_URL: "https://deb-zlf.tail38902e.ts.net"
+#      ORIGIN: "https://deb-zlf.tail38902e.ts.net"
   hermes:
     image: nousresearch/hermes-agent:latest
     container_name: hermes
@@ -25,7 +25,7 @@ services:
     command: gateway run
     ports:
       - "8642:8642"   # gateway API
-      - "9119:9119"   # dashboard (only reached when HERMES_DASHBOARD=1)
+  #    - "9119:9119"   # dashboard (only reached when HERMES_DASHBOARD=1)
     volumes:
       - ./hermes-data:/opt/data
       - ./hermes-data:/root/.hermes
