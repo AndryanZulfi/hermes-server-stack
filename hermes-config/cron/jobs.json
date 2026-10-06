@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 288
+        "completed": 289
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-10-06T13:00:00+07:00",
-      "last_run_at": "2026-10-06T11:01:04.499704+07:00",
+      "next_run_at": "2026-10-06T14:00:00+07:00",
+      "last_run_at": "2026-10-06T12:01:05.885390+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-06T12:00:00+07:00",
-        "dispatched_at": "2026-10-06T12:00:52.158012+07:00",
+        "scheduled_at": "2026-10-06T13:00:00+07:00",
+        "dispatched_at": "2026-10-06T13:00:52.156376+07:00",
         "lateness_seconds": 52.2,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-10-06T12:00:52.278104+07:00",
-        "by": "265d6c4e3dca:196:ee8b333bfdb34340935acff96c28fab1"
+        "at": "2026-10-06T13:00:52.317677+07:00",
+        "by": "265d6c4e3dca:196:f6a0bb008ae844e9afd8a992e299652c"
       }
     },
     {
@@ -274,7 +274,7 @@
       "schedule_display": "0 12 * * *",
       "repeat": {
         "times": null,
-        "completed": 12
+        "completed": 13
       },
       "enabled": true,
       "state": "scheduled",
@@ -282,12 +282,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:01.571677+07:00",
       "next_run_at": "2026-10-07T12:00:00+07:00",
-      "last_run_at": "2026-10-05T12:01:15.868975+07:00",
-      "last_status": "ok",
-      "last_error": null,
+      "last_run_at": "2026-10-06T12:06:49.190298+07:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: HTTP 503: [antigravity/claude-opus-4-6-thinking] [429]: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 99h22m38s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n   (reset after 3m 41s)",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 0,
+      "failure_streak": 1,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -306,10 +306,7 @@
         "lateness_seconds": 52.2,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-10-06T12:00:52.366467+07:00",
-        "by": "265d6c4e3dca:196:32d786dc82fa4564abafd0e3bbf6fcda"
-      }
+      "fire_claim": null
     },
     {
       "id": "6705d52c8d70",
@@ -482,5 +479,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-06T12:00:52.368842+07:00"
+  "updated_at": "2026-10-06T13:00:52.319781+07:00"
 }
