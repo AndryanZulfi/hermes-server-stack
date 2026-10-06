@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 283
+        "completed": 284
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-10-06T08:00:00+07:00",
-      "last_run_at": "2026-10-06T06:00:13.795196+07:00",
+      "next_run_at": "2026-10-06T09:00:00+07:00",
+      "last_run_at": "2026-10-06T07:00:15.094438+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-06T07:00:00+07:00",
-        "dispatched_at": "2026-10-06T07:00:01.234614+07:00",
+        "scheduled_at": "2026-10-06T08:00:00+07:00",
+        "dispatched_at": "2026-10-06T08:00:01.249928+07:00",
         "lateness_seconds": 1.2,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-10-06T07:00:01.342106+07:00",
-        "by": "8c5a57ae8c8a:200:d34affc1defb44c190a91345bbb0b538"
+        "at": "2026-10-06T08:00:01.417804+07:00",
+        "by": "8c5a57ae8c8a:200:35d4e5695dfe46a6bc4de83bb717612e"
       }
     },
     {
@@ -88,7 +88,7 @@
       "schedule_display": "45 5 * * *",
       "repeat": {
         "times": null,
-        "completed": 12
+        "completed": 13
       },
       "enabled": true,
       "state": "scheduled",
@@ -96,12 +96,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T18:57:02.448049+07:00",
       "next_run_at": "2026-10-07T05:45:00+07:00",
-      "last_run_at": "2026-10-05T05:46:13.672840+07:00",
-      "last_status": "ok",
-      "last_error": null,
+      "last_run_at": "2026-10-06T07:00:41.491795+07:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: Provider has been unresponsive (no response received) for 5 consecutive stale attempts — aborting this call to avoid an indefinite stall. Switch models or start a new session, then retry.",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 0,
+      "failure_streak": 1,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -120,10 +120,7 @@
         "lateness_seconds": 1.2,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-10-06T07:00:02.011549+07:00",
-        "by": "8c5a57ae8c8a:200:99078a3b7189450abb7771c23c664aa1"
-      }
+      "fire_claim": null
     },
     {
       "id": "737b0fc2fea5",
@@ -479,5 +476,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-06T07:00:02.013375+07:00"
+  "updated_at": "2026-10-06T08:00:01.421356+07:00"
 }
