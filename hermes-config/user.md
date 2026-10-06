@@ -54,10 +54,13 @@
 - **Halaman Utama Notion:** `Project Invoice Pintar` (`3c5132f7-ca42-80f5-9d8a-eb8b4ea758cb`)
 - **Tasks Database:** `99e132f7-ca42-8386-a96b-076c3b86c7eb`
 - **Grup WhatsApp Invoice Pintar:** JID `120363428902431958@g.us` (`https://chat.whatsapp.com/Hoz0lc50EHjIw0rMrDCALG`)
+- **Kategori & Struktur Logging Developer:**
+  - Tasks di database Notion diklasifikasikan ke dalam property `Category`: **`Feature`** (fitur baru/enhancement), **`Bug`** (kendala/error/responsivitas), dan **`Daily Log`** (sprint harian).
+  - Setiap halaman daily sprint (seperti `06-10-2026`) wajib memisahkan task ke dalam dua blok utama: `## 🚀 Features` dan `## 🐛 Bugs` agar developer logging rapi dan terukur.
 - **Alur Pencatatan & Checklist Otomatis:**
-  1. *Pencatatan Fitur Baru:* Setiap ada request/ide/pembahasan fitur baru di grup WhatsApp `invoice pintar`, AI langsung mencatatnya ke halaman Notion tanggal berjalan (format `DD-MM-YYYY`) di database Tasks dengan checklist `- [ ] [Nama Fitur]`.
-  2. *Checklist Otomatis:* Ketika Zulfi mengirim pesan bahwa suatu fitur selesai (baik di chat personal, workspace, maupun grup), AI otomatis mencari item fitur terkait di halaman Notion berjalan dan mengubahnya menjadi `- [x] [Nama Fitur] (Done)`.
-  3. *Auto-Generate Page Hari Berikutnya (Seterusnya):* Setiap kali Zulfi selesai melaporkan pembuatan fitur di Invoice Pintar, AI **WAJIB langsung membuatkan halaman baru untuk hari berikutnya** (format `DD-MM-YYYY`) di database Tasks Notion, yang memindahkan seluruh task backlog yang belum selesai beserta task baru yang ditambahkan.
+  1. *Pencatatan Fitur & Bug Baru:* Setiap ada request/ide/pembahasan di grup WhatsApp `invoice pintar` atau chat, AI mencatatnya ke halaman Notion tanggal berjalan sesuai kategorinya (`Feature` atau `Bug`).
+  2. *Checklist Otomatis:* Ketika Zulfi mengirim pesan bahwa suatu fitur atau bug fix selesai, AI otomatis memperbarui checklist terkait di Notion menjadi `- [x] (Done)`.
+  3. *Auto-Generate Page Hari Berikutnya (Seterusnya):* Setiap kali Zulfi selesai melaporkan pembuatan fitur/fix bug di Invoice Pintar, AI **WAJIB langsung membuatkan halaman baru untuk hari berikutnya** (format `DD-MM-YYYY`) di database Tasks Notion dengan struktur `## 🚀 Features` dan `## 🐛 Bugs`, memindahkan seluruh backlog yang belum selesai beserta task baru.
 
 
 
