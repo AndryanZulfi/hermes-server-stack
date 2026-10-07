@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 318
+        "completed": 319
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-10-07T19:00:00+07:00",
-      "last_run_at": "2026-10-07T17:01:07.155108+07:00",
+      "next_run_at": "2026-10-07T20:00:00+07:00",
+      "last_run_at": "2026-10-07T18:01:08.110908+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-07T18:00:00+07:00",
-        "dispatched_at": "2026-10-07T18:00:52.136595+07:00",
-        "lateness_seconds": 52.1,
+        "scheduled_at": "2026-10-07T19:00:00+07:00",
+        "dispatched_at": "2026-10-07T19:00:52.153139+07:00",
+        "lateness_seconds": 52.2,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-10-07T18:00:52.212379+07:00",
-        "by": "265d6c4e3dca:196:9b8d18fa4f2647a291aa59fad2c0ecd1"
+        "at": "2026-10-07T19:00:52.332708+07:00",
+        "by": "265d6c4e3dca:196:ab093640d6de432b88afff4542ca87ea"
       }
     },
     {
@@ -339,7 +339,7 @@
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:08.640396+07:00",
-      "next_run_at": "2026-10-07T19:00:00+07:00",
+      "next_run_at": "2026-10-08T19:00:00+07:00",
       "last_run_at": "2026-10-06T19:06:45.485242+07:00",
       "last_status": "error",
       "last_error": "RuntimeError: HTTP 503: [antigravity/claude-opus-4-6-thinking] [429]: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 92h22m35s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/",
@@ -359,12 +359,15 @@
       "workdir": null,
       "attach_to_session": true,
       "last_dispatch": {
-        "scheduled_at": "2026-10-06T19:00:00+07:00",
-        "dispatched_at": "2026-10-06T19:00:52.139721+07:00",
-        "lateness_seconds": 52.1,
+        "scheduled_at": "2026-10-07T19:00:00+07:00",
+        "dispatched_at": "2026-10-07T19:00:52.153139+07:00",
+        "lateness_seconds": 52.2,
         "kind": "on_time"
       },
-      "fire_claim": null
+      "fire_claim": {
+        "at": "2026-10-07T19:00:52.315808+07:00",
+        "by": "265d6c4e3dca:196:53b2e5a3fc484728994439d10336ab0f"
+      }
     },
     {
       "id": "d7314fe91853",
@@ -476,5 +479,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-07T18:00:52.214114+07:00"
+  "updated_at": "2026-10-07T19:00:52.352550+07:00"
 }
