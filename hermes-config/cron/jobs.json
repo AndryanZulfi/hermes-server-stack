@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 319
+        "completed": 320
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-10-07T20:00:00+07:00",
-      "last_run_at": "2026-10-07T18:01:08.110908+07:00",
+      "next_run_at": "2026-10-07T21:00:00+07:00",
+      "last_run_at": "2026-10-07T19:01:10.459140+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-07T19:00:00+07:00",
-        "dispatched_at": "2026-10-07T19:00:52.153139+07:00",
+        "scheduled_at": "2026-10-07T20:00:00+07:00",
+        "dispatched_at": "2026-10-07T20:00:52.157122+07:00",
         "lateness_seconds": 52.2,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-10-07T19:00:52.332708+07:00",
-        "by": "265d6c4e3dca:196:ab093640d6de432b88afff4542ca87ea"
+        "at": "2026-10-07T20:00:52.370245+07:00",
+        "by": "265d6c4e3dca:196:1c16319f4a3b415f9573ebc433f39e70"
       }
     },
     {
@@ -332,7 +332,7 @@
       "schedule_display": "0 19 * * *",
       "repeat": {
         "times": null,
-        "completed": 13
+        "completed": 14
       },
       "enabled": true,
       "state": "scheduled",
@@ -340,12 +340,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:08.640396+07:00",
       "next_run_at": "2026-10-08T19:00:00+07:00",
-      "last_run_at": "2026-10-06T19:06:45.485242+07:00",
-      "last_status": "error",
-      "last_error": "RuntimeError: HTTP 503: [antigravity/claude-opus-4-6-thinking] [429]: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 92h22m35s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/",
+      "last_run_at": "2026-10-07T19:01:20.787653+07:00",
+      "last_status": "ok",
+      "last_error": null,
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 1,
+      "failure_streak": 0,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -364,10 +364,7 @@
         "lateness_seconds": 52.2,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-10-07T19:00:52.315808+07:00",
-        "by": "265d6c4e3dca:196:53b2e5a3fc484728994439d10336ab0f"
-      }
+      "fire_claim": null
     },
     {
       "id": "d7314fe91853",
@@ -479,5 +476,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-07T19:00:52.352550+07:00"
+  "updated_at": "2026-10-07T20:00:52.373947+07:00"
 }
