@@ -69,8 +69,9 @@ def sync_allowlist():
     today = datetime.datetime.now(tz).date()
     name, phone = get_active_ketua(today)
     
-    allowed_list = [ADMIN_PHONE]
-    if phone != ADMIN_PHONE:
+    EXTRA_ALLOWED = ["6285751202762"]  # Kahfi test profile
+    allowed_list = [ADMIN_PHONE] + [p for p in EXTRA_ALLOWED if p != ADMIN_PHONE]
+    if phone != ADMIN_PHONE and phone not in allowed_list:
         allowed_list.append(phone)
     
     val_json = json.dumps(allowed_list)

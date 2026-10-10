@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 391
+        "completed": 392
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-10-10T20:00:00+07:00",
-      "last_run_at": "2026-10-10T18:00:40.797224+07:00",
+      "next_run_at": "2026-10-10T21:00:00+07:00",
+      "last_run_at": "2026-10-10T19:00:40.466551+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-10T19:00:00+07:00",
-        "dispatched_at": "2026-10-10T19:00:20.164102+07:00",
-        "lateness_seconds": 20.2,
+        "scheduled_at": "2026-10-10T20:00:00+07:00",
+        "dispatched_at": "2026-10-10T20:01:18.811831+07:00",
+        "lateness_seconds": 78.8,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-10-10T19:00:20.400966+07:00",
-        "by": "265d6c4e3dca:53657:3f10e1991bbf480fab48e98f58135b40"
+        "at": "2026-10-10T20:01:19.444061+07:00",
+        "by": "265d6c4e3dca:60841:843072fee1254d26b2cd6eec812ddfe2"
       }
     },
     {
@@ -332,7 +332,7 @@
       "schedule_display": "0 19 * * *",
       "repeat": {
         "times": null,
-        "completed": 16
+        "completed": 17
       },
       "enabled": true,
       "state": "scheduled",
@@ -340,7 +340,7 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:08.640396+07:00",
       "next_run_at": "2026-10-11T19:00:00+07:00",
-      "last_run_at": "2026-10-09T19:01:22.010861+07:00",
+      "last_run_at": "2026-10-10T19:00:37.278121+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -364,10 +364,7 @@
         "lateness_seconds": 20.2,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-10-10T19:00:20.584731+07:00",
-        "by": "265d6c4e3dca:53657:1696df8228574f37934d5a01c2dc5200"
-      }
+      "fire_claim": null
     },
     {
       "id": "d7314fe91853",
@@ -428,5 +425,5 @@
       }
     }
   ],
-  "updated_at": "2026-10-10T19:00:20.594462+07:00"
+  "updated_at": "2026-10-10T20:01:19.446363+07:00"
 }
