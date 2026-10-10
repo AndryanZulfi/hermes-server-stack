@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 380
+        "completed": 381
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-10-10T09:00:00+07:00",
-      "last_run_at": "2026-10-10T07:00:38.413232+07:00",
+      "next_run_at": "2026-10-10T10:00:00+07:00",
+      "last_run_at": "2026-10-10T08:00:37.641153+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-10T08:00:00+07:00",
-        "dispatched_at": "2026-10-10T08:00:20.122752+07:00",
-        "lateness_seconds": 20.1,
+        "scheduled_at": "2026-10-10T09:00:00+07:00",
+        "dispatched_at": "2026-10-10T09:00:20.178515+07:00",
+        "lateness_seconds": 20.2,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-10-10T08:00:20.372843+07:00",
-        "by": "265d6c4e3dca:53657:0b9d2a564b2e49d285126d212e566849"
+        "at": "2026-10-10T09:00:20.570221+07:00",
+        "by": "265d6c4e3dca:53657:7c4765ffd6c84d6486006f20e7bd9d93"
       }
     },
     {
@@ -210,15 +210,15 @@
       "schedule_display": "30 8 * * *",
       "repeat": {
         "times": null,
-        "completed": 15
+        "completed": 16
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T22:48:57.745370+07:00",
-      "next_run_at": "2026-10-10T08:30:00+07:00",
-      "last_run_at": "2026-10-09T08:31:34.898432+07:00",
+      "next_run_at": "2026-10-11T08:30:00+07:00",
+      "last_run_at": "2026-10-10T08:30:52.436589+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -237,9 +237,9 @@
       "workdir": null,
       "attach_to_session": true,
       "last_dispatch": {
-        "scheduled_at": "2026-10-09T08:30:00+07:00",
-        "dispatched_at": "2026-10-09T08:30:52.156031+07:00",
-        "lateness_seconds": 52.2,
+        "scheduled_at": "2026-10-10T08:30:00+07:00",
+        "dispatched_at": "2026-10-10T08:30:20.208405+07:00",
+        "lateness_seconds": 20.2,
         "kind": "on_time"
       },
       "fire_claim": null
@@ -423,58 +423,7 @@
         "lateness_seconds": 52.2,
         "kind": "on_time"
       }
-    },
-    {
-      "id": "201456fe423a",
-      "name": "Pengingat Jemur Baju",
-      "prompt": "Ingatkan Zulfi dengan ramah dan ringkas bahwa sudah 30 menit dan saatnya untuk menjemur baju.",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": "custom:9router",
-      "base_url": null,
-      "script": null,
-      "no_agent": false,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "once",
-        "run_at": "2026-10-03T08:34:25.540605+07:00",
-        "display": "once in 30m"
-      },
-      "schedule_display": "once in 30m",
-      "repeat": {
-        "times": 1,
-        "completed": 1
-      },
-      "enabled": false,
-      "state": "completed",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-10-03T08:04:25.540949+07:00",
-      "next_run_at": null,
-      "last_run_at": "2026-10-03T08:35:22.010070+07:00",
-      "last_status": "ok",
-      "last_error": null,
-      "last_delivery_error": null,
-      "last_delivery_unverified": null,
-      "failure_streak": 0,
-      "deliver": "origin",
-      "origin": {
-        "platform": "whatsapp",
-        "chat_id": "224983305470121@lid",
-        "chat_name": "z",
-        "thread_id": null,
-        "user_id": "6288803918389@s.whatsapp.net",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null,
-      "run_claim": null,
-      "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-10T08:00:20.390790+07:00"
+  "updated_at": "2026-10-10T09:00:20.585396+07:00"
 }
