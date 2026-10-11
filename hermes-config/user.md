@@ -41,14 +41,18 @@
 - **Standar Development & Coding (Anti-Slop):** Wajib menerapkan skill `antislop` (khususnya `antislop-code` dan `antislop-ui`) dan software development skills terkait. Dilarang menghasilkan kode dengan komentar khas AI (narasi step-by-step, banner `===`, emoji, redundant echo) atau UI template generik AI (gradient ungu-biru, bento grid tanpa tujuan, data palsu).
 
 
-## Jadwal & Rutinitas Harian (Single Source of Truth: Google Calendar)
-- **Prinsip Utama:** Rencana, target harian, dan fokus rutinitas hari ini **WAJIB dicek dan diambil langsung dari Google Calendar** secara real-time via API (`calendar list`), BUKAN mengasumsikan atau menghafal dari catatan/memori statis AI. Apa pun event atau perubahan yang ada di Google Calendar adalah kebenaran tunggal (source of truth).
-- **Jam Kerja:** 09.00 – 17.00 WIB (Jumat libur).
+## Jadwal & Rutinitas Harian (Single Source of Truth: Google Calendar & Sync Spreadsheet)
+- **Prinsip Utama:** Rencana, target harian, dan fokus rutinitas hari ini **WAJIB dicek dan diambil langsung dari Google Calendar** secara real-time via API (`calendar list`), disinkronkan dengan target roadmap di **Google Spreadsheet** (`1SrVE7CQNai_Rq1Alehpya51sDdyaWHR4U9GdfSI3W0U`).
+- **Jam Kerja Efektif:** 09.00 – 17.00 WIB (Jumat libur penuh).
+- **Pembagian 3 Blok Kerja Harian:**
+  - **Blok Pagi (09.00 – 12.00 WIB):** Belajar **Embedded Router dengan Rust** sesuai materi roadmap per hari di Google Spreadsheet. (Khusus Kamis: mencakup sesi review tugas & monitoring mentor).
+  - **Blok Siang (13.30 – 15.00 WIB):** **Project** (pengerjaan project aplikasi: Invoice Pintar, NARA, atau project lainnya).
+  - **Blok Sore (16.00 – 17.00 WIB):** **Belajar / Persiapan Sharing Session & Workshop** (khusus Senin sore: Meeting Mingguan NARA 17.00 - 17.50 WIB).
 - **Istirahat:** Istirahat 1 (12.00 – 13.30 WIB), Istirahat 2 (15.00 – 16.00 WIB).
-- **Rutinitas Wajib:**
-  - 08.45 WIB: Pengisian Timebox IDN Academy
-  - 16.30 WIB: Pengisian Logbook Programmer IDN Academy
-  - 20.45 WIB: Laporan Malam Grup Invoice Pintar
+- **Rutinitas & Otomasi Laporan:**
+  - **08.45 WIB:** Pengisian Timebox IDN Academy.
+  - **16.30 WIB:** Pengisian Logbook Programmer IDN Academy. Saat Zulfi mengirimkan laporan sore hari mengenai apa yang dikerjakan, AI **otomatis memperbarui baris hari tersebut di Google Spreadsheet** (Sheet 'Andryan Zulfi') dengan detail output riil dan mengubah status menjadi **`Done`**.
+  - **20.45 WIB:** Laporan Malam Grup Invoice Pintar.
 
 ## Project Invoice Pintar & Notion Tracking
 - **Halaman Utama Notion:** `Project Invoice Pintar` (`3c5132f7-ca42-80f5-9d8a-eb8b4ea758cb`)

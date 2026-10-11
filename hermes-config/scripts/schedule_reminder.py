@@ -20,44 +20,44 @@ TOKEN_PATH = "/opt/data/google_token.json"
 DEFAULT_ROUTINES = {
     # 0 = Senin
     0: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Invoice Pintar", "Prioritas #1: eksekusi to-do list Notion & pengerjaan fitur utama.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Tugas Rust & Lab QEMU", "Prioritas #2: riset jaringan, implementasi code Rust.")],
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
+        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
         "sore": [
-            ("16.00 - 17.00 WIB", "Blok Sore: Project NARA", "Development fokus mengejar target mingguan NARA."),
+            ("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop."),
             ("17.00 - 17.50 WIB", "Meeting Mingguan NARA", "Evaluasi progress mingguan & koordinasi tim NARA.")
         ]
     },
     # 1 = Selasa
     1: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Invoice Pintar", "Selesaikan fitur utama & perbaikan bug.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Tugas Rust & Lab QEMU", "Lanjutan pengerjaan tugas & lab sistem sebelum monitoring.")],
-        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Latihan Delivery Workshop Golang", "Simulasi membawakan materi, melatih analogi konsep, dan persiapan workshop.")]
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
+        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
+        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     },
     # 2 = Rabu
     2: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Invoice Pintar", "Selesaikan fitur utama & perbaikan bug.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Tugas Rust & Lab QEMU", "Finalisasi tugas sistem & lab sebelum hari monitoring.")],
-        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Latihan Delivery Workshop Golang", "Simulasi membawakan materi, melatih analogi konsep, dan persiapan workshop.")]
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
+        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
+        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     },
     # 3 = Kamis
     3: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Monitoring Mentor (Rust & QEMU)", "Review tugas Rust & QEMU bersama Mas Asad.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Invoice Pintar / Follow-up Mentor", "Lanjutan pengerjaan Invoice Pintar atau follow-up evaluasi mentor.")],
-        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Latihan Delivery Workshop Golang", "Simulasi membawakan materi, melatih analogi konsep, dan persiapan workshop.")]
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust) & Monitoring Mentor", "Belajar materi Embedded Router dan sesi monitoring tugas bersama mentor.")],
+        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau follow-up mentor).")],
+        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     },
     # 4 = Jumat (Libur)
     4: {},
     # 5 = Sabtu
     5: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Invoice Pintar", "Prioritas #1: eksekusi to-do list Notion & pengerjaan fitur utama.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Tugas Rust & Lab QEMU", "Prioritas #2: riset jaringan, implementasi code Rust.")],
-        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Project NARA", "Development fokus mengejar target mingguan NARA.")]
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
+        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
+        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     },
     # 6 = Minggu
     6: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Invoice Pintar", "Prioritas #1: eksekusi to-do list Notion & pengerjaan fitur utama.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Tugas Rust & Lab QEMU", "Prioritas #2: riset jaringan, implementasi code Rust.")],
-        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Project NARA", "Development fokus mengejar target mingguan NARA.")]
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
+        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
+        "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     }
 }
 
