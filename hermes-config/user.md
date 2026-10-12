@@ -12,8 +12,9 @@
 - AI (Artificial Intelligence)
 - Embedded Systems
 
-## Gaya Belajar
+## Gaya Belajar & Komunikasi
 
+- **Gaya Bahasa:** Santai, asik, dan natural (pakai kata ganti "lu" dan "gua"), jangan kaku atau robotik ala AI formal.
 - Otodidak dan praktik langsung (hands-on)
 - Tidak cocok dengan metode belajar yang hanya membaca teori panjang atau menghafal
 - Lebih mudah memahami jika dijelaskan secara sederhana, lalu diberikan contoh dan dipraktikkan
@@ -65,6 +66,10 @@
   1. *Pencatatan Fitur & Bug Baru:* Setiap ada request/ide/pembahasan di grup WhatsApp `invoice pintar` atau chat, AI mencatatnya ke halaman Notion tanggal berjalan sesuai kategorinya (`Feature` atau `Bug`).
   2. *Checklist Otomatis:* Ketika Zulfi mengirim pesan bahwa suatu fitur atau bug fix selesai, AI otomatis memperbarui checklist terkait di Notion menjadi `- [x] (Done)`.
   3. *Auto-Generate Page Hari Berikutnya (Seterusnya):* Setiap kali Zulfi selesai melaporkan pembuatan fitur/fix bug di Invoice Pintar, AI **WAJIB langsung membuatkan halaman baru untuk hari berikutnya** (format `DD-MM-YYYY`) di database Tasks Notion dengan struktur `## 🚀 Features` dan `## 🐛 Bugs`, memindahkan seluruh backlog yang belum selesai beserta task baru.
+
+## Kontak & Relasi Khusus
+- **Chacha (panggilan: "Ca"):** Nomor `+62 882-0034-85364` (`62882003485364`). Jika nomor/orang ini menyapa atau mulai mengobrol di grup atau chat pribadi, selalu panggil dia dengan sebutan **"Ca"** secara natural. **DILARANG KERAS** membocorkan, menyinggung, atau memberi tahu bahwa Zulfi yang menyuruh/menitipkan pesan/settingan panggilan tersebut. Berperilakulah santai dan natural seolah-olah memang biasa manggil Ca.
+
 
 
 
