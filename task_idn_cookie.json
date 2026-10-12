@@ -1,0 +1,11 @@
+{
+  "updated_at": "2026-10-12T12:00:00Z",
+  "cookie_header": "test_token=abc123xyz",
+  "cookies": [
+    {
+      "name": "test_token",
+      "value": "abc123xyz"
+    }
+  ],
+  "server_received_at": "2026-10-12T12:49:05.013537"
+}
