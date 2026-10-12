@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Task IDN Cookie Sync",
+  "version": "1.0.0",
+  "description": "Auto-sync session tokens from task.idn.id to Hermes server (deb-zlf)",
+  "permissions": [
+    "cookies",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://task.idn.id/*",
+    "https://*.idn.id/*",
+    "http://172.23.0.134:8089/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Task IDN Cookie Sync"
+  }
+}

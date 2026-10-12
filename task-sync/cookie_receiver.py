@@ -49,12 +49,44 @@ class CookieSyncHandler(BaseHTTPRequestHandler):
                 "detected_cookies": cookie_names
             }
             self.wfile.write(json.dumps(status_payload, indent=2).encode("utf-8"))
+        elif self.path in ["/extension.zip", "/download", "/task-idn-extension.zip"]:
+            zip_file = "/home/zulfi/Projects/task-sync/extension.zip"
+            if os.path.exists(zip_file):
+                self.send_response(200)
+                self.send_header("Content-Type", "application/zip")
+                self.send_header("Content-Disposition", 'attachment; filename="task-idn-extension.zip"')
+                with open(zip_file, "rb") as f:
+                    content = f.read()
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+            else:
+                self.send_response(404)
+                self.end_headers()
         else:
             self.send_response(404)
             self._send_cors_headers()
             self.end_headers()
 
     def do_POST(self):
+        if self.path == "/api/upload-timebox":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_len).decode("utf-8")
+            import base64
+            if "," in body:
+                body = body.split(",", 1)[1]
+            img_bytes = base64.b64decode(body)
+            save_path = "/opt/data/timebox_latest.png"
+            with open(save_path, "wb") as f:
+                f.write(img_bytes)
+            self.send_response(200)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"status": "saved", "path": save_path, "bytes": len(img_bytes)}).encode("utf-8"))
+            print(f"[{datetime.now().isoformat()}] Timebox PNG saved to {save_path} ({len(img_bytes)} bytes)", flush=True)
+            return
+
         if self.path != "/api/sync-cookie":
             self.send_response(404)
             self._send_cors_headers()
