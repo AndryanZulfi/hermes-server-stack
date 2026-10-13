@@ -20,7 +20,7 @@ TOKEN_PATH = "/opt/data/google_token.json"
 DEFAULT_ROUTINES = {
     # 0 = Senin
     0: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Firmware Router Fisik TOTOLINK dan Rust sesuai materi di spreadsheet.")],
         "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
         "sore": [
             ("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop."),
@@ -29,34 +29,34 @@ DEFAULT_ROUTINES = {
     },
     # 1 = Selasa
     1: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Firmware Router Fisik TOTOLINK dan Rust sesuai materi di spreadsheet.")],
         "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
         "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     },
     # 2 = Rabu
     2: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Firmware Router Fisik TOTOLINK dan Rust sesuai materi di spreadsheet.")],
+        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project NARA", "Fokus pengerjaan development fitur dan modul Project NARA.")],
         "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     },
     # 3 = Kamis
     3: {
         "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust) & Monitoring Mentor", "Belajar materi Embedded Router dan sesi monitoring tugas bersama mentor.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau follow-up mentor).")],
+        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project NARA", "Fokus pengerjaan development fitur dan modul Project NARA.")],
         "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     },
     # 4 = Jumat (Libur)
     4: {},
     # 5 = Sabtu
     5: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Firmware Router Fisik TOTOLINK dan Rust sesuai materi di spreadsheet.")],
         "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
         "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     },
     # 6 = Minggu
     6: {
-        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Embedded Router dengan Rust sesuai materi di spreadsheet.")],
-        "siang": [("13.30 - 15.00 WIB", "Blok Siang: Project (Invoice Pintar / NARA / Project Lainnya)", "Fokus pengerjaan project aplikasi (Invoice Pintar, NARA, atau project lainnya).")],
+        "pagi": [("09.00 - 12.00 WIB", "Blok Pagi: Belajar Embedded Router (Rust)", "Fokus belajar Firmware Router Fisik TOTOLINK dan Rust sesuai materi di spreadsheet.")],
+        "siang": [("13.30 - 15.00 WIB", "Meeting Tambahan Project NARA", "Meeting tambahan koordinasi dan sinkronisasi progress Project NARA.")],
         "sore": [("16.00 - 17.00 WIB", "Blok Sore: Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung atau mempersiapkan sharing session dan workshop.")]
     }
 }

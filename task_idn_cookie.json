@@ -1,21 +1,8 @@
 {
-  "updated_at": "2026-10-13T01:39:26.910Z",
+  "updated_at": "2026-10-13T02:07:27.009Z",
   "source": "chrome_extension",
-  "cookie_header": "oauth_state=6c719c4f375815349af020d60cd7098c0ef8a0dbf9e29546753b58faadc7d786; __Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkxODU1NTU1LCJleHAiOjE3OTQ0NDc1NTV9.RJjdzEFyHdHD_yL3e0W8uJKVjbrnxx8QMDRWAHye4hY; __Secure-access_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkxODU1NTU1LCJleHAiOjE3OTE4ODQzNTV9.JqoUsvG954BRyKpomoX_rW2qbXowqxzREvmQx4dwQsk",
+  "cookie_header": "__Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkxODU1NTU1LCJleHAiOjE3OTQ0NDc1NTV9.RJjdzEFyHdHD_yL3e0W8uJKVjbrnxx8QMDRWAHye4hY; __Secure-access_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkxODU1NTU1LCJleHAiOjE3OTE4ODQzNTV9.JqoUsvG954BRyKpomoX_rW2qbXowqxzREvmQx4dwQsk",
   "cookies": [
-    {
-      "domain": "task.idn.id",
-      "expirationDate": 1791856150.689785,
-      "hostOnly": true,
-      "httpOnly": true,
-      "name": "oauth_state",
-      "path": "/api/auth",
-      "sameSite": "lax",
-      "secure": true,
-      "session": false,
-      "storeId": "0",
-      "value": "6c719c4f375815349af020d60cd7098c0ef8a0dbf9e29546753b58faadc7d786"
-    },
     {
       "domain": "task.idn.id",
       "expirationDate": 1794447555.373339,
@@ -43,5 +30,5 @@
       "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkxODU1NTU1LCJleHAiOjE3OTE4ODQzNTV9.JqoUsvG954BRyKpomoX_rW2qbXowqxzREvmQx4dwQsk"
     }
   ],
-  "server_received_at": "2026-10-13T08:39:26.920790"
+  "server_received_at": "2026-10-13T09:07:27.041566"
 }
