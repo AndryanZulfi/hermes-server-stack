@@ -37,7 +37,8 @@ DEFAULT_ROUTINES = {
     2: {  # Rabu
         "pagi": ("Belajar Firmware Router Fisik TOTOLINK & Rust", "Fokus belajar firmware router fisik TOTOLINK dan Rust sesuai materi di spreadsheet."),
         "siang": ("Project NARA", "Fokus pengerjaan development fitur dan modul Project NARA."),
-        "sore": ("Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung serta persiapan sharing session dan workshop.")
+        "sore": ("Belajar / Persiapan Sharing Session & Workshop", "Belajar materi pendukung serta persiapan sharing session dan workshop."),
+        "extra": ("Sharing Session (17.00 - 18.00 WIB)", "Mengikuti sesi sharing session / presentasi ilmu & teknologi IDN Academy.")
     },
     3: {  # Kamis
         "pagi": ("Belajar Firmware Router Fisik TOTOLINK & Rust & Monitoring Mentor", "Belajar materi Embedded Router dan sesi monitoring tugas bersama mentor."),
@@ -190,6 +191,10 @@ def parse_schedule_details(target_date, weekday):
                 points = [p.strip() for p in sec_clean.splitlines()[1:] if p.strip()]
                 if points:
                     siang_desc = " ".join(points)
+            elif sec_clean.startswith("(Sharing Session"):
+                points = [p.strip() for p in sec_clean.splitlines()[1:] if p.strip()]
+                if points:
+                    extra_item = ("Sharing Session (17.00 - 18.00 WIB)", " ".join(points))
 
     return {
         "pagi_title": pagi_title,
