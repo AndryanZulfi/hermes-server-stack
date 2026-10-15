@@ -1,21 +1,8 @@
 {
-  "updated_at": "2026-10-15T01:00:35.727Z",
+  "updated_at": "2026-10-15T01:00:51.762Z",
   "source": "chrome_extension",
-  "cookie_header": "__Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkxOTQyMjc0LCJleHAiOjE3OTQ1MzQyNzR9.kU__ddX_88F-ypNr1J4t0EJ259ns3buX5uy6vToSTFY; oauth_state=04274ec5f6bdd18e32dc0b04efb359f9232dd7c1408d38efd772acc1c1c4d64f",
+  "cookie_header": "oauth_state=04274ec5f6bdd18e32dc0b04efb359f9232dd7c1408d38efd772acc1c1c4d64f; __Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMDI2MDQzLCJleHAiOjE3OTQ2MTgwNDN9.0xFu0AusjM5JQExzZrI1xHi-tkKrxna0tCp5ctoiEhs; __Secure-access_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMDI2MDQzLCJleHAiOjE3OTIwNTQ4NDN9.UC7pEgLbWYeRyVr0DBXZ-t0ibsKqAIX1Nunm3ssmYmE",
   "cookies": [
-    {
-      "domain": "task.idn.id",
-      "expirationDate": 1794534274.798292,
-      "hostOnly": true,
-      "httpOnly": true,
-      "name": "__Secure-refresh_token",
-      "path": "/api/auth",
-      "sameSite": "lax",
-      "secure": true,
-      "session": false,
-      "storeId": "0",
-      "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkxOTQyMjc0LCJleHAiOjE3OTQ1MzQyNzR9.kU__ddX_88F-ypNr1J4t0EJ259ns3buX5uy6vToSTFY"
-    },
     {
       "domain": "task.idn.id",
       "expirationDate": 1792026634.641909,
@@ -28,7 +15,33 @@
       "session": false,
       "storeId": "0",
       "value": "04274ec5f6bdd18e32dc0b04efb359f9232dd7c1408d38efd772acc1c1c4d64f"
+    },
+    {
+      "domain": "task.idn.id",
+      "expirationDate": 1794618042.942874,
+      "hostOnly": true,
+      "httpOnly": true,
+      "name": "__Secure-refresh_token",
+      "path": "/api/auth",
+      "sameSite": "lax",
+      "secure": true,
+      "session": false,
+      "storeId": "0",
+      "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMDI2MDQzLCJleHAiOjE3OTQ2MTgwNDN9.0xFu0AusjM5JQExzZrI1xHi-tkKrxna0tCp5ctoiEhs"
+    },
+    {
+      "domain": "task.idn.id",
+      "expirationDate": 1792054842.942686,
+      "hostOnly": true,
+      "httpOnly": true,
+      "name": "__Secure-access_token",
+      "path": "/",
+      "sameSite": "lax",
+      "secure": true,
+      "session": false,
+      "storeId": "0",
+      "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMDI2MDQzLCJleHAiOjE3OTIwNTQ4NDN9.UC7pEgLbWYeRyVr0DBXZ-t0ibsKqAIX1Nunm3ssmYmE"
     }
   ],
-  "server_received_at": "2026-10-15T08:00:35.750312"
+  "server_received_at": "2026-10-15T08:00:51.799323"
 }
