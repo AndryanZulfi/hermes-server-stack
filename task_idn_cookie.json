@@ -1,21 +1,8 @@
 {
-  "updated_at": "2026-10-16T01:09:09.936Z",
+  "updated_at": "2026-10-16T11:36:23.090Z",
   "source": "chrome_extension",
-  "cookie_header": "oauth_state=66ba7f68208007566aa5f41fec6ab329ebdd23f79781b45d7701753d557ad0cc; __Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTEyOTQyLCJleHAiOjE3OTQ3MDQ5NDJ9.Gyj_9CQ4RBib0hDrDeL0mm8TXOeQfql5qCeItyC56mM; __Secure-access_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTEyOTQyLCJleHAiOjE3OTIxNDE3NDJ9.8C8u0JL7ZbJnBstehfG_0Q8n4Ydq1vbXZejHujst0S0",
+  "cookie_header": "__Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTEyOTQyLCJleHAiOjE3OTQ3MDQ5NDJ9.Gyj_9CQ4RBib0hDrDeL0mm8TXOeQfql5qCeItyC56mM",
   "cookies": [
-    {
-      "domain": "task.idn.id",
-      "expirationDate": 1792113537.490551,
-      "hostOnly": true,
-      "httpOnly": true,
-      "name": "oauth_state",
-      "path": "/api/auth",
-      "sameSite": "lax",
-      "secure": true,
-      "session": false,
-      "storeId": "0",
-      "value": "66ba7f68208007566aa5f41fec6ab329ebdd23f79781b45d7701753d557ad0cc"
-    },
     {
       "domain": "task.idn.id",
       "expirationDate": 1794704942.84003,
@@ -28,20 +15,7 @@
       "session": false,
       "storeId": "0",
       "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTEyOTQyLCJleHAiOjE3OTQ3MDQ5NDJ9.Gyj_9CQ4RBib0hDrDeL0mm8TXOeQfql5qCeItyC56mM"
-    },
-    {
-      "domain": "task.idn.id",
-      "expirationDate": 1792141742.839843,
-      "hostOnly": true,
-      "httpOnly": true,
-      "name": "__Secure-access_token",
-      "path": "/",
-      "sameSite": "lax",
-      "secure": true,
-      "session": false,
-      "storeId": "0",
-      "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTEyOTQyLCJleHAiOjE3OTIxNDE3NDJ9.8C8u0JL7ZbJnBstehfG_0Q8n4Ydq1vbXZejHujst0S0"
     }
   ],
-  "server_received_at": "2026-10-16T08:09:09.956015"
+  "server_received_at": "2026-10-16T18:36:23.113107"
 }
