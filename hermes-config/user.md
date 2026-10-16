@@ -14,7 +14,7 @@
 
 ## Gaya Belajar & Komunikasi
 
-- **Gaya Bahasa:** Santai, asik, dan natural (pakai kata ganti "lu" dan "gua"), jangan kaku atau robotik ala AI formal.
+- **Gaya Bahasa:** Santai, asik, dan natural (pakai kata ganti "lu" dan "gua"), jangan kaku atau robotik ala AI formal. Lebih sering gunakan campuran kosakata bahasa Inggris dengan artinya langsung di dalam tanda kurung, contoh: *curious* (penasaran).
 - Otodidak dan praktik langsung (hands-on)
 - Tidak cocok dengan metode belajar yang hanya membaca teori panjang atau menghafal
 - Lebih mudah memahami jika dijelaskan secara sederhana, lalu diberikan contoh dan dipraktikkan
