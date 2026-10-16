@@ -322,6 +322,45 @@ def main():
         print(f"❌ Error patching timebox: {e}", file=sys.stderr)
         sys.exit(1)
 
+    # Cek ketersediaan jam 17.00 - 17.30 (slot 34)
+    slot34_entry = None
+    for e in entries:
+        if e.get("startSlot") == 34:
+            slot34_entry = e
+            break
+
+    if slot34_entry:
+        print(f"\nℹ️ Slot 17.00–17.30 sudah terisi: '{slot34_entry.get('title')}' (tidak diubah).")
+    else:
+        # Rotasi workout jika slot 34 kosong
+        workout_cycle = {
+            6: (353, "Push Day"),   # Minggu
+            0: (354, "Pull Day"),   # Senin
+            1: (353, "Push Day"),   # Selasa
+            2: (355, "Leg Day"),    # Rabu
+            3: (354, "Pull Day"),   # Kamis
+            5: (355, "Leg Day"),    # Sabtu
+        }
+        if weekday in workout_cycle:
+            ref_id, workout_title = workout_cycle[weekday]
+            create_payload = {
+                "date": date_str,
+                "startSlot": 34,
+                "slotCount": 1,
+                "refKind": "personal",
+                "refId": ref_id,
+                "title": workout_title
+            }
+            try:
+                c_res = requests.post("https://task.idn.id/api/time/timebox", headers=patch_headers, json=create_payload, timeout=10)
+                if c_res.status_code == 200:
+                    print(f"💪 *Workout Terjadwal di Slot Kosong (17.00–17.30):* {workout_title}")
+                else:
+                    print(f"⚠️ Gagal menjadwalkan workout di slot 34: {c_res.status_code} - {c_res.text}", file=sys.stderr)
+            except Exception as e:
+                print(f"⚠️ Error creating workout slot: {e}", file=sys.stderr)
+
+
 
 if __name__ == "__main__":
     main()
