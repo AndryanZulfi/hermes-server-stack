@@ -1,7 +1,7 @@
 {
   "updated_at": "2026-10-16T11:36:23.090Z",
   "source": "chrome_extension",
-  "cookie_header": "__Secure-access_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTUyNTU1LCJleHAiOjE3OTIxODEzNTV9.O2p9kclkP7UQ-skLUAhPDawMxucXt2FvTv2OAXS57MU; __Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTUyNTU1LCJleHAiOjE3OTQ3NDQ1NTV9.W_QyTs-j5bLT6I8Bnh3arrYHjjKnza3gK9CYFBJdh34",
+  "cookie_header": "__Secure-access_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTk4ODU4LCJleHAiOjE3OTIyMjc2NTh9.EUelZW5pMkiFji7sy9mKvv8D3o3AY7kEExZourghKQE; __Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTk4ODU4LCJleHAiOjE3OTQ3OTA4NTh9.bnjImy6xd9m7mjN7GMP2XY1tinuAO1AGD987jn-Kb9I",
   "cookies": [
     {
       "domain": "task.idn.id",
