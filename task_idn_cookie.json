@@ -1,11 +1,24 @@
 {
-  "updated_at": "2026-10-16T11:36:23.090Z",
+  "updated_at": "2026-10-17T12:28:58.894Z",
   "source": "chrome_extension",
-  "cookie_header": "__Secure-access_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMjMwNzg5LCJleHAiOjE3OTIyNTk1ODl9.393ZzEILEGFehJvz7zafbE4ZeQMZ-Hd6KTJzsK9zkdM; __Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMjMwNzg5LCJleHAiOjE3OTQ4MjI3ODl9.EIksC5GQItVWw8X4stR1qzvhXNKDgu_zIJ7Tw8iy-c0",
+  "cookie_header": "oauth_state=76bacec44a746993d4b8b1c755e1b9eac6b3b863c6c4b308f25966619705ec74; __Secure-refresh_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMjQwMTM2LCJleHAiOjE3OTQ4MzIxMzZ9.hUFNlhOFhxYaohboRjq9m54ju4zzbtjV1u9xHCeii2U; __Secure-access_token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMjQwMTM2LCJleHAiOjE3OTIyNjg5MzZ9.kpBhGK3eTnat0Cih-ECXOR8PTeFC2AGNWK2J3r8P_2E",
   "cookies": [
     {
       "domain": "task.idn.id",
-      "expirationDate": 1794704942.84003,
+      "expirationDate": 1792240731.094364,
+      "hostOnly": true,
+      "httpOnly": true,
+      "name": "oauth_state",
+      "path": "/api/auth",
+      "sameSite": "lax",
+      "secure": true,
+      "session": false,
+      "storeId": "0",
+      "value": "76bacec44a746993d4b8b1c755e1b9eac6b3b863c6c4b308f25966619705ec74"
+    },
+    {
+      "domain": "task.idn.id",
+      "expirationDate": 1794832136.562107,
       "hostOnly": true,
       "httpOnly": true,
       "name": "__Secure-refresh_token",
@@ -14,8 +27,21 @@
       "secure": true,
       "session": false,
       "storeId": "0",
-      "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMTEyOTQyLCJleHAiOjE3OTQ3MDQ5NDJ9.Gyj_9CQ4RBib0hDrDeL0mm8TXOeQfql5qCeItyC56mM"
+      "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMjQwMTM2LCJleHAiOjE3OTQ4MzIxMzZ9.hUFNlhOFhxYaohboRjq9m54ju4zzbtjV1u9xHCeii2U"
+    },
+    {
+      "domain": "task.idn.id",
+      "expirationDate": 1792268936.561947,
+      "hostOnly": true,
+      "httpOnly": true,
+      "name": "__Secure-access_token",
+      "path": "/",
+      "sameSite": "lax",
+      "secure": true,
+      "session": false,
+      "storeId": "0",
+      "value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjE2LCJlbWFpbCI6ImFuZHJ5YW56dWxmaTIwMDdAZ21haWwuY29tIiwicm9sZSI6Imthcnlhd2FuIiwiZGl2aXNpb25JZCI6NCwiaWF0IjoxNzkyMjQwMTM2LCJleHAiOjE3OTIyNjg5MzZ9.kpBhGK3eTnat0Cih-ECXOR8PTeFC2AGNWK2J3r8P_2E"
     }
   ],
-  "server_received_at": "2026-10-16T18:36:23.113107"
+  "server_received_at": "2026-10-17T19:28:58.907409"
 }
