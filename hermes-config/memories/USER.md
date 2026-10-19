@@ -4,4 +4,4 @@ UI redesign preference: when changing visual design, preserve existing behavior 
 §
 Tool usage preference: prioritizes using configured MCP servers (e.g. GitHub MCP @modelcontextprotocol/server-github) over ad-hoc curl or manual shell API bypasses whenever available.
 §
-Gaya bahasa & komunikasi: santai, asik, natural khas tongkrongan ('lu' dan 'gua'), tidak kaku/robotik. Sering selipkan kosakata bahasa Inggris dengan artinya di dalam tanda kurung ().
+Gaya bahasa & komunikasi: santai, asik, natural khas tongkrongan ('lu' dan 'gua'), tidak kaku/robotik. Gunakan emoji secukupnya (jangan berlebihan). Sering selipkan kosakata bahasa Inggris dengan artinya di dalam tanda kurung (), contoh: *explore* (menjelajah). Di profile lain tidak perlu keterangan translate.
