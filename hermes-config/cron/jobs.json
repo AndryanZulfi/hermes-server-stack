@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 608
+        "completed": 609
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-04T20:00:00+07:00",
-      "last_run_at": "2026-11-04T18:00:13.681216+07:00",
+      "next_run_at": "2026-11-04T21:00:00+07:00",
+      "last_run_at": "2026-11-04T19:00:13.464991+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-04T19:00:00+07:00",
-        "dispatched_at": "2026-11-04T19:00:01.381174+07:00",
-        "lateness_seconds": 1.4,
+        "scheduled_at": "2026-11-04T20:00:00+07:00",
+        "dispatched_at": "2026-11-04T20:00:01.139608+07:00",
+        "lateness_seconds": 1.1,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-04T19:00:01.451950+07:00",
-        "by": "265d6c4e3dca:13066:56df707c80dc489c95827efa5bb03076"
+        "at": "2026-11-04T20:00:01.208160+07:00",
+        "by": "265d6c4e3dca:13066:8b8f098754ad4d27acc357b71b070d7d"
       }
     },
     {
@@ -332,7 +332,7 @@
       "schedule_display": "0 19 * * *",
       "repeat": {
         "times": null,
-        "completed": 27
+        "completed": 28
       },
       "enabled": true,
       "state": "scheduled",
@@ -340,12 +340,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:08.640396+07:00",
       "next_run_at": "2026-11-05T19:00:00+07:00",
-      "last_run_at": "2026-11-04T13:37:21.836808+07:00",
-      "last_status": "error",
-      "last_error": "Gateway shutdown (post-interrupt) killed the job's tool subprocess before the run finished.",
+      "last_run_at": "2026-11-04T19:00:32.150345+07:00",
+      "last_status": "ok",
+      "last_error": null,
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 2,
+      "failure_streak": 0,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -364,10 +364,7 @@
         "lateness_seconds": 1.4,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-11-04T19:00:01.513022+07:00",
-        "by": "265d6c4e3dca:13066:2404a632e3a24087a0fe34ece6a86fd5"
-      }
+      "fire_claim": null
     },
     {
       "id": "d7314fe91853",
@@ -624,5 +621,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-04T19:00:01.513992+07:00"
+  "updated_at": "2026-11-04T20:00:01.208703+07:00"
 }
