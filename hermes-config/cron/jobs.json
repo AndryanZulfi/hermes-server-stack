@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 618
+        "completed": 619
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-05T06:00:00+07:00",
-      "last_run_at": "2026-11-05T04:00:13.166185+07:00",
+      "next_run_at": "2026-11-05T07:00:00+07:00",
+      "last_run_at": "2026-11-05T05:00:14.049731+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-05T05:00:00+07:00",
-        "dispatched_at": "2026-11-05T05:00:01.139131+07:00",
+        "scheduled_at": "2026-11-05T06:00:00+07:00",
+        "dispatched_at": "2026-11-05T06:00:01.139263+07:00",
         "lateness_seconds": 1.1,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-05T05:00:01.207020+07:00",
-        "by": "265d6c4e3dca:13066:c07f84da061d4a3ea0172f2973fb2d01"
+        "at": "2026-11-05T06:00:01.205838+07:00",
+        "by": "265d6c4e3dca:13066:d4d3a0a76ede45c6adca4c0f0e8f7a26"
       }
     },
     {
@@ -88,20 +88,20 @@
       "schedule_display": "45 5 * * *",
       "repeat": {
         "times": null,
-        "completed": 28
+        "completed": 29
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T18:57:02.448049+07:00",
-      "next_run_at": "2026-11-05T05:45:00+07:00",
-      "last_run_at": "2026-11-04T13:37:21.689728+07:00",
-      "last_status": "error",
-      "last_error": "Gateway shutdown (post-interrupt) killed the job's tool subprocess before the run finished.",
+      "next_run_at": "2026-11-06T05:45:00+07:00",
+      "last_run_at": "2026-11-05T05:45:24.559165+07:00",
+      "last_status": "ok",
+      "last_error": null,
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 2,
+      "failure_streak": 0,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -115,10 +115,10 @@
       "workdir": null,
       "attach_to_session": true,
       "last_dispatch": {
-        "scheduled_at": "2026-10-21T05:45:00+07:00",
-        "dispatched_at": "2026-11-04T13:31:43.330098+07:00",
-        "lateness_seconds": 1237603.3,
-        "kind": "catch_up"
+        "scheduled_at": "2026-11-05T05:45:00+07:00",
+        "dispatched_at": "2026-11-05T05:45:01.152252+07:00",
+        "lateness_seconds": 1.2,
+        "kind": "on_time"
       },
       "fire_claim": null
     },
@@ -628,5 +628,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-05T05:00:01.207711+07:00"
+  "updated_at": "2026-11-05T06:00:01.206431+07:00"
 }
