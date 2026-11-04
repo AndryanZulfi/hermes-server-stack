@@ -212,13 +212,15 @@ if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
     git rebase --abort 2>/dev/null || rm -rf .git/rebase-merge .git/rebase-apply
 fi
 
-# Check status and commit if changes exist
-STATUS=$(git status --porcelain)
+# Check status and commit if changes exist (ignore submodule modified content)
+STATUS=$(git status --porcelain --ignore-submodules=all)
 COMMITTED=0
 if [ -n "$STATUS" ]; then
     git add -A
-    git commit -m "chore(stack): auto-sync server infrastructure & seed configs ({now_str})"
-    COMMITTED=1
+    if ! git diff --cached --quiet; then
+        git commit -m "chore(stack): auto-sync server infrastructure & seed configs ({now_str})"
+        COMMITTED=1
+    fi
 fi
 
 # Pull latest changes from remote with rebase (skip submodule fetch — skills backed up separately)
