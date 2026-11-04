@@ -47,7 +47,7 @@ def backup_local_repo(repo_dir, repo_name, branch="main"):
     git_cmd = ["git", "-C", repo_dir, "-c", "credential.helper=store --file=/opt/data/home/.git-credentials"]
 
     # Clean tracked runtime noise if any
-    subprocess.run(git_cmd + ["checkout", "--", ".usage.json"], capture_output=True)
+    subprocess.run(git_cmd + ["checkout", "--", ".usage.json", ".curator_state"], capture_output=True)
 
     status = get_git_status_porcelain(repo_dir)
     committed = False
@@ -92,11 +92,21 @@ def backup_local_repo(repo_dir, repo_name, branch="main"):
             pulled = True
     except subprocess.CalledProcessError as e:
         subprocess.run(git_cmd + ["rebase", "--abort"], capture_output=True)
-        return {
-            "name": repo_name,
-            "status": "error",
-            "error": f"Pull rebase gagal: {e.stderr.strip() if e.stderr else str(e)}"
-        }
+        # Fallback to merge with -X theirs if rebase conflicts
+        try:
+            fallback_res = subprocess.run(
+                git_cmd + ["pull", "origin", branch, "--no-rebase", "-X", "theirs", "-m", "chore: merge upstream changes"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            pulled = True
+        except subprocess.CalledProcessError as e_fallback:
+            return {
+                "name": repo_name,
+                "status": "error",
+                "error": f"Pull gagal: {e_fallback.stderr.strip() if e_fallback.stderr else str(e_fallback)}"
+            }
 
     # 3. Push to remote if we committed changes or are ahead of remote
     pushed = False
