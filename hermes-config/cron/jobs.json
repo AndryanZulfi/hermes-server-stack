@@ -25,18 +25,18 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 602
+        "completed": 603
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-04T14:00:00+07:00",
-      "last_run_at": "2026-10-19T18:01:15.256283+07:00",
-      "last_status": "delivery_failed",
+      "next_run_at": "2026-11-04T15:00:00+07:00",
+      "last_run_at": "2026-11-04T13:32:15.680605+07:00",
+      "last_status": "ok",
       "last_error": null,
-      "last_delivery_error": "delivery error: WhatsApp send failed: Cannot connect to host localhost:3000 ssl:default [Connect call failed ('127.0.0.1', 3000)] (target whatsapp:120363414423509222@g.us)",
+      "last_delivery_error": null,
       "last_delivery_unverified": null,
       "failure_streak": 0,
       "deliver": "whatsapp:120363414423509222@g.us",
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-10-20T07:00:00+07:00",
-        "dispatched_at": "2026-11-04T13:31:43.330098+07:00",
-        "lateness_seconds": 1319503.3,
-        "kind": "catch_up"
+        "scheduled_at": "2026-11-04T14:00:00+07:00",
+        "dispatched_at": "2026-11-04T14:10:24.041953+07:00",
+        "lateness_seconds": 624.0,
+        "kind": "late"
       },
       "fire_claim": {
-        "at": "2026-11-04T13:31:43.519082+07:00",
-        "by": "265d6c4e3dca:237:2d5dd9f9273148ba92263065290a5b24"
+        "at": "2026-11-04T14:10:25.225379+07:00",
+        "by": "265d6c4e3dca:6026:05c1cf5ca41b42f2bc59215f03f25da1"
       }
     },
     {
@@ -88,7 +88,7 @@
       "schedule_display": "45 5 * * *",
       "repeat": {
         "times": null,
-        "completed": 27
+        "completed": 28
       },
       "enabled": true,
       "state": "scheduled",
@@ -96,12 +96,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T18:57:02.448049+07:00",
       "next_run_at": "2026-11-05T05:45:00+07:00",
-      "last_run_at": "2026-10-20T06:31:06.012921+07:00",
+      "last_run_at": "2026-11-04T13:37:21.689728+07:00",
       "last_status": "error",
-      "last_error": "TimeoutError: Cron job 'Latihan Berpikir Kritis Harian' idle for 606s (limit 600s) — last activity: initializing",
-      "last_delivery_error": "delivery error: WhatsApp send failed: Cannot connect to host localhost:3000 ssl:default [Connect call failed ('127.0.0.1', 3000)] (target whatsapp:120363411899201343@g.us)",
+      "last_error": "Gateway shutdown (post-interrupt) killed the job's tool subprocess before the run finished.",
+      "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 1,
+      "failure_streak": 2,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -120,10 +120,7 @@
         "lateness_seconds": 1237603.3,
         "kind": "catch_up"
       },
-      "fire_claim": {
-        "at": "2026-11-04T13:31:43.568058+07:00",
-        "by": "265d6c4e3dca:237:90872e22ef734f9c9c3537a6a0ebdd09"
-      }
+      "fire_claim": null
     },
     {
       "id": "737b0fc2fea5",
@@ -152,7 +149,7 @@
       "schedule_display": "30 21 * * *",
       "repeat": {
         "times": null,
-        "completed": 27
+        "completed": 28
       },
       "enabled": true,
       "state": "scheduled",
@@ -160,12 +157,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T20:24:31.297270+07:00",
       "next_run_at": "2026-11-04T21:30:00+07:00",
-      "last_run_at": "2026-10-20T06:31:06.051582+07:00",
+      "last_run_at": "2026-11-04T13:37:21.723262+07:00",
       "last_status": "error",
-      "last_error": "TimeoutError: Cron job 'Refleksi Malam Harian' idle for 607s (limit 600s) — last activity: initializing",
-      "last_delivery_error": "delivery error: WhatsApp send failed: Cannot connect to host localhost:3000 ssl:default [Connect call failed ('127.0.0.1', 3000)] (target whatsapp:224983305470121@lid)",
+      "last_error": "Gateway shutdown (post-interrupt) killed the job's tool subprocess before the run finished.",
+      "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 1,
+      "failure_streak": 2,
       "deliver": "origin",
       "origin": {
         "platform": "whatsapp",
@@ -184,10 +181,7 @@
         "lateness_seconds": 1267303.3,
         "kind": "catch_up"
       },
-      "fire_claim": {
-        "at": "2026-11-04T13:31:43.592089+07:00",
-        "by": "265d6c4e3dca:237:bcd76bff0e374914aebfdb6624900413"
-      }
+      "fire_claim": null
     },
     {
       "id": "31ec4f4ffcfa",
@@ -216,7 +210,7 @@
       "schedule_display": "30 8 * * *",
       "repeat": {
         "times": null,
-        "completed": 25
+        "completed": 26
       },
       "enabled": true,
       "state": "scheduled",
@@ -224,12 +218,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:48:57.745370+07:00",
       "next_run_at": "2026-11-05T08:30:00+07:00",
-      "last_run_at": "2026-10-19T08:31:04.510130+07:00",
-      "last_status": "ok",
-      "last_error": null,
+      "last_run_at": "2026-11-04T13:37:21.768394+07:00",
+      "last_status": "error",
+      "last_error": "Gateway shutdown (post-interrupt) killed the job's tool subprocess before the run finished.",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 0,
+      "failure_streak": 1,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -248,10 +242,7 @@
         "lateness_seconds": 1314103.3,
         "kind": "catch_up"
       },
-      "fire_claim": {
-        "at": "2026-11-04T13:31:43.630120+07:00",
-        "by": "265d6c4e3dca:237:501ebf2677f641aaa8cfe9ed35220642"
-      }
+      "fire_claim": null
     },
     {
       "id": "a7b3fa5ff22f",
@@ -280,7 +271,7 @@
       "schedule_display": "0 12 * * *",
       "repeat": {
         "times": null,
-        "completed": 26
+        "completed": 27
       },
       "enabled": true,
       "state": "scheduled",
@@ -288,12 +279,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:01.571677+07:00",
       "next_run_at": "2026-11-05T12:00:00+07:00",
-      "last_run_at": "2026-10-19T12:01:04.619069+07:00",
-      "last_status": "ok",
-      "last_error": null,
+      "last_run_at": "2026-11-04T13:37:21.811132+07:00",
+      "last_status": "error",
+      "last_error": "Gateway shutdown (post-interrupt) killed the job's tool subprocess before the run finished.",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 0,
+      "failure_streak": 1,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -312,10 +303,7 @@
         "lateness_seconds": 1301503.3,
         "kind": "catch_up"
       },
-      "fire_claim": {
-        "at": "2026-11-04T13:31:43.653380+07:00",
-        "by": "265d6c4e3dca:237:014d70a3f395429f9b580d15964bccd4"
-      }
+      "fire_claim": null
     },
     {
       "id": "6705d52c8d70",
@@ -344,7 +332,7 @@
       "schedule_display": "0 19 * * *",
       "repeat": {
         "times": null,
-        "completed": 26
+        "completed": 27
       },
       "enabled": true,
       "state": "scheduled",
@@ -352,12 +340,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:08.640396+07:00",
       "next_run_at": "2026-11-04T19:00:00+07:00",
-      "last_run_at": "2026-10-19T19:21:42.680035+07:00",
+      "last_run_at": "2026-11-04T13:37:21.836808+07:00",
       "last_status": "error",
-      "last_error": "TimeoutError: Cron job 'Latihan Public Speaking Malam (19.00 WIB)' idle for 1027s (limit 600s) — last activity: initializing",
-      "last_delivery_error": "delivery error: WhatsApp send failed: Cannot connect to host localhost:3000 ssl:default [Connect call failed ('127.0.0.1', 3000)] (target whatsapp:120363411899201343@g.us)",
+      "last_error": "Gateway shutdown (post-interrupt) killed the job's tool subprocess before the run finished.",
+      "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 1,
+      "failure_streak": 2,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -376,10 +364,7 @@
         "lateness_seconds": 1276303.3,
         "kind": "catch_up"
       },
-      "fire_claim": {
-        "at": "2026-11-04T13:31:43.993172+07:00",
-        "by": "265d6c4e3dca:237:86a5b852f801419c89a8ccdd7837a7c9"
-      }
+      "fire_claim": null
     },
     {
       "id": "d7314fe91853",
@@ -406,7 +391,7 @@
       "schedule_display": "5 0 * * 6",
       "repeat": {
         "times": null,
-        "completed": 5
+        "completed": 6
       },
       "enabled": true,
       "state": "scheduled",
@@ -414,7 +399,7 @@
       "paused_reason": null,
       "created_at": "2026-09-24T22:01:23.711257+07:00",
       "next_run_at": "2026-11-07T00:05:00+07:00",
-      "last_run_at": "2026-10-17T00:05:27.913373+07:00",
+      "last_run_at": "2026-11-04T13:32:16.988077+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -431,10 +416,7 @@
       },
       "enabled_toolsets": null,
       "workdir": null,
-      "fire_claim": {
-        "at": "2026-11-04T13:31:44.600697+07:00",
-        "by": "265d6c4e3dca:237:3723e950886f4a0387ad39d590731b94"
-      },
+      "fire_claim": null,
       "last_dispatch": {
         "scheduled_at": "2026-10-24T00:05:00+07:00",
         "dispatched_at": "2026-11-04T13:31:43.330098+07:00",
@@ -443,5 +425,5 @@
       }
     }
   ],
-  "updated_at": "2026-11-04T13:31:44.607314+07:00"
+  "updated_at": "2026-11-04T14:10:25.238684+07:00"
 }
