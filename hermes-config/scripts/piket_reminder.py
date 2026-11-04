@@ -1,61 +1,108 @@
 #!/usr/bin/env python3
 """
-Script pengingat piket dapur / mencuci ompreng ID-Networkers.
-Dijalankan via cronjob Hermes:
-- Pagi: 07:30 WIB
-- Siang: 13:00 WIB
-- Malam: 20:00 WIB
+Pengingat Jadwal Piket Cuci Ompreng dan Bantu Dapur IDN Academy.
+Dijalankan via cronjob Hermes tanpa log/output tambahan.
 
-Urutan rolling piket per 5 hari:
-1. Media (Kahfi & Yazid)
-2. Network (Hanif, Fajru, Ridho)
-3. Programmer (Andryan, Hilman)
-4. Cyber Security (Angga, Rizal)
-5. Sys Admin (Adel, Naufal)
-
-Tanggal referensi: Sabtu, 19 September 2026 = Programmer
+Jadwal Pengingat:
+- Ompreng Pagi: 07:30 WIB
+- Ompreng Siang: 12:50 WIB
+- Ompreng Malam: 20:45 WIB
+- Bantu Dapur (Sabtu & Minggu): 07:00 WIB
 """
 
-from datetime import date, datetime
-from zoneinfo import ZoneInfo
 import sys
+import datetime
+from zoneinfo import ZoneInfo
 
-REF_DATE = date(2026, 9, 19)
-
-DUTY_CYCLE = [
-    {"major": "Programmer", "members": "Andryan, Hilman"},
-    {"major": "Cyber Security", "members": "Angga, Rizal"},
-    {"major": "Sys Admin", "members": "Adel, Naufal"},
-    {"major": "Media", "members": "Kahfi & Yazid"},
-    {"major": "Network", "members": "Hanif, Fajru, Ridho"},
+OMPRENG_ROSTER = [
+    "Ridho, Hanif, Fajru",
+    "Naufal, Adly, Farid",
+    "Daffa, Rafif, Eko",
+    "Andryan, Hilman, Yazid",
+    "Angga, Rizal, Kahfi",
 ]
 
-def main():
+DAPUR_ROSTER = [
+    "Sysadmin (Adel, Nopal)",
+    "Networking (Fajru, Hanif, Ridho)",
+    "Media (Yazid, Kahfi)",
+    "Programming (Andryan, Hilman)",
+    "Cysec (Angga, Rizal)",
+    "Daffa, Rafif (akdev1)",
+    "Farid, Eko (aldev2)",
+]
+
+def get_ompreng(target_date):
+    if target_date == datetime.date(2026, 11, 4):
+        return "Farid, Eko"
+    anchor = datetime.date(2026, 11, 5)
+    delta = (target_date - anchor).days
+    return OMPRENG_ROSTER[delta % len(OMPRENG_ROSTER)]
+
+def get_dapur(target_date):
+    anchor = datetime.date(2026, 11, 1)  # Cysec (idx 4)
+    if target_date <= anchor:
+        return DAPUR_ROSTER[4]
+    cur = anchor + datetime.timedelta(days=1)
+    weekend_count = 0
+    while cur <= target_date:
+        if cur.weekday() in (5, 6):  # 5=Sabtu, 6=Minggu
+            weekend_count += 1
+        cur += datetime.timedelta(days=1)
+    return DAPUR_ROSTER[(4 + weekend_count) % len(DAPUR_ROSTER)]
+
+def run_reminder(mode="auto"):
     tz = ZoneInfo("Asia/Jakarta")
-    now = datetime.now(tz)
+    now = datetime.datetime.now(tz)
     today = now.date()
-    current_hour = now.hour
 
-    delta = (today - REF_DATE).days
-    if delta < 0:
-        sys.exit(0)
+    if mode == "dapur":
+        if today.weekday() not in (5, 6):
+            return
+        petugas = get_dapur(today)
+        print(
+            f"🍳 *Pengingat Piket Bantu Dapur*\n"
+            f"⏰ Waktu: 07.00 WIB\n"
+            f"👥 Petugas: *{petugas}*\n\n"
+            f"Jangan lupa merapat ke dapur untuk piket bantu dapur pagi ini ya! Semangat! 👍"
+        )
+        return
 
-    duty = DUTY_CYCLE[delta % len(DUTY_CYCLE)]
+    petugas = get_ompreng(today)
 
-    if current_hour < 11:
-        session = "Sarapan Pagi"
-    elif current_hour < 17:
-        session = "Makan Siang"
+    if mode == "pagi":
+        print(
+            f"🔔 *Pengingat Piket Cuci Ompreng — Pagi*\n"
+            f"⏰ Waktu: 07.30 WIB\n"
+            f"👥 Petugas: *{petugas}*\n\n"
+            f"Semangat dan jangan lupa cuci omprengnya ya! 👍"
+        )
+    elif mode == "siang":
+        print(
+            f"🔔 *Pengingat Piket Cuci Ompreng — Siang*\n"
+            f"⏰ Waktu: 12.50 WIB\n"
+            f"👥 Petugas: *{petugas}*\n\n"
+            f"Jangan lupa cuci omprengnya setelah makan siang ya! 👍"
+        )
+    elif mode == "malam":
+        print(
+            f"🔔 *Pengingat Piket Cuci Ompreng — Malam*\n"
+            f"⏰ Waktu: 20.45 WIB\n"
+            f"👥 Petugas: *{petugas}*\n\n"
+            f"Jangan lupa cuci omprengnya setelah makan malam ya! 👍"
+        )
     else:
-        session = "Makan Malam"
+        h = now.hour
+        if h < 11:
+            run_reminder("pagi")
+        elif h < 16:
+            run_reminder("siang")
+        else:
+            run_reminder("malam")
 
-    message = (
-        f"🔔 *Piket Cuci Ompreng — {session}*\n"
-        f"Petugas: *{duty['major']}* ({duty['members']})\n"
-        f"Jangan lupa dicuci ya! 👍"
-    )
-
-    print(message)
+def main():
+    mode = sys.argv[1].lower() if len(sys.argv) > 1 else "auto"
+    run_reminder(mode)
 
 if __name__ == "__main__":
     main()

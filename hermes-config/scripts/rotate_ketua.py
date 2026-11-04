@@ -40,6 +40,13 @@ BASE_ROUTES = [
         "enabled": True,
     },
     {
+        "name": "kitchen-idn-academy",
+        "platform": "whatsapp",
+        "chat_id": "120363427693771326@g.us",
+        "profile": "idn-academy",
+        "enabled": True,
+    },
+    {
         "name": "idn-programmer-group",
         "platform": "whatsapp",
         "chat_id": "120363430531430052@g.us",
