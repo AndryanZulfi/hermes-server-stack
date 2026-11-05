@@ -76,8 +76,14 @@ def refresh_task_idn_token(data, real_path):
                 cookie_parts.append(f"{k}={v}")
             new_header = "; ".join(cookie_parts)
             data["cookie_header"] = new_header
-            with open(real_path, "w") as f:
-                json.dump(data, f, indent=2)
+            try:
+                with open(real_path, "w") as f:
+                    json.dump(data, f, indent=2)
+            except (PermissionError, OSError):
+                if os.path.islink(COOKIE_FILE):
+                    os.unlink(COOKIE_FILE)
+                with open(COOKIE_FILE, "w") as f:
+                    json.dump(data, f, indent=2)
             return new_header
     except Exception as e:
         print(f"Gagal refresh token: {e}", file=sys.stderr)
@@ -130,7 +136,7 @@ def get_logbook_data(target_date_str):
         service = build("sheets", "v4", credentials=creds, cache_discovery=False)
         res = service.spreadsheets().values().get(
             spreadsheetId=SPREADSHEET_ID,
-            range=f"'{SHEET_NAME}'!A40:F70"
+            range=f"'{SHEET_NAME}'!A40:F200"
         ).execute()
 
         rows = res.get("values", [])
@@ -165,6 +171,8 @@ def parse_schedule_details(target_date, weekday):
         for line in c_lines:
             if "Belajar Firmware Router" in line or "Embedded Router" in line:
                 pagi_title = line.replace("(Belajar) ", "").strip()
+            elif "Monitoring" in line and ("Mentor" in line or "Mingguan" in line):
+                pagi_title = line.replace("(Monitoring) ", "").strip()
             elif "Mengerjakan Project NARA" in line:
                 siang_title = "Project NARA"
             elif "Meeting Tambahan Project NARA" in line:
@@ -176,7 +184,11 @@ def parse_schedule_details(target_date, weekday):
         d_sections = output_d.split("\n\n")
         for sec in d_sections:
             sec_clean = sec.strip()
-            if sec_clean.startswith("(Embedded Router)"):
+            if sec_clean.startswith("(Embedded Router"):
+                points = [p.strip() for p in sec_clean.splitlines()[1:] if p.strip()]
+                if points:
+                    pagi_desc = "; ".join(points[:3])
+            elif sec_clean.startswith("(Monitoring Mentor") or sec_clean.startswith("(Monitoring)"):
                 points = [p.strip() for p in sec_clean.splitlines()[1:] if p.strip()]
                 if points:
                     pagi_desc = "; ".join(points[:3])
