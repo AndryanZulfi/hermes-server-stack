@@ -33,11 +33,10 @@ DAPUR_ROSTER = [
 ]
 
 def get_ompreng(target_date):
-    if target_date == datetime.date(2026, 11, 4):
-        return "Farid, Eko"
+    # Anchor: 5 Nov 2026 (Kamis) = Andryan, Hilman, Yazid (index 3)
     anchor = datetime.date(2026, 11, 5)
     delta = (target_date - anchor).days
-    return OMPRENG_ROSTER[delta % len(OMPRENG_ROSTER)]
+    return OMPRENG_ROSTER[(3 + delta) % len(OMPRENG_ROSTER)]
 
 def get_dapur(target_date):
     anchor = datetime.date(2026, 11, 1)  # Cysec (idx 4)
