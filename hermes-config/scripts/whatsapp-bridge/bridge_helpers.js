@@ -216,9 +216,31 @@ export function pollUpdateForAggregation({
   return null;
 }
 
+export function normalizeMentionJid(jid) {
+  if (!jid || typeof jid !== 'string') return null;
+  const cleaned = jid.trim().replace(/^\+/, '');
+  if (!cleaned) return null;
+  if (cleaned.includes('@')) return cleaned;
+  return `${cleaned}@s.whatsapp.net`;
+}
+
+export function extractMentionsFromText(text) {
+  if (!text || typeof text !== 'string') return [];
+  const matches = text.match(/@(\d{9,16})/g);
+  if (!matches) return [];
+  const jids = matches.map(m => `${m.slice(1)}@s.whatsapp.net`);
+  return Array.from(new Set(jids));
+}
+
 export function addMentions(payload, mentions) {
-  if (payload && Array.isArray(mentions) && mentions.length > 0) {
-    payload.mentions = mentions;
+  const explicit = (Array.isArray(mentions) ? mentions : [])
+    .map(normalizeMentionJid)
+    .filter(Boolean);
+  const text = payload?.text || payload?.caption || '';
+  const autoExtracted = text ? extractMentionsFromText(text) : [];
+  const combined = Array.from(new Set([...explicit, ...autoExtracted]));
+  if (payload && combined.length > 0) {
+    payload.mentions = combined;
   }
   return payload;
 }

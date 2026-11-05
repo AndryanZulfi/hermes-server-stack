@@ -46,7 +46,7 @@ MEMBER_PHONES = load_member_phones()
 def format_person(name: str) -> str:
     phone = MEMBER_PHONES.get(name.lower().strip())
     if phone:
-        return f"*{name}* (@{phone})"
+        return f"*{name}* @{phone}"
     return f"*{name}*"
 
 def format_group_names(names: list[str]) -> str:

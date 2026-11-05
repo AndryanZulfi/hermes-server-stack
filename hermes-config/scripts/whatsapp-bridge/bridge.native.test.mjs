@@ -92,6 +92,11 @@ import {
   assert.deepEqual(content.mentions, mentions);
   assert.deepEqual(media.mentions, mentions);
   console.log('  ✓ outbound text and media payloads preserve native mention JIDs');
+
+  // Test automatic mention extraction without explicit mentions array
+  const autoText = buildTextSendPayload('Piket: *Andryan* @6288803918389 dan *Hilman* (@62895336902593)');
+  assert.deepEqual(autoText.content.mentions, ['6288803918389@s.whatsapp.net', '62895336902593@s.whatsapp.net']);
+  console.log('  ✓ auto-extraction of @phone mentions from text payload');
 }
 
 // -- inbound quote/media/native metadata --------------------------------
