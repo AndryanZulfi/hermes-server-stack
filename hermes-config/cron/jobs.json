@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 644
+        "completed": 645
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-06T08:00:00+07:00",
-      "last_run_at": "2026-11-06T06:00:47.466186+07:00",
+      "next_run_at": "2026-11-06T09:00:00+07:00",
+      "last_run_at": "2026-11-06T07:00:47.171510+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-06T07:00:00+07:00",
-        "dispatched_at": "2026-11-06T07:00:35.561290+07:00",
+        "scheduled_at": "2026-11-06T08:00:00+07:00",
+        "dispatched_at": "2026-11-06T08:00:35.565161+07:00",
         "lateness_seconds": 35.6,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-06T07:00:35.727789+07:00",
-        "by": "265d6c4e3dca:18124:3301229b3e7542e588450640f8067098"
+        "at": "2026-11-06T08:00:35.715612+07:00",
+        "by": "265d6c4e3dca:18124:5a9d3cc2c95f4f848fadbc1e4595a0e1"
       }
     },
     {
@@ -447,18 +447,18 @@
       "schedule_display": "30 7 * * *",
       "repeat": {
         "times": null,
-        "completed": 1
+        "completed": 2
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-11-04T16:12:42.717179+07:00",
-      "next_run_at": "2026-11-06T07:30:00+07:00",
-      "last_run_at": "2026-11-05T07:30:02.013445+07:00",
-      "last_status": "delivery_failed",
+      "next_run_at": "2026-11-07T07:30:00+07:00",
+      "last_run_at": "2026-11-06T07:30:37.034643+07:00",
+      "last_status": "ok",
       "last_error": null,
-      "last_delivery_error": "live adapter send failed: {\"error\":\"forbidden\"}; live adapter delivery to whatsapp:120363410899436681@g.us failed: {\"error\":\"forbidden\"}; delivery error: WhatsApp bridge error (500): {\"error\":\"forbidden\"} (target whatsapp:120363410899436681@g.us)",
+      "last_delivery_error": null,
       "last_delivery_unverified": null,
       "failure_streak": 0,
       "deliver": "whatsapp:120363427693771326@g.us",
@@ -473,9 +473,9 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-05T07:30:00+07:00",
-        "dispatched_at": "2026-11-05T07:30:01.138141+07:00",
-        "lateness_seconds": 1.1,
+        "scheduled_at": "2026-11-06T07:30:00+07:00",
+        "dispatched_at": "2026-11-06T07:30:35.535832+07:00",
+        "lateness_seconds": 35.5,
         "kind": "on_time"
       },
       "fire_claim": null
@@ -642,5 +642,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-06T07:00:35.730316+07:00"
+  "updated_at": "2026-11-06T08:00:35.717337+07:00"
 }
