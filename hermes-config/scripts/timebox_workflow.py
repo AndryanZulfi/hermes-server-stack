@@ -141,42 +141,29 @@ def approve_draft():
 
     state["approved_at"] = now.isoformat()
 
-    # Cek apakah sudah jam 09.00 WIB atau lebih
-    current_minutes = now.hour * 60 + now.minute
-    target_minutes = 9 * 60
+    # Ketika Zulfi konfirmasi (jam 07.30 atau kapan pun), LANGSUNG kirim ke grup IDN Academy Programmer
+    caption = build_formal_caption(now)
+    img_path = state.get("image_path", IMAGE_PATH)
 
-    if current_minutes >= target_minutes:
-        # Langsung kirim sekarang ke grup IDN Academy Programmer
-        caption = build_formal_caption(now)
-        img_path = state.get("image_path", IMAGE_PATH)
-
-        success = send_whatsapp_media(ACADEMY_GROUP_JID, img_path, caption)
-        if success:
-            state["status"] = "sent"
-            state["sent_at"] = now.isoformat()
-            save_state(state)
-            # Notif balik ke review group
-            send_whatsapp_text(
-                REVIEW_GROUP_JID,
-                f"✅ *Laporan Pengiriman Timebox:*\nFoto timebox hari ini telah resmi terkirim ke grup *IDN Academy Programmer 2026-2027* pukul {now.strftime('%H.%M')} WIB."
-            )
-            return {
-                "action": "dispatched",
-                "message": "Draf disetujui dan foto timebox telah langsung dikirimkan ke grup IDN Academy Programmer 2026-2027! 🚀"
-            }
-        else:
-            save_state(state)
-            return {
-                "action": "failed_dispatch",
-                "message": "Draf disetujui tetapi gagal mengirim media ke grup IDN Academy Programmer. Silakan cek koneksi bridge."
-            }
+    success = send_whatsapp_media(ACADEMY_GROUP_JID, img_path, caption)
+    if success:
+        state["status"] = "sent"
+        state["sent_at"] = now.isoformat()
+        save_state(state)
+        # Notif balik ke review group
+        send_whatsapp_text(
+            REVIEW_GROUP_JID,
+            f"✅ *Laporan Pengiriman Timebox:*\nFoto timebox hari ini telah resmi terkirim ke grup *IDN Academy Programmer 2026-2027* pukul {now.strftime('%H.%M')} WIB."
+        )
+        return {
+            "action": "dispatched",
+            "message": "Draf disetujui dan foto timebox telah langsung dikirimkan ke grup IDN Academy Programmer 2026-2027! 🚀"
+        }
     else:
-        # Masih sebelum jam 09.00 WIB -> simpan status approved, nanti jam 09.00 dikirim otomatis
-        state["status"] = "approved"
         save_state(state)
         return {
-            "action": "approved_waiting",
-            "message": "Draf timebox terkonfirmasi sesuai! Sistem akan otomatis mengirimkannya ke grup IDN Academy Programmer tepat pukul 09.00 WIB nanti. 👍"
+            "action": "failed_dispatch",
+            "message": "Draf disetujui tetapi gagal mengirim media ke grup IDN Academy Programmer. Silakan cek koneksi bridge."
         }
 
 
@@ -184,6 +171,7 @@ def check_and_tick():
     """
     Checker cron job (berjalan setiap 30 menit dari jam 08.00 s/d 11.30).
     Jadwal cron: 0,30 8-11 * * 0,1,2,3,4,6
+    Target batas kirim otomatis: 08.30 WIB.
     """
     now = get_current_time()
     today_str = now.strftime("%Y-%m-%d")
@@ -199,7 +187,7 @@ def check_and_tick():
 
     status = state.get("status")
     current_minutes = now.hour * 60 + now.minute
-    target_minutes = 9 * 60
+    target_minutes = 8 * 60 + 30  # 08.30 WIB
 
     # 1. Jika sudah sent atau holiday, tidak ada yang perlu dilakukan
     if status in ["sent", "holiday"]:
@@ -207,35 +195,36 @@ def check_and_tick():
 
     # 2. Jika status SUDAH APPROVED
     if status == "approved":
-        if current_minutes >= target_minutes:
-            caption = build_formal_caption(now)
-            img_path = state.get("image_path", IMAGE_PATH)
-            success = send_whatsapp_media(ACADEMY_GROUP_JID, img_path, caption)
-            if success:
-                state["status"] = "sent"
-                state["sent_at"] = now.isoformat()
-                save_state(state)
-                send_whatsapp_text(
-                    REVIEW_GROUP_JID,
-                    f"✅ *Laporan Pengiriman Timebox:*\nFoto timebox hari ini telah resmi terkirim ke grup *IDN Academy Programmer 2026-2027* pukul {now.strftime('%H.%M')} WIB."
-                )
-                print(f"Timebox sent to academy group at {now.strftime('%H:%M')}")
+        caption = build_formal_caption(now)
+        img_path = state.get("image_path", IMAGE_PATH)
+        success = send_whatsapp_media(ACADEMY_GROUP_JID, img_path, caption)
+        if success:
+            state["status"] = "sent"
+            state["sent_at"] = now.isoformat()
+            save_state(state)
+            send_whatsapp_text(
+                REVIEW_GROUP_JID,
+                f"✅ *Laporan Pengiriman Timebox:*\nFoto timebox hari ini telah resmi terkirim ke grup *IDN Academy Programmer 2026-2027* pukul {now.strftime('%H.%M')} WIB."
+            )
+            print(f"Timebox sent to academy group at {now.strftime('%H:%M')}")
         return
 
     # 3. Jika status MASIH PENDING (Zulfi belum konfirmasi)
     if status == "pending":
-        # Tepat jam 09.00 WIB
-        if now.hour == 9 and now.minute <= 5:
+        # Tepat jam 08.30 WIB
+        if now.hour == 8 and now.minute >= 25 and now.minute <= 35:
             msg = (
-                "⚠️ *Pengingat Timebox (09.00 WIB)*\n\n"
-                "Waktu pengiriman timebox pukul 09.00 WIB sudah tiba, namun pengiriman ke grup *IDN Academy Programmer 2026-2027* **ditahan sementara** karena draf belum dikonfirmasi oleh Zulfi.\n\n"
+                "⚠️ *Pengingat Timebox (08.30 WIB)*\n\n"
+                "Waktu pengiriman timebox pukul 08.30 WIB sudah tiba, namun pengiriman ke grup *IDN Academy Programmer 2026-2027* **ditahan sementara** karena draf belum dikonfirmasi oleh Zulfi.\n\n"
                 "Mohon cek draf foto timebox di atas dan balas chat ini (apakah jadwal sudah sesuai / ada perbaikan) agar bisa langsung segera dikirimkan."
             )
             send_whatsapp_text(REVIEW_GROUP_JID, msg)
             state["reminder_count"] = state.get("reminder_count", 0) + 1
             state["last_reminder_at"] = now.isoformat()
             save_state(state)
-            print("Held delivery at 09.00 WIB because pending approval. Sent warning.")
+            print("Held delivery at 08.30 WIB because pending approval. Sent warning.")
+            return
+
         # Cek debouncing: minimal 25 menit dari reminder / draft terakhir
         last_time_str = state.get("last_reminder_at") or state.get("draft_sent_at")
         if last_time_str:
@@ -248,10 +237,10 @@ def check_and_tick():
                 pass
 
         if current_minutes < target_minutes:
-            # Jam 08.00 atau 08.30
+            # Jam 08.00
             msg = (
                 f"🔔 *Pengingat Konfirmasi Timebox ({now.strftime('%H.%M')} WIB)*\n\n"
-                "Halo Zulfi, mengingatkan kembali untuk pengecekan draf timebox hari ini. Apakah jadwal sudah sesuai atau ada yang perlu diperbaiki sebelum jadwal kirim pukul 09.00 WIB nanti?\n\n"
+                "Halo Zulfi, mengingatkan kembali untuk pengecekan draf timebox hari ini. Apakah jadwal sudah sesuai atau ada yang perlu diperbaiki sebelum jadwal kirim pukul 08.30 WIB nanti?\n\n"
                 "👉 Silakan balas chat ini ya."
             )
             send_whatsapp_text(REVIEW_GROUP_JID, msg)
@@ -260,17 +249,17 @@ def check_and_tick():
             save_state(state)
             print(f"Sent reminder at {now.strftime('%H:%M')} WIB.")
         else:
-            # Jam 09.30, 10.00, 10.30, dst (setelah 09.00 tapi belum dijawab)
+            # Jam 09.00, 09.30, 10.00, dst (setelah 08.30 tapi belum dijawab)
             msg = (
                 f"🔔 *Pengingat Konfirmasi Timebox ({now.strftime('%H.%M')} WIB)*\n\n"
                 "Pengiriman timebox ke grup IDN Academy Programmer masih tertahan menunggu konfirmasi Zulfi.\n\n"
-                "👉 Mohon balas chat ini jika sudah oke atau beri tahu jika ada jadwal yang perlu diubah."
+                "👉 Mohon balas chat ini jika sudah oke agar bisa langsung segera dikirimkan."
             )
             send_whatsapp_text(REVIEW_GROUP_JID, msg)
             state["reminder_count"] = state.get("reminder_count", 0) + 1
             state["last_reminder_at"] = now.isoformat()
             save_state(state)
-            print(f"Sent post-09:00 reminder at {now.strftime('%H:%M')} WIB.")
+            print(f"Sent post-08:30 reminder at {now.strftime('%H:%M')} WIB.")
 
 
 def update_draft_note(new_note):
