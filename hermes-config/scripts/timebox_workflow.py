@@ -195,18 +195,19 @@ def check_and_tick():
 
     # 2. Jika status SUDAH APPROVED
     if status == "approved":
-        caption = build_formal_caption(now)
-        img_path = state.get("image_path", IMAGE_PATH)
-        success = send_whatsapp_media(ACADEMY_GROUP_JID, img_path, caption)
-        if success:
-            state["status"] = "sent"
-            state["sent_at"] = now.isoformat()
-            save_state(state)
-            send_whatsapp_text(
-                REVIEW_GROUP_JID,
-                f"✅ *Laporan Pengiriman Timebox:*\nFoto timebox hari ini telah resmi terkirim ke grup *IDN Academy Programmer 2026-2027* pukul {now.strftime('%H.%M')} WIB."
-            )
-            print(f"Timebox sent to academy group at {now.strftime('%H:%M')}")
+        if current_minutes >= target_minutes:
+            caption = build_formal_caption(now)
+            img_path = state.get("image_path", IMAGE_PATH)
+            success = send_whatsapp_media(ACADEMY_GROUP_JID, img_path, caption)
+            if success:
+                state["status"] = "sent"
+                state["sent_at"] = now.isoformat()
+                save_state(state)
+                send_whatsapp_text(
+                    REVIEW_GROUP_JID,
+                    f"✅ *Laporan Pengiriman Timebox:*\nFoto timebox hari ini telah resmi terkirim ke grup *IDN Academy Programmer 2026-2027* pukul {now.strftime('%H.%M')} WIB."
+                )
+                print(f"Timebox sent to academy group at {now.strftime('%H:%M')}")
         return
 
     # 3. Jika status MASIH PENDING (Zulfi belum konfirmasi)
