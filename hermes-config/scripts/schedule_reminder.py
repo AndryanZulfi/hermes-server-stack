@@ -61,6 +61,24 @@ DEFAULT_ROUTINES = {
     }
 }
 
+def is_on_leave_today(now):
+    today_str = now.strftime("%Y-%m-%d")
+    cookie_path = "/opt/data/task_idn_cookie.json"
+    if os.path.exists(cookie_path):
+        try:
+            import json, requests
+            with open(cookie_path) as f:
+                d = json.load(f)
+            headers = {"Cookie": d.get("cookie_header", ""), "User-Agent": "Mozilla/5.0"}
+            r = requests.get(f"https://task.idn.id/api/time/timebox?date={today_str}", headers=headers, timeout=5)
+            if r.status_code == 200:
+                leave_info = r.json().get("leave")
+                if leave_info:
+                    return True
+        except Exception:
+            pass
+    return False
+
 def get_calendar_events_today(now):
     tz = now.tzinfo
     start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
@@ -125,6 +143,10 @@ def main():
     )
 
     events, err = get_calendar_events_today(now)
+
+    # Jika sedang izin sakit / cuti, jangan kirim pengingat jadwal
+    if is_on_leave_today(now):
+        sys.exit(0)
 
     # Hari Jumat libur jika tidak ada event
     if weekday == 4 and (not events or len(events) == 0):
