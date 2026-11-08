@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 701
+        "completed": 702
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-08T17:00:00+07:00",
-      "last_run_at": "2026-11-08T15:00:27.280462+07:00",
+      "next_run_at": "2026-11-08T18:00:00+07:00",
+      "last_run_at": "2026-11-08T16:00:33.262165+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-08T16:00:00+07:00",
-        "dispatched_at": "2026-11-08T16:00:13.613638+07:00",
-        "lateness_seconds": 13.6,
+        "scheduled_at": "2026-11-08T17:00:00+07:00",
+        "dispatched_at": "2026-11-08T17:00:13.347635+07:00",
+        "lateness_seconds": 13.3,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-08T16:00:13.841233+07:00",
-        "by": "265d6c4e3dca:38038:7cbfef9bde084460a3443288090a8b44"
+        "at": "2026-11-08T17:00:13.490933+07:00",
+        "by": "265d6c4e3dca:53049:ed5b2542f87b49718424515cc0c285c2"
       }
     },
     {
@@ -647,7 +647,203 @@
         "kind": "on_time"
       },
       "fire_claim": null
+    },
+    {
+      "id": "230fc9e42d12",
+      "name": "English Class - Sesi Pagi (08.00 WIB)",
+      "prompt": "Kamu adalah AI English Mentor untuk Zulfi di grup WhatsApp English Class.\nBaca /opt/data/profiles/english-class/tracker.json untuk mengetahui nilai current_day, lalu buka materi hari tersebut di /opt/data/profiles/english-class/curriculum.json.\n\nTugas Sesi Pagi (08.00 WIB):\n1. Kirimkan header:\n   *[English Class A1 ➔ A1+]*\n   *Day <X>/30: <Topic>*\n2. Buka dengan sapaan hangat dan santai khas tongkrongan (pakai lu/gua).\n3. Materi Inti Grammar (Interleaving):\n   - Jelaskan konsep perbandingan 2-3 tense hari ini secara lugas dan komparatif.\n   - Pakai analogi sederhana dan contoh kalimat nyata di dunia programming / keseharian anak tech (misal: coding, debugging, rutinitas asrama).\n4. Contextual Vocabulary:\n   - Berikan 3-5 frasa praktis (vocab_focus) hari ini lengkap dengan contoh penggunaannya dalam kalimat.\n5. Mini Active Challenge:\n   - Berikan 1 instruksi langsung buat Zulfi: minta dia bikin 2 kalimat bahasa Inggris sendiri berdasarkan materi pagi ini dan kirimkan di grup untuk langsung dikoreksi.\n\nGunakan format WhatsApp yang rapi (*bold*, bullet points). Jangan ada AI slop atau basa-basi kosong.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 * * *",
+        "display": "0 8 * * *"
+      },
+      "schedule_display": "0 8 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-11-08T16:13:27.820937+07:00",
+      "next_run_at": "2026-11-09T08:00:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "whatsapp:120363413593580299@g.us",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "120363411899201343@g.us",
+        "chat_name": "120363411899201343",
+        "thread_id": null,
+        "user_id": "6288803918389@s.whatsapp.net",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": "/opt/data/profiles/english-class"
+    },
+    {
+      "id": "29a0a5ade32b",
+      "name": "English Class - Sesi Siang (12.00 WIB)",
+      "prompt": "Kamu adalah AI English Mentor untuk Zulfi di grup WhatsApp English Class.\nBaca /opt/data/profiles/english-class/tracker.json untuk mengetahui nilai current_day, lalu buka materi hari tersebut di /opt/data/profiles/english-class/curriculum.json.\n\nTugas Sesi Siang (12.00 WIB):\n1. Kirimkan header:\n   *[English Class A1 ➔ A1+]*\n   *Day <X>/30: Reading Comprehension & Drill*\n2. Sapaan santai jam istirahat siang (tetap santai khas tongkrongan).\n3. Reading Passage:\n   - Sajikan 1 teks bacaan pendek (80-150 kata) berbahasa Inggris bertema konteks hari ini (reading_theme, seputar dev life / tech / habits).\n   - Teks harus natural, menarik, dan memuat kombinasi tense yang relevan.\n4. Comprehension Questions:\n   - Berikan 2 pertanyaan singkat dalam bahasa Inggris mengenai isi teks.\n5. Tense Spotting & Mini Drill:\n   - Tunjuk 1-2 kalimat dari teks bacaan dan minta Zulfi mengidentifikasi tense apa yang digunakan serta kenapa penulis memilih tense itu.\nAjak Zulfi menjawab santai di grup sebelum rehat siang selesai.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 12 * * *",
+        "display": "0 12 * * *"
+      },
+      "schedule_display": "0 12 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-11-08T16:14:02.557890+07:00",
+      "next_run_at": "2026-11-09T12:00:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "whatsapp:120363413593580299@g.us",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "120363411899201343@g.us",
+        "chat_name": "120363411899201343",
+        "thread_id": null,
+        "user_id": "6288803918389@s.whatsapp.net",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": "/opt/data/profiles/english-class"
+    },
+    {
+      "id": "5475c7d6c905",
+      "name": "English Class - Sesi Malam (18.30 WIB)",
+      "prompt": "Kamu adalah AI English Mentor untuk Zulfi di grup WhatsApp English Class.\nBaca /opt/data/profiles/english-class/tracker.json untuk mengetahui nilai current_day, lalu buka materi hari tersebut di /opt/data/profiles/english-class/curriculum.json.\n\nTugas Sesi Malam (18.30 WIB):\n1. Kirimkan header:\n   *[English Class A1 ➔ A1+]*\n   *Day <X>/30: Speaking Mission & Active Recall*\n2. Sapaan rileks malam hari untuk melepas penat setelah seharian ngoding/belajar.\n3. Speaking Mission:\n   - Berikan tantangan berbicara selama 45-90 detik sesuai speaking_prompt hari ini.\n   - Dorong Zulfi untuk merekam suara lewat Voice Note (VN) WhatsApp di grup ini.\n   - Sediakan 2-3 ide pointer pembuka agar Zulfi tidak bingung mulai dari mana.\n4. Active Recall Blitz:\n   - Berikan 2 soal cepat tanpa contek (misal: 'Bagaimana kamu mengucapkan kalimat ini dalam bahasa Inggris dengan tense yang tepat?' atau koreksi kalimat rusak).\n5. Penutup santai:\n   - Sampaikan kalau VN dan jawaban Zulfi bakal langsung kamu review dan kasih feedback malam ini.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 18 * * *",
+        "display": "30 18 * * *"
+      },
+      "schedule_display": "30 18 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": false,
+      "state": "paused",
+      "paused_at": "2026-11-08T16:15:13.862585+07:00",
+      "paused_reason": null,
+      "created_at": "2026-11-08T16:14:11.067546+07:00",
+      "next_run_at": "2026-11-08T18:30:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "whatsapp:120363413593580299@g.us",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "120363411899201343@g.us",
+        "chat_name": "120363411899201343",
+        "thread_id": null,
+        "user_id": "6288803918389@s.whatsapp.net",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": "/opt/data/profiles/english-class"
+    },
+    {
+      "id": "6498b0e5a410",
+      "name": "English Class - Auto Advance Day Tracker (00.05 WIB)",
+      "prompt": "",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": "advance_english_class_day.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "5 0 * * *",
+        "display": "5 0 * * *"
+      },
+      "schedule_display": "5 0 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": false,
+      "state": "paused",
+      "paused_at": "2026-11-08T16:16:22.201653+07:00",
+      "paused_reason": null,
+      "created_at": "2026-11-08T16:16:03.094668+07:00",
+      "next_run_at": "2026-11-09T00:05:00+07:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "last_delivery_unverified": null,
+      "failure_streak": 0,
+      "deliver": "local",
+      "origin": {
+        "platform": "whatsapp",
+        "chat_id": "120363411899201343@g.us",
+        "chat_name": "120363411899201343",
+        "thread_id": null,
+        "user_id": "6288803918389@s.whatsapp.net",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null
     }
   ],
-  "updated_at": "2026-11-08T16:00:13.843221+07:00"
+  "updated_at": "2026-11-08T17:00:13.493466+07:00"
 }
