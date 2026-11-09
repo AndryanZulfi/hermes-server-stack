@@ -189,8 +189,8 @@ def check_and_tick():
     current_minutes = now.hour * 60 + now.minute
     target_minutes = 8 * 60 + 30  # 08.30 WIB
 
-    # 1. Jika sudah sent atau holiday, tidak ada yang perlu dilakukan
-    if status in ["sent", "holiday"]:
+    # 1. Jika sudah sent, holiday, atau ditahan (held), tidak ada yang perlu dilakukan
+    if status in ["sent", "holiday", "held"]:
         return
 
     # 2. Jika status SUDAH APPROVED
