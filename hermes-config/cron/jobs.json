@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 756
+        "completed": 757
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-11T00:00:00+07:00",
-      "last_run_at": "2026-11-10T22:01:11.560410+07:00",
+      "next_run_at": "2026-11-11T01:00:00+07:00",
+      "last_run_at": "2026-11-10T23:01:09.869468+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-10T23:00:00+07:00",
-        "dispatched_at": "2026-11-10T23:00:53.642298+07:00",
+        "scheduled_at": "2026-11-11T00:00:00+07:00",
+        "dispatched_at": "2026-11-11T00:00:53.621940+07:00",
         "lateness_seconds": 53.6,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-10T23:00:53.936719+07:00",
-        "by": "265d6c4e3dca:54863:f60216ea171e40d3815df3a61432566c"
+        "at": "2026-11-11T00:00:53.795840+07:00",
+        "by": "265d6c4e3dca:54863:732f653efd0e47c6a43f1f7f925d3de5"
       }
     },
     {
@@ -859,5 +859,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-10T23:00:53.938273+07:00"
+  "updated_at": "2026-11-11T00:00:53.797204+07:00"
 }
