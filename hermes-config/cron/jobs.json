@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 861
+        "completed": 862
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-15T09:00:00+07:00",
-      "last_run_at": "2026-11-15T07:00:45.145570+07:00",
+      "next_run_at": "2026-11-15T10:00:00+07:00",
+      "last_run_at": "2026-11-15T08:00:41.408044+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-15T08:00:00+07:00",
-        "dispatched_at": "2026-11-15T08:00:25.293603+07:00",
+        "scheduled_at": "2026-11-15T09:00:00+07:00",
+        "dispatched_at": "2026-11-15T09:00:25.303988+07:00",
         "lateness_seconds": 25.3,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-15T08:00:25.435158+07:00",
-        "by": "265d6c4e3dca:98036:6dd29095b5884057865ca33b704c35ef"
+        "at": "2026-11-15T09:00:25.543167+07:00",
+        "by": "265d6c4e3dca:98036:a8f4442a9c504058b562c38964580b91"
       }
     },
     {
@@ -210,20 +210,20 @@
       "schedule_display": "30 8 * * *",
       "repeat": {
         "times": null,
-        "completed": 36
+        "completed": 37
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T22:48:57.745370+07:00",
-      "next_run_at": "2026-11-15T08:30:00+07:00",
-      "last_run_at": "2026-11-14T08:31:42.290820+07:00",
-      "last_status": "ok",
-      "last_error": null,
+      "next_run_at": "2026-11-16T08:30:00+07:00",
+      "last_run_at": "2026-11-15T08:46:55.868071+07:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 32s)",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 0,
+      "failure_streak": 1,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -237,8 +237,8 @@
       "workdir": null,
       "attach_to_session": true,
       "last_dispatch": {
-        "scheduled_at": "2026-11-14T08:30:00+07:00",
-        "dispatched_at": "2026-11-14T08:30:25.295405+07:00",
+        "scheduled_at": "2026-11-15T08:30:00+07:00",
+        "dispatched_at": "2026-11-15T08:30:25.257033+07:00",
         "lateness_seconds": 25.3,
         "kind": "on_time"
       },
@@ -671,7 +671,7 @@
       "schedule_display": "0 8 * * *",
       "repeat": {
         "times": null,
-        "completed": 6
+        "completed": 7
       },
       "enabled": true,
       "state": "scheduled",
@@ -679,12 +679,12 @@
       "paused_reason": null,
       "created_at": "2026-11-08T16:13:27.820937+07:00",
       "next_run_at": "2026-11-16T08:00:00+07:00",
-      "last_run_at": "2026-11-14T08:01:03.411162+07:00",
-      "last_status": "ok",
-      "last_error": null,
+      "last_run_at": "2026-11-15T08:22:39.354598+07:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 1s)",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 0,
+      "failure_streak": 1,
       "deliver": "whatsapp:120363413593580299@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -702,10 +702,7 @@
         "lateness_seconds": 25.3,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-11-15T08:00:25.505028+07:00",
-        "by": "265d6c4e3dca:98036:4a190a82a69448a4b5afa0a2a998c398"
-      }
+      "fire_claim": null
     },
     {
       "id": "29a0a5ade32b",
@@ -862,5 +859,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-15T08:00:25.506859+07:00"
+  "updated_at": "2026-11-15T09:00:25.549283+07:00"
 }
