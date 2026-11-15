@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 865
+        "completed": 866
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-15T13:00:00+07:00",
-      "last_run_at": "2026-11-15T11:00:45.772518+07:00",
+      "next_run_at": "2026-11-15T14:00:00+07:00",
+      "last_run_at": "2026-11-15T12:00:55.600759+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-15T12:00:00+07:00",
-        "dispatched_at": "2026-11-15T12:00:25.356496+07:00",
-        "lateness_seconds": 25.4,
+        "scheduled_at": "2026-11-15T13:00:00+07:00",
+        "dispatched_at": "2026-11-15T13:00:25.254076+07:00",
+        "lateness_seconds": 25.3,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-15T12:00:25.730995+07:00",
-        "by": "265d6c4e3dca:98036:b5d20dbf3c1f40948a7d740f1089a347"
+        "at": "2026-11-15T13:00:25.336362+07:00",
+        "by": "265d6c4e3dca:98036:b7f6228452ca4ff38d89c1a9aa9ce230"
       }
     },
     {
@@ -271,7 +271,7 @@
       "schedule_display": "0 12 * * *",
       "repeat": {
         "times": null,
-        "completed": 37
+        "completed": 38
       },
       "enabled": true,
       "state": "scheduled",
@@ -279,12 +279,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:01.571677+07:00",
       "next_run_at": "2026-11-16T12:00:00+07:00",
-      "last_run_at": "2026-11-14T12:01:09.215351+07:00",
-      "last_status": "ok",
-      "last_error": null,
+      "last_run_at": "2026-11-15T12:14:25.655293+07:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 6s)",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 0,
+      "failure_streak": 1,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -303,10 +303,7 @@
         "lateness_seconds": 25.4,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-11-15T12:00:25.926816+07:00",
-        "by": "265d6c4e3dca:98036:fb33f447e4b94ee9b2b3dc80da87430c"
-      }
+      "fire_claim": null
     },
     {
       "id": "6705d52c8d70",
@@ -506,15 +503,15 @@
       "schedule_display": "50 12 * * *",
       "repeat": {
         "times": null,
-        "completed": 10
+        "completed": 11
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-11-04T16:12:49.389367+07:00",
-      "next_run_at": "2026-11-15T12:50:00+07:00",
-      "last_run_at": "2026-11-14T12:50:27.183303+07:00",
+      "next_run_at": "2026-11-16T12:50:00+07:00",
+      "last_run_at": "2026-11-15T12:50:28.761413+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -532,9 +529,9 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-14T12:50:00+07:00",
-        "dispatched_at": "2026-11-14T12:50:25.311337+07:00",
-        "lateness_seconds": 25.3,
+        "scheduled_at": "2026-11-15T12:50:00+07:00",
+        "dispatched_at": "2026-11-15T12:50:25.385142+07:00",
+        "lateness_seconds": 25.4,
         "kind": "on_time"
       },
       "fire_claim": null
@@ -730,7 +727,7 @@
       "schedule_display": "0 12 * * *",
       "repeat": {
         "times": null,
-        "completed": 6
+        "completed": 7
       },
       "enabled": true,
       "state": "scheduled",
@@ -738,12 +735,12 @@
       "paused_reason": null,
       "created_at": "2026-11-08T16:14:02.557890+07:00",
       "next_run_at": "2026-11-16T12:00:00+07:00",
-      "last_run_at": "2026-11-14T12:01:01.245561+07:00",
-      "last_status": "ok",
-      "last_error": null,
+      "last_run_at": "2026-11-15T12:14:08.293857+07:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 1s)",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 0,
+      "failure_streak": 1,
       "deliver": "whatsapp:120363413593580299@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -761,10 +758,7 @@
         "lateness_seconds": 25.4,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-11-15T12:00:26.179391+07:00",
-        "by": "265d6c4e3dca:98036:d10c6aa6e19c492f803badf2e8ba13a0"
-      }
+      "fire_claim": null
     },
     {
       "id": "5475c7d6c905",
@@ -865,5 +859,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-15T12:00:26.183537+07:00"
+  "updated_at": "2026-11-15T13:00:25.337131+07:00"
 }
