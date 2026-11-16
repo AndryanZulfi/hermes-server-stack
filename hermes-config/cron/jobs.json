@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 888
+        "completed": 889
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-16T12:00:00+07:00",
-      "last_run_at": "2026-11-16T10:00:56.097364+07:00",
+      "next_run_at": "2026-11-16T13:00:00+07:00",
+      "last_run_at": "2026-11-16T11:01:07.447978+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-16T11:00:00+07:00",
-        "dispatched_at": "2026-11-16T11:00:39.892971+07:00",
-        "lateness_seconds": 39.9,
+        "scheduled_at": "2026-11-16T12:00:00+07:00",
+        "dispatched_at": "2026-11-16T12:00:39.789109+07:00",
+        "lateness_seconds": 39.8,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-16T11:00:40.328666+07:00",
-        "by": "540ed728c914:268:6f3cc3ae569a441085eb4d5b16d2732b"
+        "at": "2026-11-16T12:00:39.964900+07:00",
+        "by": "540ed728c914:268:01205f72052447038efad5360c7878b6"
       }
     },
     {
@@ -278,7 +278,7 @@
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:01.571677+07:00",
-      "next_run_at": "2026-11-16T12:00:00+07:00",
+      "next_run_at": "2026-11-17T12:00:00+07:00",
       "last_run_at": "2026-11-15T12:14:25.655293+07:00",
       "last_status": "error",
       "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 6s)",
@@ -298,12 +298,15 @@
       "workdir": null,
       "attach_to_session": true,
       "last_dispatch": {
-        "scheduled_at": "2026-11-15T12:00:00+07:00",
-        "dispatched_at": "2026-11-15T12:00:25.356496+07:00",
-        "lateness_seconds": 25.4,
+        "scheduled_at": "2026-11-16T12:00:00+07:00",
+        "dispatched_at": "2026-11-16T12:00:39.789109+07:00",
+        "lateness_seconds": 39.8,
         "kind": "on_time"
       },
-      "fire_claim": null
+      "fire_claim": {
+        "at": "2026-11-16T12:00:40.086508+07:00",
+        "by": "540ed728c914:268:4cde5cd1e7c44f6787a66dd8c689eae8"
+      }
     },
     {
       "id": "6705d52c8d70",
@@ -734,7 +737,7 @@
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-11-08T16:14:02.557890+07:00",
-      "next_run_at": "2026-11-16T12:00:00+07:00",
+      "next_run_at": "2026-11-17T12:00:00+07:00",
       "last_run_at": "2026-11-15T12:14:08.293857+07:00",
       "last_status": "error",
       "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 1s)",
@@ -753,12 +756,15 @@
       "enabled_toolsets": null,
       "workdir": "/opt/data/profiles/english-class",
       "last_dispatch": {
-        "scheduled_at": "2026-11-15T12:00:00+07:00",
-        "dispatched_at": "2026-11-15T12:00:25.356496+07:00",
-        "lateness_seconds": 25.4,
+        "scheduled_at": "2026-11-16T12:00:00+07:00",
+        "dispatched_at": "2026-11-16T12:00:39.789109+07:00",
+        "lateness_seconds": 39.8,
         "kind": "on_time"
       },
-      "fire_claim": null
+      "fire_claim": {
+        "at": "2026-11-16T12:00:40.297976+07:00",
+        "by": "540ed728c914:268:5f97c649c7f9499683f2bcd9cd5de390"
+      }
     },
     {
       "id": "5475c7d6c905",
@@ -859,5 +865,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-16T11:00:40.330865+07:00"
+  "updated_at": "2026-11-16T12:00:40.341782+07:00"
 }
