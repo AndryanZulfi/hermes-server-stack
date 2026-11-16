@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 896
+        "completed": 897
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-16T20:00:00+07:00",
-      "last_run_at": "2026-11-16T18:00:58.737901+07:00",
+      "next_run_at": "2026-11-16T21:00:00+07:00",
+      "last_run_at": "2026-11-16T19:00:59.225615+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-16T19:00:00+07:00",
-        "dispatched_at": "2026-11-16T19:00:39.760718+07:00",
+        "scheduled_at": "2026-11-16T20:00:00+07:00",
+        "dispatched_at": "2026-11-16T20:00:39.806920+07:00",
         "lateness_seconds": 39.8,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-16T19:00:39.851332+07:00",
-        "by": "540ed728c914:268:03ddb30ae3294f299eb0987f9a10862e"
+        "at": "2026-11-16T20:00:40.063392+07:00",
+        "by": "540ed728c914:268:8990d0970f074b589274383f3e8ada56"
       }
     },
     {
@@ -332,7 +332,7 @@
       "schedule_display": "0 19 * * *",
       "repeat": {
         "times": null,
-        "completed": 39
+        "completed": 40
       },
       "enabled": true,
       "state": "scheduled",
@@ -340,12 +340,12 @@
       "paused_reason": null,
       "created_at": "2026-09-23T22:49:08.640396+07:00",
       "next_run_at": "2026-11-17T19:00:00+07:00",
-      "last_run_at": "2026-11-15T19:09:13.598284+07:00",
-      "last_status": "error",
-      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 2s)",
+      "last_run_at": "2026-11-16T19:01:33.129993+07:00",
+      "last_status": "ok",
+      "last_error": null,
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 1,
+      "failure_streak": 0,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -364,10 +364,7 @@
         "lateness_seconds": 39.8,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-11-16T19:00:39.905848+07:00",
-        "by": "540ed728c914:268:10c85f9c13324fb283c1a9e3a0af9860"
-      }
+      "fire_claim": null
     },
     {
       "id": "d7314fe91853",
@@ -862,5 +859,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-16T19:00:39.907774+07:00"
+  "updated_at": "2026-11-16T20:00:40.065376+07:00"
 }
