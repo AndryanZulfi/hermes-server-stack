@@ -25,15 +25,15 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 885
+        "completed": 886
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-16T09:00:00+07:00",
-      "last_run_at": "2026-11-16T07:00:56.774388+07:00",
+      "next_run_at": "2026-11-16T10:00:00+07:00",
+      "last_run_at": "2026-11-16T08:01:09.248193+07:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-16T08:00:00+07:00",
-        "dispatched_at": "2026-11-16T08:00:39.877323+07:00",
-        "lateness_seconds": 39.9,
+        "scheduled_at": "2026-11-16T09:00:00+07:00",
+        "dispatched_at": "2026-11-16T09:00:39.804350+07:00",
+        "lateness_seconds": 39.8,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-16T08:00:40.140770+07:00",
-        "by": "540ed728c914:268:d8600428509b46c9bcf69b7b34e41821"
+        "at": "2026-11-16T09:00:39.950717+07:00",
+        "by": "540ed728c914:268:08f8dceae70e4c0fb7f5c3cd36e2220d"
       }
     },
     {
@@ -210,20 +210,20 @@
       "schedule_display": "30 8 * * *",
       "repeat": {
         "times": null,
-        "completed": 37
+        "completed": 38
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T22:48:57.745370+07:00",
-      "next_run_at": "2026-11-16T08:30:00+07:00",
-      "last_run_at": "2026-11-15T08:46:55.868071+07:00",
+      "next_run_at": "2026-11-17T08:30:00+07:00",
+      "last_run_at": "2026-11-16T08:39:16.109602+07:00",
       "last_status": "error",
-      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 32s)",
+      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 3s)",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 1,
+      "failure_streak": 2,
       "deliver": "whatsapp:120363411899201343@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -237,9 +237,9 @@
       "workdir": null,
       "attach_to_session": true,
       "last_dispatch": {
-        "scheduled_at": "2026-11-15T08:30:00+07:00",
-        "dispatched_at": "2026-11-15T08:30:25.257033+07:00",
-        "lateness_seconds": 25.3,
+        "scheduled_at": "2026-11-16T08:30:00+07:00",
+        "dispatched_at": "2026-11-16T08:30:39.793605+07:00",
+        "lateness_seconds": 39.8,
         "kind": "on_time"
       },
       "fire_claim": null
@@ -671,7 +671,7 @@
       "schedule_display": "0 8 * * *",
       "repeat": {
         "times": null,
-        "completed": 7
+        "completed": 8
       },
       "enabled": true,
       "state": "scheduled",
@@ -679,12 +679,12 @@
       "paused_reason": null,
       "created_at": "2026-11-08T16:13:27.820937+07:00",
       "next_run_at": "2026-11-17T08:00:00+07:00",
-      "last_run_at": "2026-11-15T08:22:39.354598+07:00",
+      "last_run_at": "2026-11-16T08:09:25.309000+07:00",
       "last_status": "error",
-      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 1s)",
+      "last_error": "RuntimeError: HTTP 503: [antigravity/gemini-3.7-flash-low] [403]: HTTP 403 (reset after 17s)",
       "last_delivery_error": null,
       "last_delivery_unverified": null,
-      "failure_streak": 1,
+      "failure_streak": 2,
       "deliver": "whatsapp:120363413593580299@g.us",
       "origin": {
         "platform": "whatsapp",
@@ -702,10 +702,7 @@
         "lateness_seconds": 39.9,
         "kind": "on_time"
       },
-      "fire_claim": {
-        "at": "2026-11-16T08:00:40.322890+07:00",
-        "by": "540ed728c914:268:d91463c5d19a47d887ac505850b842f4"
-      }
+      "fire_claim": null
     },
     {
       "id": "29a0a5ade32b",
@@ -862,5 +859,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-16T08:00:40.329480+07:00"
+  "updated_at": "2026-11-16T09:00:39.951737+07:00"
 }
