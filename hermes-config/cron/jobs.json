@@ -25,18 +25,18 @@
       "schedule_display": "0 * * * *",
       "repeat": {
         "times": null,
-        "completed": 984
+        "completed": 985
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:55:59.605353+07:00",
-      "next_run_at": "2026-11-21T03:00:00+07:00",
-      "last_run_at": "2026-11-21T01:00:44.289279+07:00",
-      "last_status": "ok",
+      "next_run_at": "2026-11-21T04:00:00+07:00",
+      "last_run_at": "2026-11-21T02:00:42.743934+07:00",
+      "last_status": "delivery_failed",
       "last_error": null,
-      "last_delivery_error": null,
+      "last_delivery_error": "live adapter send failed: {}; live adapter delivery to whatsapp:120363414423509222@g.us failed: {}; delivery error: WhatsApp bridge error (503): {\"error\":\"Not connected to WhatsApp\"} (target whatsapp:120363414423509222@g.us)",
       "last_delivery_unverified": null,
       "failure_streak": 0,
       "deliver": "whatsapp:120363414423509222@g.us",
@@ -51,14 +51,14 @@
       "enabled_toolsets": null,
       "workdir": null,
       "last_dispatch": {
-        "scheduled_at": "2026-11-21T02:00:00+07:00",
-        "dispatched_at": "2026-11-21T02:00:31.312258+07:00",
+        "scheduled_at": "2026-11-21T03:00:00+07:00",
+        "dispatched_at": "2026-11-21T03:00:31.317730+07:00",
         "lateness_seconds": 31.3,
         "kind": "on_time"
       },
       "fire_claim": {
-        "at": "2026-11-21T02:00:31.471821+07:00",
-        "by": "540ed728c914:6801:dcc857bb3f704a5da7b6c54e3b9d4a21"
+        "at": "2026-11-21T03:00:31.479511+07:00",
+        "by": "540ed728c914:6801:53a9504b053b4f3d98a55a60e1444478"
       }
     },
     {
@@ -859,5 +859,5 @@
       "workdir": null
     }
   ],
-  "updated_at": "2026-11-21T02:00:31.473221+07:00"
+  "updated_at": "2026-11-21T03:00:31.481137+07:00"
 }
