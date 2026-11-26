@@ -207,9 +207,10 @@ cleanup() {{
 }}
 trap cleanup EXIT INT TERM
 
-# If a previous rebase was stuck, abort it safely
-if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
-    git rebase --abort 2>/dev/null || rm -rf .git/rebase-merge .git/rebase-apply
+# An interrupted operation may contain manual resolutions; leave it for recovery.
+if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ] || [ -f .git/MERGE_HEAD ]; then
+    echo "Backup stopped: unfinished Git operation requires manual recovery" >&2
+    exit 1
 fi
 
 # Check status and commit if changes exist (ignore submodule modified content)
@@ -223,11 +224,12 @@ if [ -n "$STATUS" ]; then
     fi
 fi
 
-# Pull latest changes from remote with rebase (skip submodule fetch — skills backed up separately)
-if ! git pull --rebase --no-recurse-submodules origin main; then
-    # If conflict occurs (e.g. submodule pointer diff), accept remote or abort
-    git rebase --abort 2>/dev/null || rm -rf .git/rebase-merge .git/rebase-apply
-    git pull origin main --no-rebase -X theirs --no-recurse-submodules -m "chore: merge upstream changes"
+# Merge preserves backup history; conflicts must never silently discard local files.
+git fetch --no-recurse-submodules origin main
+if ! git -c submodule.recurse=false merge --no-edit origin/main; then
+    git merge --abort
+    echo "Backup stopped: upstream conflict; local commits preserved" >&2
+    exit 1
 fi
 
 # Push only if we committed or are ahead of remote
